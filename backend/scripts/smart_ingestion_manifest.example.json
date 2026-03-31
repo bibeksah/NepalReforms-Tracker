@@ -1,0 +1,23 @@
+{
+  "name": "lal_kitab_single_doc",
+  "priority": 50,
+  "options": {
+    "publish_threshold": 0.75,
+    "max_workers": 4,
+    "adaptive": true
+  },
+  "documents": [
+    {
+      "path": "../../sources/LalKitab/Federal/Redbook_2081_82.pdf",
+      "source_type": "lal_kitab",
+      "source_tier": "A",
+      "destination": "tracker",
+      "gov_level": "federal",
+      "province_name": "",
+      "fiscal_year": "2081/82",
+      "extra_metadata": {
+        "note": "single-document smart ingestion example"
+      }
+    }
+  ]
+}

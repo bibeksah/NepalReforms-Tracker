@@ -1,0 +1,133 @@
+import json
+
+from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
+from django.utils import timezone
+
+from tracker.agents.smart_ingestion_engine import refresh_job_rollup
+from tracker.agents.smart_neo4j_publisher import ensure_smart_constraints, publish_project_record
+from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
+
+
+class Command(BaseCommand):
+    help = "Publish approved review-queue items to Neo4j and resolve them."
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--job-id",
+            help="Optional IngestionJob UUID filter. Use 'latest' for newest job.",
+        )
+        parser.add_argument("--limit", type=int, default=500, help="Maximum approved items to publish.")
+        parser.add_argument(
+            "--dry-run",
+            action="store_true",
+            help="Preview how many items are publishable without mutating DB/Neo4j.",
+        )
+
+    def handle(self, *args, **options):
+        job = None
+        job_id = options.get("job_id")
+        if job_id:
+            if job_id == "latest":
+                job = IngestionJob.objects.order_by("-created_at").first()
+                if not job:
+                    raise CommandError("No ingestion jobs found.")
+            else:
+                try:
+                    job = IngestionJob.objects.get(id=job_id)
+                except IngestionJob.DoesNotExist as exc:
+                    raise CommandError(f"IngestionJob not found: {job_id}") from exc
+
+        qs = ReviewQueueItem.objects.filter(status="approved").order_by("created_at")
+        if job:
+            qs = qs.filter(job=job)
+        limit = max(1, int(options.get("limit", 500)))
+        items = list(qs[:limit])
+
+        if options.get("dry_run"):
+            payload = {
+                "status": "dry_run",
+                "job_id": str(job.id) if job else None,
+                "approved_items_selected": len(items),
+                "limit": limit,
+            }
+            self.stdout.write(json.dumps(payload, indent=2))
+            return
+
+        ensure_smart_constraints()
+
+        published = 0
+        skipped = 0
+        failed = 0
+        failures: list[dict] = []
+        touched_docs: set[str] = set()
+        touched_jobs: set[str] = set()
+        now = timezone.now()
+
+        for item in items:
+            payload = item.proposed_payload or {}
+            entity_type = payload.get("entity_type", item.entity_type)
+
+            if entity_type != "Project":
+                skipped += 1
+                failures.append(
+                    {
+                        "item_id": str(item.id),
+                        "reason": "unsupported_entity_type",
+                        "entity_type": entity_type,
+                    }
+                )
+                continue
+
+            result = publish_project_record(payload)
+            if not result.get("ok"):
+                failed += 1
+                failures.append(
+                    {
+                        "item_id": str(item.id),
+                        "reason": "neo4j_publish_failed",
+                    }
+                )
+                continue
+
+            with transaction.atomic():
+                locked = ReviewQueueItem.objects.select_for_update().get(id=item.id)
+                if locked.status != "approved":
+                    continue
+                locked.status = "resolved"
+                locked.resolved_at = now
+                locked.save(update_fields=["status", "resolved_at", "updated_at"])
+
+                if locked.document_id:
+                    doc = IngestionDocument.objects.select_for_update().get(id=locked.document_id)
+                    doc.published_count += 1
+                    if doc.held_count > 0:
+                        doc.held_count -= 1
+                    if doc.held_count == 0 and doc.published_count > 0 and doc.status != "failed":
+                        doc.status = "published"
+                    doc.save(update_fields=["published_count", "held_count", "status", "updated_at"])
+                    touched_docs.add(str(doc.id))
+                    touched_jobs.add(str(doc.job_id))
+                elif locked.job_id:
+                    touched_jobs.add(str(locked.job_id))
+            published += 1
+
+        refreshed_jobs = []
+        for refreshed_job_id in sorted(touched_jobs):
+            refreshed_job = IngestionJob.objects.get(id=refreshed_job_id)
+            refresh_job_rollup(refreshed_job)
+            refreshed_jobs.append({"job_id": str(refreshed_job.id), "status": refreshed_job.status})
+
+        response = {
+            "status": "completed",
+            "job_id": str(job.id) if job else None,
+            "approved_items_selected": len(items),
+            "published": published,
+            "skipped": skipped,
+            "failed": failed,
+            "touched_documents": len(touched_docs),
+            "refreshed_jobs": refreshed_jobs,
+        }
+        if failures:
+            response["failures"] = failures[:30]
+        self.stdout.write(json.dumps(response, indent=2))

@@ -1,0 +1,77 @@
+flowchart TD
+    A["Operator Scheduler"] --> B["Ingestion Submit"]
+    B --> B1{"Input Type"}
+    B1 -->|"Manifest"| B2["Load Manifest File"]
+    B1 -->|"Document"| B3["Use Direct File List"]
+    B2 --> B4["Validate Paths and Metadata"]
+    B3 --> B4
+    B4 --> B5["Create Ingestion Job in Postgres"]
+    B4 --> B6["Create Ingestion Document Records in Postgres"]
+
+    A --> C["Ingestion Run"]
+    C --> C1["Run Job Controller"]
+    C1 --> C2["Select Queued Documents"]
+    C2 --> C3["Create Adaptive Worker Pool"]
+    C3 --> D["Process Document"]
+
+    D --> D1["Enrich Document Metadata"]
+    D1 --> D2["Plan Document Strategy"]
+    D2 --> D3{"Source Type"}
+
+    D3 -->|"Lal Kitab"| E["Extract Lal Kitab"]
+    E --> E1["Parse Table Text"]
+    E1 --> E2{"Needs Vision"}
+    E2 -->|"No"| E3["Use Deterministic Rows"]
+    E2 -->|"Yes"| E4["Run Vision OCR on Pages"]
+    E3 --> E5["Cleanup Module"]
+    E4 --> E5
+    E5 --> E6["Validate Project Batch"]
+    E6 --> E7["Translation Module NE to EN"]
+    E7 --> F["Project Records"]
+
+    D3 -->|"Other Sources"| G["Read Source Text"]
+    G --> G0["Language Preprocessor"]
+    G0 --> G00{"English Ready"}
+    G00 -->|"Yes"| G1["Run LLM Extraction in English"]
+    G00 -->|"No"| J1["Create Review Queue Item Translation Failed"]
+    G00 -->|"No"| L1["Create Failed Ingestion Item Language Preprocess"]
+    G1 --> H["Non Project Records"]
+
+    F --> I{"Publish Gate"}
+    H --> I
+    I -->|"Needs Review"| J["Create Review Queue Item"]
+    I -->|"Safe Project"| K["Publish Project to Neo4j"]
+    I -->|"Unsupported Entity"| J
+
+    K --> K1["Ensure Graph Constraints"]
+    K1 --> K2["Upsert Project FiscalYear and Province"]
+    K -->|"Publish Error"| J
+
+    D -->|"Missing Source or Exception"| L["Create Failed Ingestion Item"]
+    L1 --> M
+    J1 --> M
+    D --> M["Update Document Counters and Status"]
+    M --> N["Refresh Job Rollup"]
+    N --> O["Update Ingestion Job Status"]
+
+    A --> P["Ingestion Status"]
+    P --> O
+    P --> B6
+    P --> J
+    P --> P1["Show Translation Metrics"]
+
+    A --> Q["Ingestion Retry"]
+    Q --> Q1["Requeue Failed and Held Documents"]
+    Q1 --> C1
+
+    R["Human Reviewer"] --> R1["Approve or Reject Review Item"]
+    R1 --> S["Ingestion Publish Review"]
+    S -->|"Approved Project Payload"| K
+    S --> S1["Mark Review Item Resolved"]
+    S1 --> S2["Adjust Document Counters"]
+    S2 --> N
+
+    T["Failure Queue"] --> L
+    T --> L1
+    L --> U["Retry Later or Human Intervention"]
+    L1 --> U
