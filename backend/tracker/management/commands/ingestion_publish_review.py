@@ -5,7 +5,7 @@ from django.db import transaction
 from django.utils import timezone
 
 from tracker.agents.smart_ingestion_engine import refresh_job_rollup
-from tracker.agents.smart_neo4j_publisher import ensure_smart_constraints, publish_project_record
+from tracker.agents.smart_neo4j_publisher import ensure_smart_constraints, publish_record
 from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
 
 
@@ -13,16 +13,9 @@ class Command(BaseCommand):
     help = "Publish approved review-queue items to Neo4j and resolve them."
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--job-id",
-            help="Optional IngestionJob UUID filter. Use 'latest' for newest job.",
-        )
+        parser.add_argument("--job-id", help="Optional IngestionJob UUID filter. Use 'latest' for newest job.")
         parser.add_argument("--limit", type=int, default=500, help="Maximum approved items to publish.")
-        parser.add_argument(
-            "--dry-run",
-            action="store_true",
-            help="Preview how many items are publishable without mutating DB/Neo4j.",
-        )
+        parser.add_argument("--dry-run", action="store_true", help="Preview how many items are publishable without mutating DB/Neo4j.")
 
     def handle(self, *args, **options):
         job = None
@@ -45,19 +38,13 @@ class Command(BaseCommand):
         items = list(qs[:limit])
 
         if options.get("dry_run"):
-            payload = {
-                "status": "dry_run",
-                "job_id": str(job.id) if job else None,
-                "approved_items_selected": len(items),
-                "limit": limit,
-            }
+            payload = {"status": "dry_run", "job_id": str(job.id) if job else None, "approved_items_selected": len(items), "limit": limit}
             self.stdout.write(json.dumps(payload, indent=2))
             return
 
         ensure_smart_constraints()
 
         published = 0
-        skipped = 0
         failed = 0
         failures: list[dict] = []
         touched_docs: set[str] = set()
@@ -66,28 +53,15 @@ class Command(BaseCommand):
 
         for item in items:
             payload = item.proposed_payload or {}
-            entity_type = payload.get("entity_type", item.entity_type)
-
-            if entity_type != "Project":
-                skipped += 1
-                failures.append(
-                    {
-                        "item_id": str(item.id),
-                        "reason": "unsupported_entity_type",
-                        "entity_type": entity_type,
-                    }
-                )
-                continue
-
-            result = publish_project_record(payload)
-            if not result.get("ok"):
+            try:
+                result = publish_record(payload)
+            except Exception as exc:
                 failed += 1
-                failures.append(
-                    {
-                        "item_id": str(item.id),
-                        "reason": "neo4j_publish_failed",
-                    }
-                )
+                failures.append({"item_id": str(item.id), "reason": "neo4j_publish_failed", "error": f"{type(exc).__name__}: {exc}"})
+                continue
+            if not result.get("ok", True):
+                failed += 1
+                failures.append({"item_id": str(item.id), "reason": "neo4j_publish_failed"})
                 continue
 
             with transaction.atomic():
@@ -123,7 +97,6 @@ class Command(BaseCommand):
             "job_id": str(job.id) if job else None,
             "approved_items_selected": len(items),
             "published": published,
-            "skipped": skipped,
             "failed": failed,
             "touched_documents": len(touched_docs),
             "refreshed_jobs": refreshed_jobs,

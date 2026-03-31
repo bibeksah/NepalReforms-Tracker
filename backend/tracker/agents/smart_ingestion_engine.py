@@ -1,15 +1,8 @@
-"""
-Centralized smart ingestion engine.
-
-Responsibilities:
-  - AI-first strategy planning per document
-  - source-aware extraction contracts
-  - confidence gating (publish vs review hold)
-  - direct Neo4j publishing with dedup fingerprints
-"""
+"""Centralized smart ingestion engine with source-native deterministic flows."""
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import logging
@@ -26,21 +19,24 @@ from django.db import close_old_connections
 from django.db.models import Sum
 from django.utils import timezone
 
-from tracker.models import (
-    FailedIngestionItem,
-    IngestionDocument,
-    IngestionJob,
-    ReviewQueueItem,
-)
+from tracker.models import FailedIngestionItem, IngestionDocument, IngestionJob, ReviewQueueItem
 from .ingestion import _ingest_lal_kitab, clean_and_validate, get_lal_kitab_page_count
 from .language_preprocessor import ensure_english_text
 from .normalizer import normalize_translate
 from .router import router
-from .schemas import ManifestoCommitment
+from .schemas import (
+    AgendaItemRecord,
+    AgendaVersionRecord,
+    ManifestoCommitment,
+    ManifestoDocumentRecord,
+    PoliticalPromiseRecord,
+    stable_id,
+)
 from .smart_neo4j_publisher import (
     compute_project_fingerprint,
     ensure_smart_constraints,
-    publish_project_records_batch,
+    publish_record,
+    publish_records_batch,
 )
 from .validators import validate_project_batch
 
@@ -68,7 +64,6 @@ def _merge_document_extra_metadata(document: IngestionDocument, patch: dict[str,
     except TypeError:
         document.save(update_fields=["extra_metadata"])
     except AttributeError:
-        # Unit tests may pass a lightweight stand-in object without .save()
         return
 
 
@@ -76,13 +71,13 @@ def infer_scope_from_path(source_path: str) -> tuple[str, str]:
     parts = [part.lower() for part in Path(source_path).parts]
     if "federal" in parts:
         return "federal", ""
-    if "provincial" in parts:
+    if "provincial" in parts or "province" in parts:
         return "provincial", Path(source_path).parent.name
     return "unknown", ""
 
 
 def infer_fiscal_year(filename: str) -> str:
-    match = re.search(r"(\d{4})[_-](\d{2})", filename)
+    match = re.search(r"(\d{4})[_-](\d{2})", filename or "")
     if match:
         return f"{match.group(1)}/{match.group(2)}"
     return "unknown"
@@ -90,9 +85,12 @@ def infer_fiscal_year(filename: str) -> str:
 
 def detect_source_type(source_path: str) -> str:
     lower = source_path.lower()
+    suffix = Path(source_path).suffix.lower()
     if "lalkitab" in lower or "redbook" in lower:
         return "lal_kitab"
-    if "manifesto" in lower:
+    if "manifesto" in lower or ("rsp" in lower and suffix == ".csv"):
+        return "manifesto"
+    if "agenda" in lower and suffix == ".json":
         return "manifesto"
     if "citizen" in lower:
         return "citizen"
@@ -113,38 +111,35 @@ def hash_file(path: str) -> str:
 
 
 def _strip_json_fence(text: str) -> str:
-    cleaned = (text or "").strip()
-    cleaned = cleaned.replace("```json", "").replace("```", "").strip()
-    return cleaned
+    return (text or "").strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
 
-def _safe_json_loads(text: str, fallback: dict[str, Any]) -> dict[str, Any]:
+def _safe_json_loads(text: str, fallback: Any):
     try:
-        parsed = json.loads(_strip_json_fence(text))
-        if isinstance(parsed, dict):
-            return parsed
+        return json.loads(_strip_json_fence(text))
     except Exception:
-        pass
-    return fallback
+        return fallback
 
 
 def _is_transient_error(exc: Exception) -> bool:
     text = str(exc).lower()
-    transient_markers = [
-        "timeout",
-        "temporarily unavailable",
-        "connection reset",
-        "connection aborted",
-        "connection refused",
-        "rate limit",
-        "too many requests",
-        "service unavailable",
-        "429",
-        "502",
-        "503",
-        "504",
-    ]
-    return any(marker in text for marker in transient_markers)
+    return any(
+        marker in text
+        for marker in [
+            "timeout",
+            "temporarily unavailable",
+            "connection reset",
+            "connection aborted",
+            "connection refused",
+            "rate limit",
+            "too many requests",
+            "service unavailable",
+            "429",
+            "502",
+            "503",
+            "504",
+        ]
+    )
 
 
 def _run_with_retry(operation: str, fn):
@@ -161,23 +156,48 @@ def _run_with_retry(operation: str, fn):
                 raise
             delay = min(PIPELINE_RETRY_MAX_SEC, PIPELINE_RETRY_BASE_SEC * (2 ** (attempt - 1)))
             delay = min(PIPELINE_RETRY_MAX_SEC, delay + random.uniform(0.0, 0.25))
-            logger.warning(
-                "Transient failure during %s attempt=%d/%d delay=%.2fs error=%s: %s",
-                operation,
-                attempt,
-                attempts,
-                delay,
-                type(exc).__name__,
-                exc,
-            )
+            logger.warning("Transient failure during %s attempt=%d/%d delay=%.2fs error=%s", operation, attempt, attempts, delay, exc)
             time.sleep(delay)
-    raise last_exc  # pragma: no cover
+    raise last_exc
+
+
+def _source_subtype(document: IngestionDocument | Any) -> str:
+    source_path = getattr(document, "source_path", "")
+    source_document = getattr(document, "source_document", "")
+    lower = f"{source_path} {source_document}".lower()
+    suffix = Path(source_path or source_document).suffix.lower()
+    if "agenda" in lower and suffix == ".json":
+        return "nepalreforms_agenda_json"
+    if "rsp" in lower and suffix == ".csv":
+        return "rsp_manifesto_csv"
+    if suffix == ".pdf" and getattr(document, "source_type", "") == "manifesto":
+        return "manifesto_pdf"
+    return getattr(document, "source_type", "other")
 
 
 def plan_document_strategy(document: IngestionDocument) -> dict[str, Any]:
-    """
-    AI-first document strategy planner with deterministic fallback.
-    """
+    subtype = _source_subtype(document)
+    if subtype in {"nepalreforms_agenda_json", "rsp_manifesto_csv"}:
+        return {
+            "strategy": "deterministic",
+            "confidence": 0.98,
+            "requires_ocr": False,
+            "requires_vision": False,
+            "fields_to_extract": ["structured_records"],
+            "reason": f"Deterministic structured ingestion for {subtype}.",
+            "estimated_pages": 0,
+        }
+    if subtype == "manifesto_pdf":
+        return {
+            "strategy": "hybrid",
+            "confidence": 0.72,
+            "requires_ocr": True,
+            "requires_vision": False,
+            "fields_to_extract": ["manifesto_commitments"],
+            "reason": "Manifesto PDF requires text extraction + LLM parsing.",
+            "estimated_pages": 0,
+        }
+
     source_path = document.source_path
     page_count = 0
     sample_raw = 0
@@ -205,6 +225,7 @@ strategy, confidence, requires_ocr, requires_vision, fields_to_extract, reason.
 
 strategy must be one of: deterministic, ocr, vision, hybrid
 source_type: {document.source_type}
+source_subtype: {subtype}
 source_tier: {document.source_tier}
 source_document: {document.source_document}
 page_count: {page_count}
@@ -212,13 +233,8 @@ sample_raw_rows: {sample_raw}
 sample_garbled_pages: {sample_garbled}
 goal: maximize recall while preserving auditability.
 """
-    raw_response = router.query_reasoning(prompt)
-    ai_plan = _safe_json_loads(
-        raw_response,
-        fallback={},
-    )
-
-    if ai_plan:
+    ai_plan = _safe_json_loads(router.query_reasoning(prompt), fallback={})
+    if isinstance(ai_plan, dict):
         strategy = ai_plan.get("strategy", "")
         if strategy in {"deterministic", "ocr", "vision", "hybrid"}:
             return {
@@ -231,17 +247,15 @@ goal: maximize recall while preserving auditability.
                 "estimated_pages": page_count,
             }
 
-    # Deterministic fallback planning.
     sample_pages = max(1, min(5, page_count or 5))
     garbled_ratio = sample_garbled / sample_pages
     rows_per_sample_page = sample_raw / sample_pages
     if document.source_type == "lal_kitab":
+        strategy = "deterministic"
         if sample_raw == 0 or rows_per_sample_page < 1.0 or garbled_ratio >= 0.4:
             strategy = "vision"
         elif rows_per_sample_page < 3.0 or (page_count > 80 and garbled_ratio > 0.1):
             strategy = "hybrid"
-        else:
-            strategy = "deterministic"
         return {
             "strategy": strategy,
             "confidence": 0.62,
@@ -251,8 +265,6 @@ goal: maximize recall while preserving auditability.
             "reason": "Fallback heuristic planner selected strategy.",
             "estimated_pages": page_count,
         }
-
-    # Non LalKitab documents default to hybrid text/OCR.
     return {
         "strategy": "hybrid",
         "confidence": 0.55,
@@ -261,6 +273,49 @@ goal: maximize recall while preserving auditability.
         "fields_to_extract": ["entity_text", "claims", "evidence_refs"],
         "reason": "Default non-budget planner strategy.",
         "estimated_pages": page_count,
+    }
+
+
+def _manifesto_document_record(document: IngestionDocument | Any, *, owner_type: str, owner_name: str, language: str = "en") -> dict[str, Any]:
+    subtype = _source_subtype(document)
+    manifesto_document_id = stable_id("manifesto_document", owner_type, owner_name, getattr(document, "source_hash", ""), subtype)
+    validated = ManifestoDocumentRecord(
+        manifesto_document_id=manifesto_document_id,
+        owner_type=owner_type,
+        owner_name=owner_name,
+        name=getattr(document, "source_document", Path(getattr(document, "source_path", "document")).name),
+        language=language,
+        source_reference=getattr(document, "source_path", ""),
+    )
+    props = validated.model_dump()
+    return {
+        "entity_type": "ManifestoDocument",
+        "record_identity": validated.manifesto_document_id,
+        "confidence": 0.99,
+        "risk_flags": [],
+        "graph_payload": {
+            "id": validated.manifesto_document_id,
+            "key": "manifestoDocumentId",
+            "properties": props,
+        },
+        "graph_relations": [],
+        "raw_payload": props,
+        "source_type": getattr(document, "source_type", "manifesto"),
+        "source_subtype": subtype,
+        "source_document": getattr(document, "source_document", ""),
+        "source_path": getattr(document, "source_path", ""),
+        "source_hash": getattr(document, "source_hash", ""),
+    }
+
+
+def _make_related_node(*, relation_type: str, target_entity_type: str, target_key: str, target_id: str, target_properties: dict[str, Any], relationship_properties: dict[str, Any] | None = None) -> dict[str, Any]:
+    return {
+        "relation_type": relation_type,
+        "target_entity_type": target_entity_type,
+        "target_key": target_key,
+        "target_id": target_id,
+        "target_properties": target_properties,
+        "relationship_properties": relationship_properties or {},
     }
 
 
@@ -302,7 +357,6 @@ def _extract_lal_kitab(document: IngestionDocument, plan: dict[str, Any]) -> lis
             risk_flags.append("budget_anomaly")
         if proj.get("budget_source") == "vision":
             risk_flags.append("vision_budget")
-
         confidence = 0.90
         if proj.get("budget_source") == "vision":
             confidence -= 0.12
@@ -313,7 +367,6 @@ def _extract_lal_kitab(document: IngestionDocument, plan: dict[str, Any]) -> lis
         if proj.get("budget_anomaly_flag"):
             confidence -= 0.20
         confidence = max(0.05, min(0.99, confidence))
-
         record = {
             "entity_type": "Project",
             "source_type": "lal_kitab",
@@ -336,31 +389,219 @@ def _extract_lal_kitab(document: IngestionDocument, plan: dict[str, Any]) -> lis
             "raw_payload": proj,
         }
         record["fingerprint"] = compute_project_fingerprint(record)
+        record["record_identity"] = record["fingerprint"]
         output.append(record)
     return output
 
+def _extract_nepalreforms_agenda_json(document: IngestionDocument | Any) -> list[dict[str, Any]]:
+    raw = _safe_json_loads(Path(document.source_path).read_text(encoding="utf-8"), fallback={})
+    owner_name = raw.get("owner_name") or raw.get("organization") or "NepalReforms"
+    language = raw.get("language") or "en"
+    version_name = raw.get("version") or raw.get("name") or Path(document.source_path).stem
+    effective_from = raw.get("effective_from") or raw.get("published_at") or ""
+    items = raw.get("items") or raw.get("agenda_items") or []
+    records: list[dict[str, Any]] = []
 
-def _extract_manifesto_like(document: IngestionDocument) -> list[dict[str, Any]]:
+    manifesto_record = _manifesto_document_record(document, owner_type="civic_platform", owner_name=owner_name, language=language)
+    records.append(manifesto_record)
+
+    agenda_version_id = stable_id("agenda_version", manifesto_record["record_identity"], version_name, effective_from)
+    version = AgendaVersionRecord(
+        agenda_version_id=agenda_version_id,
+        name=version_name,
+        baseline_count=len(items),
+        effective_from=effective_from,
+        status=raw.get("status") or "baseline",
+        source_reference=document.source_path,
+    )
+    version_props = version.model_dump()
+    records.append(
+        {
+            "entity_type": "AgendaVersion",
+            "record_identity": version.agenda_version_id,
+            "confidence": 0.99,
+            "risk_flags": [],
+            "graph_payload": {"id": version.agenda_version_id, "key": "agendaVersionId", "properties": version_props},
+            "graph_relations": [
+                _make_related_node(
+                    relation_type="DOCUMENTED_IN",
+                    target_entity_type="ManifestoDocument",
+                    target_key="manifestoDocumentId",
+                    target_id=manifesto_record["record_identity"],
+                    target_properties=manifesto_record["graph_payload"]["properties"],
+                )
+            ],
+            "raw_payload": version_props,
+            "source_type": "manifesto",
+            "source_subtype": "nepalreforms_agenda_json",
+            "source_document": document.source_document,
+            "source_path": document.source_path,
+            "source_hash": document.source_hash,
+        }
+    )
+
+    for idx, item in enumerate(items, start=1):
+        source_item_id = str(item.get("source_item_id") or item.get("id") or idx)
+        title = item.get("title") or item.get("name") or f"Agenda Item {idx}"
+        agenda_item_id = stable_id("agenda_item", agenda_version_id, source_item_id, title)
+        validated = AgendaItemRecord(
+            agenda_item_id=agenda_item_id,
+            source_item_id=source_item_id,
+            title=title,
+            description=item.get("description") or item.get("summary") or "",
+            language=item.get("language") or language,
+            active=bool(item.get("active", True)),
+            source_reference=document.source_path,
+            category=item.get("category") or "",
+            priority=item.get("priority") or "",
+            timeline=item.get("timeline") or "",
+            legal_foundation=item.get("legal_foundation") or "",
+            performance_targets=list(item.get("performance_targets") or []),
+            problem=dict(item.get("problem") or {}),
+            solution=dict(item.get("solution") or {}),
+            implementation=dict(item.get("implementation") or {}),
+            real_world_evidence=dict(item.get("real_world_evidence") or {}),
+        )
+        props = validated.model_dump()
+        relations = [
+            _make_related_node(
+                relation_type="PART_OF_VERSION",
+                target_entity_type="AgendaVersion",
+                target_key="agendaVersionId",
+                target_id=agenda_version_id,
+                target_properties=version_props,
+            )
+        ]
+        if validated.category:
+            category_id = stable_id("policy_category", validated.category)
+            relations.append(_make_related_node(
+                relation_type="IN_CATEGORY",
+                target_entity_type="PolicyCategory",
+                target_key="policyCategoryId",
+                target_id=category_id,
+                target_properties={"policyCategoryId": category_id, "name": validated.category},
+            ))
+        if validated.timeline:
+            timeline_id = stable_id("timeline_target", validated.timeline)
+            relations.append(_make_related_node(
+                relation_type="HAS_TIMELINE_TARGET",
+                target_entity_type="TimelineTarget",
+                target_key="timelineTargetId",
+                target_id=timeline_id,
+                target_properties={"timelineTargetId": timeline_id, "name": validated.timeline},
+            ))
+        records.append(
+            {
+                "entity_type": "AgendaItem",
+                "record_identity": validated.agenda_item_id,
+                "confidence": 0.99,
+                "risk_flags": [],
+                "graph_payload": {"id": validated.agenda_item_id, "key": "agendaItemId", "properties": props},
+                "graph_relations": relations,
+                "raw_payload": props,
+                "source_type": "manifesto",
+                "source_subtype": "nepalreforms_agenda_json",
+                "source_document": document.source_document,
+                "source_path": document.source_path,
+                "source_hash": document.source_hash,
+            }
+        )
+    return records
+
+
+def _extract_rsp_manifesto_csv(document: IngestionDocument | Any) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    manifesto_record = _manifesto_document_record(document, owner_type="political_party", owner_name="Rastriya Swatantra Party", language="en")
+    records.append(manifesto_record)
+    with Path(document.source_path).open("r", encoding="utf-8-sig", newline="") as fh:
+        reader = csv.DictReader(fh)
+        for idx, row in enumerate(reader, start=1):
+            title = (row.get("Specific_Promise") or "").strip()
+            if not title:
+                continue
+            category = (row.get("Category") or "").strip()
+            timeline = (row.get("Target_Deadline") or "").strip()
+            responsible_entity = (row.get("Responsible_Entity") or "").strip()
+            promise_id = stable_id("political_promise", manifesto_record["record_identity"], idx, title)
+            validated = PoliticalPromiseRecord(
+                political_promise_id=promise_id,
+                title=title,
+                summary=title,
+                language="en",
+                promise_scope="national",
+                source_reference=document.source_path,
+                category=category,
+                timeline=timeline,
+                responsible_entity=responsible_entity,
+            )
+            props = validated.model_dump()
+            relations = [
+                _make_related_node(
+                    relation_type="PROMISED_IN",
+                    target_entity_type="ManifestoDocument",
+                    target_key="manifestoDocumentId",
+                    target_id=manifesto_record["record_identity"],
+                    target_properties=manifesto_record["graph_payload"]["properties"],
+                )
+            ]
+            if category:
+                category_id = stable_id("policy_category", category)
+                relations.append(_make_related_node(
+                    relation_type="IN_CATEGORY",
+                    target_entity_type="PolicyCategory",
+                    target_key="policyCategoryId",
+                    target_id=category_id,
+                    target_properties={"policyCategoryId": category_id, "name": category},
+                ))
+            if timeline:
+                timeline_id = stable_id("timeline_target", timeline)
+                relations.append(_make_related_node(
+                    relation_type="HAS_TIMELINE_TARGET",
+                    target_entity_type="TimelineTarget",
+                    target_key="timelineTargetId",
+                    target_id=timeline_id,
+                    target_properties={"timelineTargetId": timeline_id, "name": timeline},
+                ))
+            if responsible_entity:
+                entity_id = stable_id("responsible_entity", responsible_entity)
+                relations.append(_make_related_node(
+                    relation_type="ASSIGNED_TO",
+                    target_entity_type="ResponsibleEntity",
+                    target_key="responsibleEntityId",
+                    target_id=entity_id,
+                    target_properties={"responsibleEntityId": entity_id, "name": responsible_entity},
+                ))
+            records.append(
+                {
+                    "entity_type": "PoliticalPromise",
+                    "record_identity": validated.political_promise_id,
+                    "confidence": 0.99,
+                    "risk_flags": [],
+                    "graph_payload": {"id": validated.political_promise_id, "key": "politicalPromiseId", "properties": props},
+                    "graph_relations": relations,
+                    "raw_payload": props,
+                    "source_type": "manifesto",
+                    "source_subtype": "rsp_manifesto_csv",
+                    "source_document": document.source_document,
+                    "source_path": document.source_path,
+                    "source_hash": document.source_hash,
+                }
+            )
+    return records
+
+def _extract_manifesto_pdf(document: IngestionDocument | Any) -> list[dict[str, Any]]:
     text = ""
     source_path = Path(document.source_path)
     if source_path.suffix.lower() == ".pdf":
         try:
             with pdfplumber.open(str(source_path)) as pdf:
-                chunks = []
-                for page in pdf.pages[: min(40, len(pdf.pages))]:
-                    chunks.append(page.extract_text() or "")
-                text = "\n".join(chunks)
+                text = "\n".join((page.extract_text() or "") for page in pdf.pages[: min(40, len(pdf.pages))])
         except Exception:
             text = ""
     else:
-        try:
-            text = source_path.read_text(encoding="utf-8", errors="ignore")
-        except Exception:
-            text = ""
-
+        text = source_path.read_text(encoding="utf-8", errors="ignore")
     if not text.strip():
         return []
-
     preprocessed = ensure_english_text(text)
     translation_meta = {
         "source_language": preprocessed.get("source_language", "unknown"),
@@ -373,111 +614,99 @@ def _extract_manifesto_like(document: IngestionDocument) -> list[dict[str, Any]]
         "translation_error": preprocessed.get("translation_error", ""),
     }
     _merge_document_extra_metadata(document, translation_meta)
-    logger.info(
-        json.dumps(
-            {
-                "event": "language_preprocessed",
-                "document_id": str(document.id),
-                "source_document": document.source_document,
-                **translation_meta,
-            }
-        )
-    )
-
     if not preprocessed.get("success"):
-        raise LanguagePreprocessError(
-            "translation_failed_pre_ingestion",
-            {
-                **translation_meta,
-                "text_preview": text[:700],
-            },
-        )
-
+        raise LanguagePreprocessError("translation_failed_pre_ingestion", {**translation_meta, "text_preview": text[:700]})
     normalized_text = preprocessed.get("translated_text", "") or text
-
-    prompt = f"""
-Extract manifesto-style commitments as JSON array with keys:
-  promise_text, category, actor, timeline, confidence
-Return strict JSON only.
-Source excerpt:
-{normalized_text[:18000]}
-"""
-    response = router.query_reasoning(prompt)
-    parsed = _safe_json_loads(response, fallback={"items": []})
+    parsed = _safe_json_loads(
+        router.query_reasoning(
+            f"Extract manifesto-style commitments as JSON array with keys: promise_text, category, actor, timeline, confidence. Return strict JSON only.\nSource excerpt:\n{normalized_text[:18000]}"
+        ),
+        fallback={"items": []},
+    )
     items = parsed if isinstance(parsed, list) else parsed.get("items", [])
     if not isinstance(items, list):
         items = []
-
-    output = []
-    for item in items:
+    records = []
+    manifesto_record = _manifesto_document_record(document, owner_type="political_party", owner_name=Path(document.source_document).stem, language="en")
+    records.append(manifesto_record)
+    for idx, item in enumerate(items, start=1):
         if not isinstance(item, dict):
             continue
         try:
             validated = ManifestoCommitment(**item)
         except Exception:
             continue
-        promise_text = validated.promise_text.strip()
-        confidence = float(validated.confidence)
-        output.append(
+        promise_id = stable_id("political_promise", manifesto_record["record_identity"], idx, validated.promise_text)
+        promise = PoliticalPromiseRecord(
+            political_promise_id=promise_id,
+            title=validated.promise_text,
+            summary=validated.promise_text,
+            language="en",
+            promise_scope="national",
+            source_reference=document.source_path,
+            category=validated.category.strip(),
+            timeline=validated.timeline.strip(),
+            responsible_entity=validated.actor.strip(),
+        )
+        risk_flags = [] if validated.confidence >= 0.7 else ["low_confidence"]
+        records.append(
             {
-                "entity_type": "ManifestoPromise",
+                "entity_type": "PoliticalPromise",
+                "record_identity": promise.political_promise_id,
+                "confidence": max(0.05, min(0.99, float(validated.confidence))),
+                "risk_flags": risk_flags,
+                "graph_payload": {"id": promise.political_promise_id, "key": "politicalPromiseId", "properties": promise.model_dump()},
+                "graph_relations": [
+                    _make_related_node(
+                        relation_type="PROMISED_IN",
+                        target_entity_type="ManifestoDocument",
+                        target_key="manifestoDocumentId",
+                        target_id=manifesto_record["record_identity"],
+                        target_properties=manifesto_record["graph_payload"]["properties"],
+                    )
+                ],
+                "raw_payload": item,
                 "source_type": "manifesto",
-                "promise_text": promise_text,
-                "category": validated.category.strip(),
-                "actor": validated.actor.strip(),
-                "timeline": validated.timeline.strip(),
-                "confidence": max(0.05, min(0.99, confidence)),
-                "risk_flags": [] if confidence >= 0.7 else ["low_confidence"],
-                "source_language": translation_meta.get("source_language", "unknown"),
-                "translation_applied": translation_meta.get("translation_applied", False),
-                "translation_confidence": translation_meta.get("translation_confidence", 0.0),
-                "translation_method": translation_meta.get("translation_method", ""),
+                "source_subtype": "manifesto_pdf",
                 "source_document": document.source_document,
                 "source_path": document.source_path,
                 "source_hash": document.source_hash,
-                "raw_payload": item,
             }
         )
-    return output
+    return records
 
 
 def extract_records(document: IngestionDocument, plan: dict[str, Any]) -> list[dict[str, Any]]:
+    subtype = _source_subtype(document)
     if document.source_type == "lal_kitab":
         return _extract_lal_kitab(document, plan)
+    if subtype == "nepalreforms_agenda_json":
+        return _extract_nepalreforms_agenda_json(document)
+    if subtype == "rsp_manifesto_csv":
+        return _extract_rsp_manifesto_csv(document)
+    if subtype == "manifesto_pdf":
+        return _extract_manifesto_pdf(document)
     if document.source_type in {"manifesto", "media", "citizen", "other"}:
-        return _extract_manifesto_like(document)
+        return _extract_manifesto_pdf(document)
     return []
 
 
-def _hold_for_review(
-    *,
-    job: IngestionJob,
-    document: IngestionDocument,
-    record: dict[str, Any],
-    reason: str,
-) -> None:
-    ReviewQueueItem.objects.create(
-        **_review_item_kwargs(job=job, document=document, record=record, reason=reason)
-    )
+def _hold_for_review(*, job: IngestionJob, document: IngestionDocument, record: dict[str, Any], reason: str) -> None:
+    ReviewQueueItem.objects.create(**_review_item_kwargs(job=job, document=document, record=record, reason=reason))
 
 
-def _review_item_kwargs(
-    *,
-    job: IngestionJob,
-    document: IngestionDocument,
-    record: dict[str, Any],
-    reason: str,
-) -> dict[str, Any]:
+def _review_item_kwargs(*, job: IngestionJob, document: IngestionDocument, record: dict[str, Any], reason: str) -> dict[str, Any]:
+    record_identity = record.get("record_identity") or record.get("fingerprint") or record.get("source_hash", "")
     return {
         "job": job,
         "document": document,
         "status": "pending_review",
         "reason": reason,
-        "risk_level": "high" if record.get("confidence", 0.0) < 0.45 else "medium",
+        "risk_level": "high" if record.get("confidence", 0.0) < 0.45 or any(flag in {"translation_uncertain", "budget_anomaly"} for flag in record.get("risk_flags", [])) else "medium",
         "confidence": float(record.get("confidence", 0.0)),
         "entity_type": record.get("entity_type", "Unknown"),
-        "record_key": f"{document.source_document}:{record.get('page_num', 0)}",
-        "fingerprint": record.get("fingerprint", "") or record.get("source_hash", ""),
+        "record_key": str(record_identity or f"{document.source_document}:{record.get('page_num', 0)}"),
+        "fingerprint": str(record_identity or ""),
         "proposed_payload": record,
         "provenance": {
             "source_path": document.source_path,
@@ -488,18 +717,10 @@ def _review_item_kwargs(
     }
 
 
-def _hold_many_for_review(
-    *,
-    job: IngestionJob,
-    document: IngestionDocument,
-    review_records: list[tuple[dict[str, Any], str]],
-) -> int:
+def _hold_many_for_review(*, job: IngestionJob, document: IngestionDocument, review_records: list[tuple[dict[str, Any], str]]) -> int:
     if not review_records:
         return 0
-    rows = [
-        ReviewQueueItem(**_review_item_kwargs(job=job, document=document, record=record, reason=reason))
-        for record, reason in review_records
-    ]
+    rows = [ReviewQueueItem(**_review_item_kwargs(job=job, document=document, record=record, reason=reason)) for record, reason in review_records]
     ReviewQueueItem.objects.bulk_create(rows, batch_size=500)
     return len(rows)
 
@@ -517,13 +738,11 @@ def _record_failure(document: IngestionDocument, reason: str, detail: str, stage
         extra_metadata={"job_id": str(document.job_id), "document_id": str(document.id)},
     )
 
-
 def _process_document(document_id: str, publish_threshold: float) -> dict[str, Any]:
     close_old_connections()
     document = IngestionDocument.objects.select_related("job").get(id=document_id)
     job = document.job
     now = timezone.now()
-
     document.status = "planning"
     document.attempt_count += 1
     document.last_attempt_at = now
@@ -540,22 +759,6 @@ def _process_document(document_id: str, publish_threshold: float) -> dict[str, A
     if not document.fiscal_year:
         document.fiscal_year = infer_fiscal_year(document.source_document)
     document.save()
-    scope = f"{document.gov_level or 'unknown'}"
-    if document.province_name:
-        scope = f"{scope}/{document.province_name}"
-    logger.info(
-        json.dumps(
-            {
-                "event": "document_started",
-                "job_id": str(job.id),
-                "document_id": str(document.id),
-                "source_type": document.source_type,
-                "scope": scope,
-                "source_document": document.source_document,
-                "source_path": document.source_path,
-            }
-        )
-    )
 
     if not Path(document.source_path).exists():
         detail = "Source file not found."
@@ -566,187 +769,92 @@ def _process_document(document_id: str, publish_threshold: float) -> dict[str, A
         return {"published": 0, "held": 0, "failed": True}
 
     plan = plan_document_strategy(document)
+    subtype = _source_subtype(document)
+    schema_map = {
+        "lal_kitab": "budget_project_v1",
+        "nepalreforms_agenda_json": "nepalreforms_agenda_v1",
+        "rsp_manifesto_csv": "rsp_manifesto_csv_v1",
+        "manifesto_pdf": "manifesto_like_v1",
+    }
     document.plan_strategy = plan.get("strategy", "")
     document.plan_confidence = float(plan.get("confidence", 0.0))
     document.plan_reason = plan.get("reason", "")
     document.requires_ocr = bool(plan.get("requires_ocr", False))
     document.requires_vision = bool(plan.get("requires_vision", False))
     document.estimated_pages = int(plan.get("estimated_pages", 0))
-    document.payload_schema = "budget_project_v1" if document.source_type == "lal_kitab" else "evidence_claim_v1"
+    document.payload_schema = schema_map.get(subtype, "manifesto_like_v1")
     document.status = "extracting"
     document.save()
-    logger.info(
-        json.dumps(
-            {
-                "event": "document_planned",
-                "job_id": str(job.id),
-                "document_id": str(document.id),
-                "source_document": document.source_document,
-                "strategy": document.plan_strategy,
-                "requires_ocr": document.requires_ocr,
-                "requires_vision": document.requires_vision,
-                "estimated_pages": document.estimated_pages,
-                "plan_confidence": document.plan_confidence,
-            }
-        )
-    )
 
     try:
-        records = _run_with_retry(
-            operation="extract_records",
-            fn=lambda: extract_records(document, plan),
-        )
+        records = _run_with_retry("extract_records", lambda: extract_records(document, plan))
     except LanguagePreprocessError as exc:
         detail = exc.metadata.get("translation_error", "") or exc.reason
-        _hold_for_review(
-            job=job,
-            document=document,
-            record={
-                "entity_type": "Document",
-                "confidence": 0.0,
-                "risk_flags": ["translation_failed_pre_ingestion"],
-                "source_document": document.source_document,
-                "source_path": document.source_path,
-                "source_hash": document.source_hash,
-                "raw_payload": exc.metadata,
-            },
-            reason=exc.reason,
-        )
-        _record_failure(
-            document,
-            reason=exc.reason,
-            detail=detail,
-            stage="language_preprocess",
-        )
+        _hold_for_review(job=job, document=document, record={"entity_type": "Document", "confidence": 0.0, "risk_flags": ["translation_failed_pre_ingestion"], "record_identity": document.source_hash or str(document.id), "source_document": document.source_document, "source_path": document.source_path, "source_hash": document.source_hash, "raw_payload": exc.metadata}, reason=exc.reason)
+        _record_failure(document, reason=exc.reason, detail=detail, stage="language_preprocess")
         document.extracted_count = 0
         document.published_count = 0
         document.held_count = max(document.held_count, 1)
         document.status = "review_hold"
         document.error_detail = f"{exc.reason}: {detail}"
-        document.save(
-            update_fields=[
-                "extracted_count",
-                "published_count",
-                "held_count",
-                "status",
-                "error_detail",
-                "updated_at",
-            ]
-        )
-        logger.warning(
-            json.dumps(
-                {
-                    "event": "language_preprocess_failed",
-                    "job_id": str(job.id),
-                    "document_id": str(document.id),
-                    "source_document": document.source_document,
-                    "reason": exc.reason,
-                    "translation_error": detail,
-                }
-            )
-        )
+        document.save(update_fields=["extracted_count", "published_count", "held_count", "status", "error_detail", "updated_at"])
         return {"published": 0, "held": 1, "failed": False}
 
     document.extracted_count = len(records)
     document.status = "publishing"
     document.save(update_fields=["extracted_count", "status", "updated_at"])
-    logger.info(
-        json.dumps(
-            {
-                "event": "document_extracted",
-                "job_id": str(job.id),
-                "document_id": str(document.id),
-                "source_document": document.source_document,
-                "extracted_count": len(records),
-            }
-        )
-    )
-
     ensure_smart_constraints()
 
     published = 0
     held = 0
-    to_publish: list[dict[str, Any]] = []
     to_hold: list[tuple[dict[str, Any], str]] = []
+    project_records: list[dict[str, Any]] = []
+    direct_records: list[dict[str, Any]] = []
     for record in records:
         confidence = float(record.get("confidence", 0.0))
         risk_flags = record.get("risk_flags", [])
-        high_risk_flags = {"translation_uncertain", "budget_anomaly"}
-        high_risk = any(flag in high_risk_flags for flag in risk_flags)
-        should_hold = confidence < publish_threshold or high_risk
-        if should_hold:
-            hold_reason = "low_confidence_or_risk_flags"
-            if risk_flags:
-                hold_reason = f"risk:{','.join(risk_flags)}"
-            to_hold.append((record, hold_reason))
+        high_risk = any(flag in {"translation_uncertain", "budget_anomaly"} for flag in risk_flags)
+        if confidence < publish_threshold or high_risk:
+            reason = f"risk:{','.join(risk_flags)}" if risk_flags else "low_confidence_or_risk_flags"
+            to_hold.append((record, reason))
             continue
-
         if record.get("entity_type") == "Project":
-            to_publish.append(record)
+            project_records.append(record)
         else:
-            # Manifesto/media/citizen entities default to review hold in V1.
-            to_hold.append((record, "unsupported_direct_entity_publish_v1"))
+            direct_records.append(record)
 
-    if to_publish:
-        batch_result = _run_with_retry(
-            operation="neo4j_batch_publish",
-            fn=lambda: publish_project_records_batch(to_publish, batch_size=NEO4J_BATCH_SIZE),
-        )
-        published_fingerprints = set(batch_result.get("published_fingerprints", []))
+    if project_records:
+        batch_result = _run_with_retry("neo4j_batch_publish", lambda: publish_records_batch(project_records, batch_size=NEO4J_BATCH_SIZE))
+        published_ids = set(batch_result.get("published_ids", []) or batch_result.get("published_fingerprints", []))
         published += int(batch_result.get("ok_count", 0))
-        for record in to_publish:
-            fingerprint = record.get("fingerprint", "") or compute_project_fingerprint(record)
-            if fingerprint not in published_fingerprints:
+        for record in project_records:
+            identity = record.get("record_identity") or record.get("fingerprint") or compute_project_fingerprint(record)
+            if identity not in published_ids:
                 to_hold.append((record, "neo4j_publish_failed"))
 
+    for record in direct_records:
+        try:
+            result = _run_with_retry("neo4j_publish", lambda rec=record: publish_record(rec))
+            if result.get("ok", True):
+                published += 1
+            else:
+                to_hold.append((record, "neo4j_publish_failed"))
+        except Exception:
+            to_hold.append((record, "neo4j_publish_failed"))
+
     held += _hold_many_for_review(job=job, document=document, review_records=to_hold)
-
     if records:
-        budget_sources: dict[str, int] = {}
-        for record in records:
-            source_key = str(record.get("budget_source", "unknown"))
-            budget_sources[source_key] = budget_sources.get(source_key, 0) + 1
-        _merge_document_extra_metadata(
-            document,
-            {
-                "record_budget_sources": budget_sources,
-                "pipeline_retries_config": {
-                    "max_retries": PIPELINE_MAX_RETRIES,
-                    "retry_base_sec": PIPELINE_RETRY_BASE_SEC,
-                    "retry_max_sec": PIPELINE_RETRY_MAX_SEC,
-                },
-            },
-        )
-
+        _merge_document_extra_metadata(document, {"source_subtype": subtype, "pipeline_retries_config": {"max_retries": PIPELINE_MAX_RETRIES, "retry_base_sec": PIPELINE_RETRY_BASE_SEC, "retry_max_sec": PIPELINE_RETRY_MAX_SEC}})
     document.published_count = published
     document.held_count = held
     if published > 0 and held == 0:
         document.status = "published"
-    elif published > 0 and held > 0:
-        document.status = "review_hold"
-    elif published == 0 and held > 0:
+    elif held > 0:
         document.status = "review_hold"
     else:
         document.status = "failed"
-        _record_failure(
-            document,
-            reason="no_records_published",
-            detail="No records could be published and no review items were created.",
-        )
+        _record_failure(document, reason="no_records_published", detail="No records could be published and no review items were created.")
     document.save()
-    logger.info(
-        json.dumps(
-            {
-                "event": "document_finished",
-                "job_id": str(job.id),
-                "document_id": str(document.id),
-                "source_document": document.source_document,
-                "status": document.status,
-                "published_count": published,
-                "held_count": held,
-            }
-        )
-    )
     return {"published": published, "held": held, "failed": document.status == "failed"}
 
 
@@ -770,13 +878,11 @@ def refresh_job_rollup(job: IngestionJob) -> IngestionJob:
     published_count = docs.aggregate(total=Sum("published_count")).get("total") or 0
     held_count = docs.aggregate(total=Sum("held_count")).get("total") or 0
     failed_count = docs.filter(status="failed").count()
-
     job.source_count = source_count
     job.processed_count = processed_count
     job.published_count = int(published_count)
     job.held_count = int(held_count)
     job.failed_count = failed_count
-
     has_pending = docs.filter(status__in=["queued", "planning", "extracting", "publishing"]).exists()
     if has_pending:
         job.status = "running"
@@ -788,7 +894,6 @@ def refresh_job_rollup(job: IngestionJob) -> IngestionJob:
         job.status = "completed"
     else:
         job.status = "dead_letter"
-
     if not has_pending:
         job.completed_at = timezone.now()
     job.save()
@@ -800,39 +905,14 @@ def run_job(job: IngestionJob, *, max_workers: int = 4, adaptive: bool = True, p
         job.started_at = timezone.now()
     job.status = "running"
     job.save(update_fields=["started_at", "status"])
-
     docs = list(job.documents.filter(status="queued").values_list("id", flat=True))
     if not docs:
         job = refresh_job_rollup(job)
-        return {
-            "job_id": str(job.id),
-            "status": job.status,
-            "processed": 0,
-            "published_count": job.published_count,
-            "held_count": job.held_count,
-            "failed_count": job.failed_count,
-        }
-
+        return {"job_id": str(job.id), "status": job.status, "processed": 0, "published_count": job.published_count, "held_count": job.held_count, "failed_count": job.failed_count}
     workers = _adaptive_worker_count(len(docs), max_workers, adaptive)
-    logger.info(
-        json.dumps(
-            {
-                "event": "job_started",
-                "job_id": str(job.id),
-                "job_name": job.name,
-                "queued_documents": len(docs),
-                "workers_used": workers,
-                "adaptive": adaptive,
-                "publish_threshold": publish_threshold,
-            }
-        )
-    )
     results = []
     with ThreadPoolExecutor(max_workers=workers, thread_name_prefix="smart-ingest") as executor:
-        future_map = {
-            executor.submit(_process_document, str(doc_id), publish_threshold): doc_id
-            for doc_id in docs
-        }
+        future_map = {executor.submit(_process_document, str(doc_id), publish_threshold): doc_id for doc_id in docs}
         for future in as_completed(future_map):
             doc_id = future_map[future]
             try:
@@ -843,22 +923,7 @@ def run_job(job: IngestionJob, *, max_workers: int = 4, adaptive: bool = True, p
                 document.status = "failed"
                 document.error_detail = f"{type(exc).__name__}: {exc}"
                 document.save(update_fields=["status", "error_detail", "updated_at"])
-                _record_failure(
-                    document,
-                    reason="unhandled_exception",
-                    detail=f"{type(exc).__name__}: {exc}",
-                )
+                _record_failure(document, reason="unhandled_exception", detail=f"{type(exc).__name__}: {exc}")
                 results.append({"published": 0, "held": 0, "failed": True})
-
     job = refresh_job_rollup(job)
-    summary = {
-        "job_id": str(job.id),
-        "status": job.status,
-        "workers_used": workers,
-        "processed": len(results),
-        "published_count": job.published_count,
-        "held_count": job.held_count,
-        "failed_count": job.failed_count,
-    }
-    logger.info(json.dumps({"event": "job_finished", **summary}))
-    return summary
+    return {"job_id": str(job.id), "status": job.status, "workers_used": workers, "processed": len(results), "published_count": job.published_count, "held_count": job.held_count, "failed_count": job.failed_count}
