@@ -24,6 +24,7 @@ def test_detect_source_type():
 def test_source_subtype_detection():
     assert engine._source_subtype(SimpleNamespace(source_path="C:/x/nepalreforms_agenda.json", source_document="nepalreforms_agenda.json", source_type="manifesto")) == "nepalreforms_agenda_json"
     assert engine._source_subtype(SimpleNamespace(source_path="C:/x/RSPdocs/rsp_commitments.csv", source_document="rsp_commitments.csv", source_type="manifesto")) == "rsp_manifesto_csv"
+    assert engine._source_subtype(SimpleNamespace(source_path="C:/x/RSPdocs/???? ???? .pdf", source_document="???? ???? .pdf", source_type="manifesto")) == "rsp_bacha_patra_pdf"
     assert engine._source_subtype(SimpleNamespace(source_path="C:/x/RSP_manifesto_2027.pdf", source_document="RSP_manifesto_2027.pdf", source_type="manifesto")) == "manifesto_pdf"
 
 
@@ -124,3 +125,142 @@ def test_run_with_retry_retries_transient(monkeypatch):
     result = engine._run_with_retry("test_op", flaky)
     assert result == "ok"
     assert attempts["n"] == 3
+
+@pytest.mark.django_db(transaction=True)
+def test_run_job_publishes_deterministic_agenda_records(monkeypatch):
+    from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
+
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        agenda_path = Path(tmp_dir) / "nepalreforms_agenda.json"
+        agenda_path.write_text(
+            '{"organization":"NepalReforms","version":"2026 Baseline","effective_from":"2026-01-01","items":[{"id":"A-1","title":"Fix procurement transparency","description":"Open budgets and tenders","category":"Governance","timeline":"2026 Q2","priority":"high"}]}',
+            encoding="utf-8",
+        )
+        job = IngestionJob.objects.create(name="agenda-job", status="queued")
+        document = IngestionDocument.objects.create(
+            job=job,
+            source_path=str(agenda_path),
+            source_document=agenda_path.name,
+            source_hash="hash-agenda",
+            source_type="manifesto",
+            status="queued",
+        )
+
+        published = []
+        monkeypatch.setattr(engine, "ensure_smart_constraints", lambda: None)
+        monkeypatch.setattr(engine, "publish_record", lambda record: published.append(record["entity_type"]) or {"ok": True, "node_id": record["record_identity"]})
+        monkeypatch.setattr(engine, "publish_records_batch", lambda records, batch_size=200: {"ok_count": 0, "published_ids": [], "failed_ids": [], "errors": []})
+
+        result = engine.run_job(job, max_workers=1, adaptive=False, publish_threshold=0.75)
+
+        document.refresh_from_db()
+        job.refresh_from_db()
+        assert result["status"] == "completed"
+        assert result["processed"] == 1
+        assert result["published_count"] == 3
+        assert result["held_count"] == 0
+        assert published == ["ManifestoDocument", "AgendaVersion", "AgendaItem"]
+        assert document.status == "published"
+        assert document.payload_schema == "nepalreforms_agenda_v1"
+        assert document.extracted_count == 3
+        assert document.published_count == 3
+        assert document.held_count == 0
+        assert document.extra_metadata["source_subtype"] == "nepalreforms_agenda_json"
+        assert job.documents.count() == 1
+        assert ReviewQueueItem.objects.count() == 0
+
+
+@pytest.mark.django_db(transaction=True)
+def test_run_job_holds_low_confidence_non_project_records(monkeypatch):
+    from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
+
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        csv_path = Path(tmp_dir) / "rsp_manifesto.csv"
+        csv_path.write_text(
+            "Category,Specific_Promise,Target_Deadline,Responsible_Entity\nGovernance,Publish all budget decisions within 48 hours,100 Days,Prime Minister's Office\n",
+            encoding="utf-8",
+        )
+        job = IngestionJob.objects.create(name="rsp-job", status="queued")
+        document = IngestionDocument.objects.create(
+            job=job,
+            source_path=str(csv_path),
+            source_document=csv_path.name,
+            source_hash="hash-rsp",
+            source_type="manifesto",
+            status="queued",
+        )
+
+        monkeypatch.setattr(engine, "ensure_smart_constraints", lambda: None)
+        monkeypatch.setattr(engine, "publish_record", lambda record: {"ok": True, "node_id": record["record_identity"]})
+        monkeypatch.setattr(engine, "publish_records_batch", lambda records, batch_size=200: {"ok_count": 0, "published_ids": [], "failed_ids": [], "errors": []})
+
+        result = engine.run_job(job, max_workers=1, adaptive=False, publish_threshold=1.0)
+
+        document.refresh_from_db()
+        job.refresh_from_db()
+        review_items = list(ReviewQueueItem.objects.order_by("created_at"))
+        assert result["status"] == "review_hold"
+        assert result["processed"] == 1
+        assert result["published_count"] == 0
+        assert result["held_count"] == 2
+        assert document.status == "review_hold"
+        assert document.payload_schema == "rsp_manifesto_csv_v1"
+        assert document.extracted_count == 2
+        assert document.published_count == 0
+        assert document.held_count == 2
+        assert len(review_items) == 2
+        assert {item.entity_type for item in review_items} == {"ManifestoDocument", "PoliticalPromise"}
+        assert all(item.status == "pending_review" for item in review_items)
+
+
+@pytest.mark.django_db(transaction=True)
+def test_run_job_holds_rsp_bacha_patra_for_review(monkeypatch):
+    from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
+
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        pdf_path = Path(tmp_dir) / "bacha patra.pdf"
+        pdf_path.write_bytes(b"%PDF-1.4\n%stub\n")
+        job = IngestionJob.objects.create(name="bacha-job", status="queued")
+        document = IngestionDocument.objects.create(
+            job=job,
+            source_path=str(pdf_path),
+            source_document=pdf_path.name,
+            source_hash="hash-bacha",
+            source_type="manifesto",
+            status="queued",
+        )
+
+        monkeypatch.setattr(engine, "ensure_smart_constraints", lambda: None)
+        monkeypatch.setattr(engine, "publish_record", lambda record: {"ok": True, "node_id": record["record_identity"]})
+        monkeypatch.setattr(engine, "publish_records_batch", lambda records, batch_size=200: {"ok_count": 0, "published_ids": [], "failed_ids": [], "errors": []})
+        monkeypatch.setattr(engine, "_extract_rsp_bacha_patra_pdf", lambda _doc: [{
+            "entity_type": "ManifestoDocument",
+            "record_identity": "bacha:doc:1",
+            "confidence": 0.40,
+            "risk_flags": ["source_native_scanned_manifesto", "ocr_review_required"],
+            "graph_payload": {"id": "bacha:doc:1", "key": "manifestoDocumentId", "properties": {"manifesto_document_id": "bacha:doc:1", "document_kind": "bacha_patra", "source_reference": str(pdf_path)}},
+            "graph_relations": [],
+            "raw_payload": {"document_kind": "bacha_patra"},
+            "source_type": "manifesto",
+            "source_subtype": "rsp_bacha_patra_pdf",
+            "source_document": pdf_path.name,
+            "source_path": str(pdf_path),
+            "source_hash": "hash-bacha",
+        }])
+
+        result = engine.run_job(job, max_workers=1, adaptive=False, publish_threshold=0.75)
+
+        document.refresh_from_db()
+        review_items = list(ReviewQueueItem.objects.order_by("created_at"))
+        assert result["status"] == "review_hold"
+        assert result["processed"] == 1
+        assert result["published_count"] == 0
+        assert result["held_count"] == 1
+        assert document.status == "review_hold"
+        assert document.payload_schema == "rsp_bacha_patra_v1"
+        assert document.extracted_count == 1
+        assert document.published_count == 0
+        assert document.held_count == 1
+        assert len(review_items) == 1
+        assert review_items[0].entity_type == "ManifestoDocument"
+        assert review_items[0].proposed_payload["source_subtype"] == "rsp_bacha_patra_pdf"

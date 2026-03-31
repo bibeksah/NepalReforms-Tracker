@@ -166,11 +166,14 @@ def _source_subtype(document: IngestionDocument | Any) -> str:
     source_document = getattr(document, "source_document", "")
     lower = f"{source_path} {source_document}".lower()
     suffix = Path(source_path or source_document).suffix.lower()
+    source_type = getattr(document, "source_type", "")
     if "agenda" in lower and suffix == ".json":
         return "nepalreforms_agenda_json"
     if "rsp" in lower and suffix == ".csv":
         return "rsp_manifesto_csv"
-    if suffix == ".pdf" and getattr(document, "source_type", "") == "manifesto":
+    if suffix == ".pdf" and source_type == "manifesto":
+        if any(marker in lower for marker in ["????", "???? ????", "bacha patra", "bacha_patra", "vacha patra", "vacha_patra"]):
+            return "rsp_bacha_patra_pdf"
         return "manifesto_pdf"
     return getattr(document, "source_type", "other")
 
@@ -185,6 +188,16 @@ def plan_document_strategy(document: IngestionDocument) -> dict[str, Any]:
             "requires_vision": False,
             "fields_to_extract": ["structured_records"],
             "reason": f"Deterministic structured ingestion for {subtype}.",
+            "estimated_pages": 0,
+        }
+    if subtype == "rsp_bacha_patra_pdf":
+        return {
+            "strategy": "hybrid",
+            "confidence": 0.45,
+            "requires_ocr": True,
+            "requires_vision": False,
+            "fields_to_extract": ["manifesto_document"],
+            "reason": "RSP bacha patra is a source-native scanned manifesto PDF; ingest document provenance deterministically and hold for OCR/review.",
             "estimated_pages": 0,
         }
     if subtype == "manifesto_pdf":
@@ -589,6 +602,40 @@ def _extract_rsp_manifesto_csv(document: IngestionDocument | Any) -> list[dict[s
             )
     return records
 
+def _extract_rsp_bacha_patra_pdf(document: IngestionDocument | Any) -> list[dict[str, Any]]:
+    page_count = 0
+    source_path = Path(document.source_path)
+    try:
+        import fitz  # type: ignore
+        with fitz.open(str(source_path)) as pdf:
+            page_count = pdf.page_count
+            embedded_text_chars = sum(len(pdf.load_page(i).get_text("text") or "") for i in range(min(3, pdf.page_count)))
+    except Exception:
+        embedded_text_chars = 0
+    record = _manifesto_document_record(document, owner_type="political_party", owner_name="Rastriya Swatantra Party", language="ne")
+    record["confidence"] = 0.40 if embedded_text_chars == 0 else 0.55
+    record["risk_flags"] = ["source_native_scanned_manifesto", "ocr_review_required"]
+    record["source_subtype"] = "rsp_bacha_patra_pdf"
+    raw_payload = dict(record.get("raw_payload") or {})
+    raw_payload.update({
+        "document_kind": "bacha_patra",
+        "page_count": page_count,
+        "embedded_text_chars_first_pages": embedded_text_chars,
+        "extraction_mode": "document_provenance_only",
+    })
+    record["raw_payload"] = raw_payload
+    graph_payload = dict(record.get("graph_payload") or {})
+    graph_properties = dict(graph_payload.get("properties") or {})
+    graph_properties.update({
+        "document_kind": "bacha_patra",
+        "page_count": page_count,
+        "source_subtype": "rsp_bacha_patra_pdf",
+    })
+    graph_payload["properties"] = graph_properties
+    record["graph_payload"] = graph_payload
+    return [record]
+
+
 def _extract_manifesto_pdf(document: IngestionDocument | Any) -> list[dict[str, Any]]:
     text = ""
     source_path = Path(document.source_path)
@@ -684,6 +731,8 @@ def extract_records(document: IngestionDocument, plan: dict[str, Any]) -> list[d
         return _extract_nepalreforms_agenda_json(document)
     if subtype == "rsp_manifesto_csv":
         return _extract_rsp_manifesto_csv(document)
+    if subtype == "rsp_bacha_patra_pdf":
+        return _extract_rsp_bacha_patra_pdf(document)
     if subtype == "manifesto_pdf":
         return _extract_manifesto_pdf(document)
     if document.source_type in {"manifesto", "media", "citizen", "other"}:
@@ -774,6 +823,7 @@ def _process_document(document_id: str, publish_threshold: float) -> dict[str, A
         "lal_kitab": "budget_project_v1",
         "nepalreforms_agenda_json": "nepalreforms_agenda_v1",
         "rsp_manifesto_csv": "rsp_manifesto_csv_v1",
+        "rsp_bacha_patra_pdf": "rsp_bacha_patra_v1",
         "manifesto_pdf": "manifesto_like_v1",
     }
     document.plan_strategy = plan.get("strategy", "")
