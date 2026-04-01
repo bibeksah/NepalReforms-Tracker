@@ -9,6 +9,16 @@ from tracker.agents.smart_neo4j_publisher import ensure_smart_constraints, publi
 from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
 
 
+def _is_rsp_bacha_patra_provenance_only(payload: dict) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    if payload.get("source_subtype") != "rsp_bacha_patra_pdf":
+        return False
+    raw_payload = payload.get("raw_payload") or {}
+    workflow = raw_payload.get("ocr_workflow") or {}
+    return raw_payload.get("extraction_mode") == "document_provenance_only" and workflow.get("structured_promises_status") == "not_extracted"
+
+
 class Command(BaseCommand):
     help = "Publish approved review-queue items to Neo4j and resolve them."
 
@@ -53,6 +63,14 @@ class Command(BaseCommand):
 
         for item in items:
             payload = item.proposed_payload or {}
+            if _is_rsp_bacha_patra_provenance_only(payload):
+                failed += 1
+                failures.append({
+                    "item_id": str(item.id),
+                    "reason": "ocr_review_incomplete",
+                    "error": "rsp_bacha_patra_pdf provenance record cannot be published from approved review until OCR-derived structured records are separately reviewed.",
+                })
+                continue
             try:
                 result = publish_record(payload)
             except Exception as exc:

@@ -616,12 +616,26 @@ def _extract_rsp_bacha_patra_pdf(document: IngestionDocument | Any) -> list[dict
     record["confidence"] = 0.40 if embedded_text_chars == 0 else 0.55
     record["risk_flags"] = ["source_native_scanned_manifesto", "ocr_review_required"]
     record["source_subtype"] = "rsp_bacha_patra_pdf"
+    ocr_workflow = {
+        "workflow_kind": "rsp_bacha_patra_ocr_review",
+        "review_status": "ocr_pending_review",
+        "ocr_status": "not_run",
+        "ocr_artifact_available": False,
+        "structured_promises_status": "not_extracted",
+        "review_required_for_structured_promises": True,
+        "publishable_record_kind": "document_provenance_only",
+        "notes": (
+            "This record captures source provenance only. "
+            "Any OCR-derived structured promises must be introduced later as separate reviewed records."
+        ),
+    }
     raw_payload = dict(record.get("raw_payload") or {})
     raw_payload.update({
         "document_kind": "bacha_patra",
         "page_count": page_count,
         "embedded_text_chars_first_pages": embedded_text_chars,
         "extraction_mode": "document_provenance_only",
+        "ocr_workflow": ocr_workflow,
     })
     record["raw_payload"] = raw_payload
     graph_payload = dict(record.get("graph_payload") or {})
@@ -633,6 +647,14 @@ def _extract_rsp_bacha_patra_pdf(document: IngestionDocument | Any) -> list[dict
     })
     graph_payload["properties"] = graph_properties
     record["graph_payload"] = graph_payload
+    record["review_context"] = {
+        "workflow": ocr_workflow,
+        "suggested_reviewer_actions": [
+            "confirm document provenance",
+            "attach OCR artifact when available",
+            "create separately reviewed PoliticalPromise records from OCR output",
+        ],
+    }
     return [record]
 
 
@@ -762,6 +784,8 @@ def _review_item_kwargs(*, job: IngestionJob, document: IngestionDocument, recor
             "source_document": document.source_document,
             "source_hash": document.source_hash,
             "page_num": record.get("page_num"),
+            "source_subtype": _source_subtype(document),
+            "review_context": record.get("review_context") or {},
         },
     }
 
@@ -894,7 +918,24 @@ def _process_document(document_id: str, publish_threshold: float) -> dict[str, A
 
     held += _hold_many_for_review(job=job, document=document, review_records=to_hold)
     if records:
-        _merge_document_extra_metadata(document, {"source_subtype": subtype, "pipeline_retries_config": {"max_retries": PIPELINE_MAX_RETRIES, "retry_base_sec": PIPELINE_RETRY_BASE_SEC, "retry_max_sec": PIPELINE_RETRY_MAX_SEC}})
+        metadata_patch = {
+            "source_subtype": subtype,
+            "pipeline_retries_config": {
+                "max_retries": PIPELINE_MAX_RETRIES,
+                "retry_base_sec": PIPELINE_RETRY_BASE_SEC,
+                "retry_max_sec": PIPELINE_RETRY_MAX_SEC,
+            },
+        }
+        if subtype == "rsp_bacha_patra_pdf":
+            metadata_patch["ocr_workflow"] = {
+                "workflow_kind": "rsp_bacha_patra_ocr_review",
+                "review_status": "ocr_pending_review" if held > 0 else "provenance_published",
+                "ocr_status": "not_run",
+                "structured_promises_status": "not_extracted",
+                "document_record_published": published > 0,
+                "review_queue_count": held,
+            }
+        _merge_document_extra_metadata(document, metadata_patch)
     document.published_count = published
     document.held_count = held
     if published > 0 and held == 0:

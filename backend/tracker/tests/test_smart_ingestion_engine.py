@@ -111,6 +111,26 @@ def test_extract_rsp_manifesto_csv():
         assert any(rel["target_entity_type"] == "ResponsibleEntity" for rel in promise["graph_relations"])
 
 
+def test_extract_rsp_bacha_patra_pdf_sets_explicit_ocr_review_workflow():
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        pdf_path = Path(tmp_dir) / "bacha patra.pdf"
+        pdf_path.write_bytes(b"%PDF-1.4\n%stub\n")
+        doc = SimpleNamespace(source_path=str(pdf_path), source_document=pdf_path.name, source_hash="hash-bacha", source_type="manifesto")
+
+        records = engine._extract_rsp_bacha_patra_pdf(doc)
+
+        assert len(records) == 1
+        record = records[0]
+        assert record["entity_type"] == "ManifestoDocument"
+        assert record["raw_payload"]["extraction_mode"] == "document_provenance_only"
+        workflow = record["raw_payload"]["ocr_workflow"]
+        assert workflow["workflow_kind"] == "rsp_bacha_patra_ocr_review"
+        assert workflow["ocr_status"] == "not_run"
+        assert workflow["structured_promises_status"] == "not_extracted"
+        assert workflow["review_required_for_structured_promises"] is True
+        assert record["review_context"]["workflow"]["publishable_record_kind"] == "document_provenance_only"
+
+
 def test_run_with_retry_retries_transient(monkeypatch):
     attempts = {"n": 0}
     monkeypatch.setattr(engine.time, "sleep", lambda _delay: None)
@@ -240,7 +260,8 @@ def test_run_job_holds_rsp_bacha_patra_for_review(monkeypatch):
             "risk_flags": ["source_native_scanned_manifesto", "ocr_review_required"],
             "graph_payload": {"id": "bacha:doc:1", "key": "manifestoDocumentId", "properties": {"manifesto_document_id": "bacha:doc:1", "document_kind": "bacha_patra", "source_reference": str(pdf_path)}},
             "graph_relations": [],
-            "raw_payload": {"document_kind": "bacha_patra"},
+            "raw_payload": {"document_kind": "bacha_patra", "ocr_workflow": {"workflow_kind": "rsp_bacha_patra_ocr_review", "structured_promises_status": "not_extracted"}},
+            "review_context": {"workflow": {"workflow_kind": "rsp_bacha_patra_ocr_review"}},
             "source_type": "manifesto",
             "source_subtype": "rsp_bacha_patra_pdf",
             "source_document": pdf_path.name,
@@ -264,3 +285,6 @@ def test_run_job_holds_rsp_bacha_patra_for_review(monkeypatch):
         assert len(review_items) == 1
         assert review_items[0].entity_type == "ManifestoDocument"
         assert review_items[0].proposed_payload["source_subtype"] == "rsp_bacha_patra_pdf"
+        assert review_items[0].provenance["source_subtype"] == "rsp_bacha_patra_pdf"
+        assert review_items[0].provenance["review_context"]["workflow"]["workflow_kind"] == "rsp_bacha_patra_ocr_review"
+        assert document.extra_metadata["ocr_workflow"]["structured_promises_status"] == "not_extracted"
