@@ -27,9 +27,11 @@ from .router import router
 from .schemas import (
     AgendaItemRecord,
     AgendaVersionRecord,
+    AlignmentAssessmentRecord,
     ManifestoCommitment,
     ManifestoDocumentRecord,
     PoliticalPromiseRecord,
+    ReviewedAlignmentAssessmentBundle,
     ReviewedOCRPromiseBundle,
     stable_id,
 )
@@ -346,7 +348,7 @@ def _manifesto_document_record(document: IngestionDocument | Any, *, owner_type:
     }
 
 
-def _make_related_node(*, relation_type: str, target_entity_type: str, target_key: str, target_id: str, target_properties: dict[str, Any], relationship_properties: dict[str, Any] | None = None) -> dict[str, Any]:
+def _make_related_node(*, relation_type: str, target_entity_type: str, target_key: str, target_id: str, target_properties: dict[str, Any], relationship_properties: dict[str, Any] | None = None, require_existing_target: bool = False) -> dict[str, Any]:
     return {
         "relation_type": relation_type,
         "target_entity_type": target_entity_type,
@@ -354,6 +356,7 @@ def _make_related_node(*, relation_type: str, target_entity_type: str, target_ke
         "target_id": target_id,
         "target_properties": target_properties,
         "relationship_properties": relationship_properties or {},
+        "require_existing_target": require_existing_target,
     }
 
 
@@ -753,6 +756,106 @@ def _extract_reviewed_rsp_bacha_patra_structured_promises(document: IngestionDoc
     return records
 
 
+def _extract_reviewed_alignment_assessments(document: IngestionDocument | Any) -> list[dict[str, Any]]:
+    metadata = getattr(document, "extra_metadata", None) or {}
+    reviewed_bundle = metadata.get("reviewed_alignment_assessment_bundle")
+    if not isinstance(reviewed_bundle, dict):
+        return []
+
+    validated_bundle = ReviewedAlignmentAssessmentBundle(**reviewed_bundle)
+    if validated_bundle.source_subtype != "agenda_promise_alignment_review":
+        return []
+    if validated_bundle.reviewed_alignment_status != "reviewed_approved":
+        return []
+
+    records: list[dict[str, Any]] = []
+    for item in validated_bundle.reviewed_alignment_assessments:
+        if item.reviewer_status != "approved":
+            continue
+        if item.placeholder:
+            continue
+        if item.confidence < 0.70:
+            continue
+        if item.approval_state != "approved":
+            continue
+
+        assessment_id = stable_id(
+            "alignment_assessment",
+            item.agenda_item_id,
+            item.political_promise_id,
+            item.relation_type,
+            item.notes,
+        )
+        assessment = AlignmentAssessmentRecord(
+            alignment_assessment_id=assessment_id,
+            relation_type=item.relation_type,
+            confidence=float(item.confidence),
+            approval_state=item.approval_state,
+            notes=item.notes.strip(),
+            agenda_item_id=item.agenda_item_id.strip(),
+            political_promise_id=item.political_promise_id.strip(),
+        )
+        props = assessment.model_dump()
+        props.update({
+            "source_subtype": validated_bundle.source_subtype,
+            "extraction_mode": validated_bundle.extraction_mode,
+        })
+        raw_payload = item.model_dump()
+        raw_payload.update({
+            "source_subtype": validated_bundle.source_subtype,
+            "extraction_mode": validated_bundle.extraction_mode,
+        })
+        relations = [
+            _make_related_node(
+                relation_type="ASSESSES_AGENDA_ITEM",
+                target_entity_type="AgendaItem",
+                target_key="agendaItemId",
+                target_id=assessment.agenda_item_id,
+                target_properties={"agendaItemId": assessment.agenda_item_id},
+                relationship_properties={
+                    "relation_type": assessment.relation_type,
+                    "confidence": assessment.confidence,
+                    "approval_state": assessment.approval_state,
+                },
+                require_existing_target=True,
+            ),
+            _make_related_node(
+                relation_type="ASSESSES_POLITICAL_PROMISE",
+                target_entity_type="PoliticalPromise",
+                target_key="politicalPromiseId",
+                target_id=assessment.political_promise_id,
+                target_properties={"politicalPromiseId": assessment.political_promise_id},
+                relationship_properties={
+                    "relation_type": assessment.relation_type,
+                    "confidence": assessment.confidence,
+                    "approval_state": assessment.approval_state,
+                },
+                require_existing_target=True,
+            ),
+        ]
+        records.append({
+            "entity_type": "AlignmentAssessment",
+            "record_identity": assessment.alignment_assessment_id,
+            "confidence": float(item.confidence),
+            "risk_flags": [],
+            "graph_payload": {"id": assessment.alignment_assessment_id, "key": "alignmentAssessmentId", "properties": props},
+            "graph_relations": relations,
+            "raw_payload": raw_payload,
+            "review_context": {
+                "workflow": {
+                    "workflow_kind": "agenda_promise_alignment_review",
+                    "reviewed_alignment_status": validated_bundle.reviewed_alignment_status,
+                },
+            },
+            "source_type": getattr(document, "source_type", "manifesto"),
+            "source_subtype": validated_bundle.source_subtype,
+            "source_document": getattr(document, "source_document", ""),
+            "source_path": getattr(document, "source_path", ""),
+            "source_hash": getattr(document, "source_hash", ""),
+        })
+    return records
+
+
 def _extract_rsp_bacha_patra_pdf(document: IngestionDocument | Any) -> list[dict[str, Any]]:
     page_count = 0
     source_path = Path(document.source_path)
@@ -899,21 +1002,25 @@ def _extract_manifesto_pdf(document: IngestionDocument | Any) -> list[dict[str, 
 def extract_records(document: IngestionDocument, plan: dict[str, Any]) -> list[dict[str, Any]]:
     subtype = _source_subtype(document)
     if document.source_type == "lal_kitab":
-        return _extract_lal_kitab(document, plan)
-    if subtype == "nepalreforms_agenda_json":
-        return _extract_nepalreforms_agenda_json(document)
-    if subtype == "rsp_manifesto_csv":
-        return _extract_rsp_manifesto_csv(document)
-    if subtype == "rsp_bacha_patra_pdf":
+        records = _extract_lal_kitab(document, plan)
+    elif subtype == "nepalreforms_agenda_json":
+        records = _extract_nepalreforms_agenda_json(document)
+    elif subtype == "rsp_manifesto_csv":
+        records = _extract_rsp_manifesto_csv(document)
+    elif subtype == "rsp_bacha_patra_pdf":
         reviewed_records = _extract_reviewed_rsp_bacha_patra_structured_promises(document)
-        if reviewed_records:
-            return reviewed_records
-        return _extract_rsp_bacha_patra_pdf(document)
-    if subtype == "manifesto_pdf":
-        return _extract_manifesto_pdf(document)
-    if document.source_type in {"manifesto", "media", "citizen", "other"}:
-        return _extract_manifesto_pdf(document)
-    return []
+        records = reviewed_records if reviewed_records else _extract_rsp_bacha_patra_pdf(document)
+    elif subtype == "manifesto_pdf":
+        records = _extract_manifesto_pdf(document)
+    elif document.source_type in {"manifesto", "media", "citizen", "other"}:
+        records = _extract_manifesto_pdf(document)
+    else:
+        records = []
+
+    reviewed_alignment_records = _extract_reviewed_alignment_assessments(document)
+    if reviewed_alignment_records:
+        records.extend(reviewed_alignment_records)
+    return records
 
 
 def _hold_for_review(*, job: IngestionJob, document: IngestionDocument, record: dict[str, Any], reason: str) -> None:
@@ -1029,6 +1136,7 @@ def _process_document(document_id: str, publish_threshold: float) -> dict[str, A
         return {"published": 0, "held": 1, "failed": False}
 
     document.extracted_count = len(records)
+    alignment_record_count = sum(1 for record in records if record.get("entity_type") == "AlignmentAssessment")
     document.status = "publishing"
     document.save(update_fields=["extracted_count", "status", "updated_at"])
     ensure_smart_constraints()
@@ -1089,6 +1197,15 @@ def _process_document(document_id: str, publish_threshold: float) -> dict[str, A
                 "ocr_status": "reviewed_artifact_supplied" if has_reviewed_bundle else "not_run",
                 "structured_promises_status": "reviewed_approved" if has_reviewed_bundle and held == 0 and published > 0 else "not_extracted",
                 "document_record_published": published > 0 and not has_reviewed_bundle,
+                "review_queue_count": held,
+            }
+        reviewed_alignment_bundle = (document.extra_metadata or {}).get("reviewed_alignment_assessment_bundle") or {}
+        has_reviewed_alignment_bundle = isinstance(reviewed_alignment_bundle, dict) and bool(reviewed_alignment_bundle.get("reviewed_alignment_assessments"))
+        if has_reviewed_alignment_bundle or alignment_record_count:
+            metadata_patch["alignment_workflow"] = {
+                "workflow_kind": "agenda_promise_alignment_review",
+                "reviewed_alignment_status": "reviewed_approved" if has_reviewed_alignment_bundle and alignment_record_count > 0 and held == 0 else "pending_review",
+                "alignment_records_extracted": alignment_record_count,
                 "review_queue_count": held,
             }
         _merge_document_extra_metadata(document, metadata_patch)

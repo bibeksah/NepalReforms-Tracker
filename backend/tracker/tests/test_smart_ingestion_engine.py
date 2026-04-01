@@ -455,3 +455,111 @@ def test_extract_nepalreforms_agenda_json_preserves_nested_structures_in_raw_pay
         agenda_item = records[2]
         assert isinstance(agenda_item["raw_payload"]["problem"], dict)
         assert isinstance(agenda_item["raw_payload"]["solution"], dict)
+
+
+
+def test_extract_reviewed_alignment_assessments_builds_safe_alignment_records():
+    doc = SimpleNamespace(
+        source_path="C:/x/nepalreforms_agenda.json",
+        source_document="nepalreforms_agenda.json",
+        source_hash="hash-agenda",
+        source_type="manifesto",
+        extra_metadata={
+            "reviewed_alignment_assessment_bundle": {
+                "source_subtype": "agenda_promise_alignment_review",
+                "extraction_mode": "reviewed_alignment_assessments",
+                "reviewed_alignment_status": "reviewed_approved",
+                "reviewed_alignment_assessments": [
+                    {
+                        "agenda_item_id": "agenda_item:abc",
+                        "political_promise_id": "political_promise:def",
+                        "relation_type": "PARTIALLY_ALIGNS",
+                        "confidence": 0.92,
+                        "approval_state": "approved",
+                        "notes": "Reviewed overlap on procurement transparency.",
+                        "reviewer_status": "approved",
+                        "placeholder": False,
+                    },
+                    {
+                        "agenda_item_id": "agenda_item:skip",
+                        "political_promise_id": "political_promise:skip",
+                        "relation_type": "NO_DIRECT_MATCH",
+                        "confidence": 0.45,
+                        "approval_state": "approved",
+                        "notes": "Too weak.",
+                        "reviewer_status": "approved",
+                        "placeholder": False,
+                    },
+                ],
+            }
+        },
+    )
+
+    records = engine._extract_reviewed_alignment_assessments(doc)
+
+    assert len(records) == 1
+    record = records[0]
+    assert record["entity_type"] == "AlignmentAssessment"
+    assert record["source_subtype"] == "agenda_promise_alignment_review"
+    assert record["confidence"] == pytest.approx(0.92)
+    assert record["graph_payload"]["key"] == "alignmentAssessmentId"
+    assert any(rel["relation_type"] == "ASSESSES_AGENDA_ITEM" and rel["require_existing_target"] is True for rel in record["graph_relations"])
+    assert any(rel["relation_type"] == "ASSESSES_POLITICAL_PROMISE" and rel["require_existing_target"] is True for rel in record["graph_relations"])
+
+
+@pytest.mark.django_db(transaction=True)
+def test_run_job_publishes_reviewed_alignment_assessments(monkeypatch):
+    from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
+
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        agenda_path = Path(tmp_dir) / "nepalreforms_agenda.json"
+        agenda_path.write_text(
+            '{"organization":"NepalReforms","version":"2026 Baseline","effective_from":"2026-01-01","items":[{"id":"A-1","title":"Fix procurement transparency","description":"Open budgets and tenders","category":"Governance","timeline":"2026 Q2","priority":"high"}]}',
+            encoding="utf-8",
+        )
+        job = IngestionJob.objects.create(name="alignment-job", status="queued")
+        document = IngestionDocument.objects.create(
+            job=job,
+            source_path=str(agenda_path),
+            source_document=agenda_path.name,
+            source_hash="hash-agenda-align",
+            source_type="manifesto",
+            status="queued",
+            extra_metadata={
+                "reviewed_alignment_assessment_bundle": {
+                    "source_subtype": "agenda_promise_alignment_review",
+                    "extraction_mode": "reviewed_alignment_assessments",
+                    "reviewed_alignment_status": "reviewed_approved",
+                    "reviewed_alignment_assessments": [
+                        {
+                            "agenda_item_id": "agenda_item:abc",
+                            "political_promise_id": "political_promise:def",
+                            "relation_type": "PARTIALLY_ALIGNS",
+                            "confidence": 0.92,
+                            "approval_state": "approved",
+                            "notes": "Reviewed overlap on procurement transparency.",
+                            "reviewer_status": "approved",
+                            "placeholder": False,
+                        }
+                    ],
+                }
+            },
+        )
+
+        published = []
+        monkeypatch.setattr(engine, "ensure_smart_constraints", lambda: None)
+        monkeypatch.setattr(engine, "publish_record", lambda record: published.append(record["entity_type"]) or {"ok": True, "node_id": record["record_identity"]})
+        monkeypatch.setattr(engine, "publish_records_batch", lambda records, batch_size=200: {"ok_count": 0, "published_ids": [], "failed_ids": [], "errors": []})
+
+        result = engine.run_job(job, max_workers=1, adaptive=False, publish_threshold=0.75)
+
+        document.refresh_from_db()
+        job.refresh_from_db()
+        assert result["status"] == "completed"
+        assert result["published_count"] == 4
+        assert result["held_count"] == 0
+        assert published == ["ManifestoDocument", "AgendaVersion", "AgendaItem", "AlignmentAssessment"]
+        assert document.status == "published"
+        assert document.extra_metadata["alignment_workflow"]["reviewed_alignment_status"] == "reviewed_approved"
+        assert document.extra_metadata["alignment_workflow"]["alignment_records_extracted"] == 1
+        assert ReviewQueueItem.objects.count() == 0

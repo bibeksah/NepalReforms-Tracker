@@ -242,36 +242,62 @@ def _publish_generic_record(record: dict[str, Any]) -> dict[str, Any]:
         target_id = _require_non_empty_str(rel.get("target_id"), "graph_relations[].target_id")
         target_properties = rel.get("target_properties") or {}
         relationship_properties = rel.get("relationship_properties") or {}
+        require_existing_target = bool(rel.get("require_existing_target", False))
         if not isinstance(target_properties, dict):
             raise ValueError("graph_relations[].target_properties must be a dict")
         if not isinstance(relationship_properties, dict):
             raise ValueError("graph_relations[].relationship_properties must be a dict")
         target_properties = _coerce_graph_properties(target_properties)
         relationship_properties = _coerce_graph_properties(relationship_properties)
-        rel_query = """
-        MATCH (s:`%s` {%s: $source_value})
-        MERGE (t:`%s` {%s: $target_value})
-          ON CREATE SET t.createdAt = datetime()
-          SET t += $target_properties, t.updatedAt = datetime()
-        MERGE (s)-[r:%s]->(t)
-        SET r.updatedAt = datetime(), r += $rel_properties
-        RETURN $target_value as target_id
-        """ % (
-            entity_type,
-            node_key,
-            target_entity_type,
-            target_key,
-            relation_type,
-        )
-        db.cypher_query(
-            rel_query,
-            {
-                "source_value": node_value,
-                "target_value": target_id,
-                "target_properties": target_properties,
-                "rel_properties": relationship_properties,
-            },
-        )
+        if require_existing_target:
+            rel_query = """
+            MATCH (s:`%s` {%s: $source_value})
+            MATCH (t:`%s` {%s: $target_value})
+            MERGE (s)-[r:%s]->(t)
+            SET r.updatedAt = datetime(), r += $rel_properties
+            RETURN $target_value as target_id
+            """ % (
+                entity_type,
+                node_key,
+                target_entity_type,
+                target_key,
+                relation_type,
+            )
+            rows, _ = db.cypher_query(
+                rel_query,
+                {
+                    "source_value": node_value,
+                    "target_value": target_id,
+                    "rel_properties": relationship_properties,
+                },
+            )
+            if not rows:
+                raise ValueError(f"graph_relations[].target_id not found: {target_id}")
+        else:
+            rel_query = """
+            MATCH (s:`%s` {%s: $source_value})
+            MERGE (t:`%s` {%s: $target_value})
+              ON CREATE SET t.createdAt = datetime()
+              SET t += $target_properties, t.updatedAt = datetime()
+            MERGE (s)-[r:%s]->(t)
+            SET r.updatedAt = datetime(), r += $rel_properties
+            RETURN $target_value as target_id
+            """ % (
+                entity_type,
+                node_key,
+                target_entity_type,
+                target_key,
+                relation_type,
+            )
+            db.cypher_query(
+                rel_query,
+                {
+                    "source_value": node_value,
+                    "target_value": target_id,
+                    "target_properties": target_properties,
+                    "rel_properties": relationship_properties,
+                },
+            )
         relation_results.append(target_id)
     return {"ok": True, "node_id": node_value, "relations": relation_results}
 

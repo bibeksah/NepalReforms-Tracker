@@ -95,3 +95,70 @@ def test_publish_record_rejects_invalid_relation_payload(monkeypatch):
         raise AssertionError("Expected ValueError for missing graph_relations[].target_id")
 
     assert len(calls) == 1
+
+
+
+def test_publish_record_requires_existing_target(monkeypatch):
+    calls = []
+
+    def fake_cypher_query(query, params):
+        calls.append(query)
+        return [[params.get("node_value") or params.get("target_value")]], None
+
+    monkeypatch.setattr(publisher.db, "cypher_query", fake_cypher_query)
+
+    result = publisher.publish_record({
+        "entity_type": "AlignmentAssessment",
+        "graph_payload": {
+            "id": "alignment:1",
+            "key": "alignmentAssessmentId",
+            "properties": {"alignment_assessment_id": "alignment:1", "relation_type": "PARTIALLY_ALIGNS"},
+        },
+        "graph_relations": [{
+            "target_entity_type": "AgendaItem",
+            "target_key": "agendaItemId",
+            "target_id": "agenda:1",
+            "relation_type": "ASSESSES_AGENDA_ITEM",
+            "target_properties": {"agendaItemId": "agenda:1"},
+            "relationship_properties": {"confidence": 0.91},
+            "require_existing_target": True,
+        }],
+    })
+
+    assert result["ok"] is True
+    assert len(calls) == 2
+    assert "MATCH (t:`AgendaItem` {agendaItemId: $target_value})" in calls[1]
+    assert "MERGE (t:`AgendaItem`" not in calls[1]
+
+
+
+def test_publish_record_fails_when_required_existing_target_missing(monkeypatch):
+    def fake_cypher_query(query, params):
+        if "RETURN $node_value as node_id" in query:
+            return [[params.get("node_value")]], None
+        return [], None
+
+    monkeypatch.setattr(publisher.db, "cypher_query", fake_cypher_query)
+
+    try:
+        publisher.publish_record({
+            "entity_type": "AlignmentAssessment",
+            "graph_payload": {
+                "id": "alignment:1",
+                "key": "alignmentAssessmentId",
+                "properties": {"alignment_assessment_id": "alignment:1", "relation_type": "PARTIALLY_ALIGNS"},
+            },
+            "graph_relations": [{
+                "target_entity_type": "PoliticalPromise",
+                "target_key": "politicalPromiseId",
+                "target_id": "promise:missing",
+                "relation_type": "ASSESSES_POLITICAL_PROMISE",
+                "target_properties": {"politicalPromiseId": "promise:missing"},
+                "relationship_properties": {"confidence": 0.91},
+                "require_existing_target": True,
+            }],
+        })
+    except ValueError as exc:
+        assert "target_id not found" in str(exc)
+    else:
+        raise AssertionError("Expected ValueError for missing required existing target")

@@ -54,6 +54,41 @@ def _reviewed_rsp_bacha_patra_promise_is_publishable(payload: dict) -> bool:
     )
 
 
+def _is_reviewed_alignment_assessment(payload: dict) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    if payload.get("entity_type") != "AlignmentAssessment":
+        return False
+    if payload.get("source_subtype") != "agenda_promise_alignment_review":
+        return False
+    raw_payload = payload.get("raw_payload") or {}
+    review_context = payload.get("review_context") or {}
+    workflow = review_context.get("workflow") or {}
+    return (
+        raw_payload.get("extraction_mode") == "reviewed_alignment_assessments"
+        and workflow.get("reviewed_alignment_status") == "reviewed_approved"
+    )
+
+
+def _reviewed_alignment_assessment_is_publishable(payload: dict) -> bool:
+    if not _is_reviewed_alignment_assessment(payload):
+        return False
+    raw_payload = payload.get("raw_payload") or {}
+    graph_properties = (payload.get("graph_payload") or {}).get("properties") or {}
+    agenda_item_id = str(raw_payload.get("agenda_item_id") or graph_properties.get("agenda_item_id") or "").strip()
+    political_promise_id = str(raw_payload.get("political_promise_id") or graph_properties.get("political_promise_id") or "").strip()
+    approval_state = str(raw_payload.get("approval_state") or graph_properties.get("approval_state") or "").strip()
+    confidence = float(raw_payload.get("confidence", graph_properties.get("confidence", 0.0)) or 0.0)
+    return (
+        bool(agenda_item_id)
+        and bool(political_promise_id)
+        and approval_state == "approved"
+        and confidence >= 0.70
+        and raw_payload.get("reviewer_status") == "approved"
+        and not bool(raw_payload.get("placeholder", False))
+    )
+
+
 class Command(BaseCommand):
     help = "Publish approved review-queue items to Neo4j and resolve them."
 
@@ -112,6 +147,14 @@ class Command(BaseCommand):
                     "item_id": str(item.id),
                     "reason": "reviewed_ocr_payload_incomplete",
                     "error": "rsp_bacha_patra_pdf reviewed structured promise is missing required approved OCR review fields or confidence.",
+                })
+                continue
+            if _is_reviewed_alignment_assessment(payload) and not _reviewed_alignment_assessment_is_publishable(payload):
+                failed += 1
+                failures.append({
+                    "item_id": str(item.id),
+                    "reason": "reviewed_alignment_payload_incomplete",
+                    "error": "agenda_promise_alignment_review payload is missing required approved alignment fields or confidence.",
                 })
                 continue
             try:

@@ -123,6 +123,25 @@ class ReviewedOCRPromiseBundle(BaseModel):
     reviewed_structured_promises: list[ReviewedOCRPoliticalPromiseInput] = Field(default_factory=list)
 
 
+class ReviewedAlignmentAssessmentInput(BaseModel):
+    agenda_item_id: str = Field(min_length=3)
+    political_promise_id: str = Field(min_length=3)
+    relation_type: str = "PARTIALLY_ALIGNS"
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    approval_state: str = "approved"
+    notes: str = ""
+    reviewer_status: str = "approved"
+    placeholder: bool = False
+
+
+class ReviewedAlignmentAssessmentBundle(BaseModel):
+    source_subtype: str = "agenda_promise_alignment_review"
+    extraction_mode: str = "reviewed_alignment_assessments"
+    reviewed_alignment_status: str = "reviewed_approved"
+    review_required_for_alignment: bool = True
+    reviewed_alignment_assessments: list[ReviewedAlignmentAssessmentInput] = Field(default_factory=list)
+
+
 class AlignmentAssessmentRecord(BaseModel):
     alignment_assessment_id: str
     relation_type: str = "NO_DIRECT_MATCH"
