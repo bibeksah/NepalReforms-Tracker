@@ -50,3 +50,48 @@ def test_publish_records_batch_mixes_projects_and_non_projects(monkeypatch):
     result = publisher.publish_records_batch(records, batch_size=50)
     assert result["ok_count"] == 2
     assert "PoliticalPromise" in calls
+
+
+def test_publish_record_rejects_missing_graph_payload_key():
+    try:
+        publisher.publish_record({
+            "entity_type": "PoliticalPromise",
+            "graph_payload": {"id": "promise:1", "properties": {}},
+            "graph_relations": [],
+        })
+    except ValueError as exc:
+        assert "graph_payload.key" in str(exc)
+    else:
+        raise AssertionError("Expected ValueError for missing graph_payload.key")
+
+
+def test_publish_record_rejects_invalid_relation_payload(monkeypatch):
+    calls = []
+
+    def fake_cypher_query(query, params):
+        calls.append((query, params))
+        return [[params.get("node_value") or params.get("target_value")]], None
+
+    monkeypatch.setattr(publisher.db, "cypher_query", fake_cypher_query)
+
+    try:
+        publisher.publish_record({
+            "entity_type": "PoliticalPromise",
+            "graph_payload": {
+                "id": "promise:1",
+                "key": "politicalPromiseId",
+                "properties": {"title": "Promise 1"},
+            },
+            "graph_relations": [{
+                "target_entity_type": "ManifestoDocument",
+                "target_key": "manifestoDocumentId",
+                "relation_type": "PROMISED_IN",
+                "target_properties": {},
+            }],
+        })
+    except ValueError as exc:
+        assert "graph_relations[].target_id" in str(exc)
+    else:
+        raise AssertionError("Expected ValueError for missing graph_relations[].target_id")
+
+    assert len(calls) == 1

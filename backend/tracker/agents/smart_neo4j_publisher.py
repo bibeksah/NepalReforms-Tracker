@@ -1,7 +1,8 @@
-"""
-Neo4j direct publisher for smart ingestion.
+"""Phase 1 Neo4j publisher.
 
-Publishes high-confidence Project records with deterministic fingerprint merges.
+Keeps Lal Kitab project publishing intact, and adds deterministic entity-family publish
+paths for NepalReforms agenda baseline, RSP CSV promises, and reviewable alignment
+assessment scaffolding.
 """
 
 from __future__ import annotations
@@ -10,6 +11,18 @@ import hashlib
 from typing import Any
 
 from neomodel import db
+
+
+def _require_mapping(value: Any, name: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise ValueError(f"{name} must be a dict")
+    return value
+
+
+def _require_non_empty_str(value: Any, name: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{name} is required")
+    return value.strip()
 
 
 def normalize_text(value: str) -> str:
@@ -33,24 +46,30 @@ def compute_project_fingerprint(record: dict[str, Any]) -> str:
 
 
 def ensure_smart_constraints() -> None:
-    db.cypher_query(
-        "CREATE CONSTRAINT project_fingerprint IF NOT EXISTS "
-        "FOR (p:Project) REQUIRE p.fingerprint IS UNIQUE"
-    )
-    db.cypher_query(
-        "CREATE CONSTRAINT fy_year IF NOT EXISTS "
-        "FOR (f:FiscalYear) REQUIRE f.year IS UNIQUE"
-    )
-    db.cypher_query(
-        "CREATE CONSTRAINT province_name IF NOT EXISTS "
-        "FOR (pr:Province) REQUIRE pr.name IS UNIQUE"
-    )
+    statements = [
+        "CREATE CONSTRAINT project_fingerprint IF NOT EXISTS FOR (p:Project) REQUIRE p.fingerprint IS UNIQUE",
+        "CREATE CONSTRAINT fy_year IF NOT EXISTS FOR (f:FiscalYear) REQUIRE f.year IS UNIQUE",
+        "CREATE CONSTRAINT province_name IF NOT EXISTS FOR (pr:Province) REQUIRE pr.name IS UNIQUE",
+        "CREATE CONSTRAINT manifesto_document_id IF NOT EXISTS FOR (n:ManifestoDocument) REQUIRE n.manifestoDocumentId IS UNIQUE",
+        "CREATE CONSTRAINT agenda_version_id IF NOT EXISTS FOR (n:AgendaVersion) REQUIRE n.agendaVersionId IS UNIQUE",
+        "CREATE CONSTRAINT agenda_item_id IF NOT EXISTS FOR (n:AgendaItem) REQUIRE n.agendaItemId IS UNIQUE",
+        "CREATE CONSTRAINT political_promise_id IF NOT EXISTS FOR (n:PoliticalPromise) REQUIRE n.politicalPromiseId IS UNIQUE",
+        "CREATE CONSTRAINT policy_category_id IF NOT EXISTS FOR (n:PolicyCategory) REQUIRE n.policyCategoryId IS UNIQUE",
+        "CREATE CONSTRAINT responsible_entity_id IF NOT EXISTS FOR (n:ResponsibleEntity) REQUIRE n.responsibleEntityId IS UNIQUE",
+        "CREATE CONSTRAINT timeline_target_id IF NOT EXISTS FOR (n:TimelineTarget) REQUIRE n.timelineTargetId IS UNIQUE",
+        "CREATE CONSTRAINT legal_foundation_id IF NOT EXISTS FOR (n:LegalFoundation) REQUIRE n.legalFoundationId IS UNIQUE",
+        "CREATE CONSTRAINT performance_target_id IF NOT EXISTS FOR (n:PerformanceTarget) REQUIRE n.performanceTargetId IS UNIQUE",
+        "CREATE CONSTRAINT problem_statement_id IF NOT EXISTS FOR (n:ProblemStatement) REQUIRE n.problemStatementId IS UNIQUE",
+        "CREATE CONSTRAINT solution_plan_id IF NOT EXISTS FOR (n:SolutionPlan) REQUIRE n.solutionPlanId IS UNIQUE",
+        "CREATE CONSTRAINT implementation_plan_id IF NOT EXISTS FOR (n:ImplementationPlan) REQUIRE n.implementationPlanId IS UNIQUE",
+        "CREATE CONSTRAINT real_world_evidence_summary_id IF NOT EXISTS FOR (n:RealWorldEvidenceSummary) REQUIRE n.realWorldEvidenceSummaryId IS UNIQUE",
+        "CREATE CONSTRAINT alignment_assessment_id IF NOT EXISTS FOR (n:AlignmentAssessment) REQUIRE n.alignmentAssessmentId IS UNIQUE",
+    ]
+    for stmt in statements:
+        db.cypher_query(stmt)
 
 
 def publish_project_record(record: dict[str, Any]) -> dict[str, Any]:
-    """
-    Upsert project + province + fiscal year with provenance fields.
-    """
     fingerprint = compute_project_fingerprint(record)
     params = {
         "fingerprint": fingerprint,
@@ -69,7 +88,6 @@ def publish_project_record(record: dict[str, Any]) -> dict[str, Any]:
         "translation_confidence": float(record.get("translation_confidence", 1.0)),
         "ingest_confidence": float(record.get("confidence", 0.0)),
     }
-
     query = """
     MERGE (fy:FiscalYear {year: $fiscal_year})
       ON CREATE SET fy.uid = randomUUID(), fy.created_at = datetime()
@@ -124,17 +142,8 @@ def _record_to_params(record: dict[str, Any]) -> dict[str, Any]:
 
 
 def publish_project_records_batch(records: list[dict[str, Any]], batch_size: int = 200) -> dict[str, Any]:
-    """
-    Batch upsert Project nodes using UNWIND for higher throughput.
-    """
     if not records:
-        return {
-            "ok_count": 0,
-            "published_fingerprints": [],
-            "failed_fingerprints": [],
-            "errors": [],
-        }
-
+        return {"ok_count": 0, "published_fingerprints": [], "failed_fingerprints": [], "errors": []}
     query = """
     UNWIND $rows AS row
     MERGE (fy:FiscalYear {year: row.fiscal_year})
@@ -163,34 +172,115 @@ def publish_project_records_batch(records: list[dict[str, Any]], batch_size: int
     MERGE (p)-[:LOCATED_IN]->(pr)
     RETURN collect(p.fingerprint) as fingerprints
     """
-
     params_rows = [_record_to_params(record) for record in records]
     published_fingerprints: list[str] = []
     failed_fingerprints: list[str] = []
     errors: list[dict[str, str]] = []
-
-    for idx in range(0, len(params_rows), max(1, int(batch_size))):
-        chunk = params_rows[idx : idx + max(1, int(batch_size))]
+    step = max(1, int(batch_size))
+    for idx in range(0, len(params_rows), step):
+        chunk = params_rows[idx : idx + step]
         expected = {row["fingerprint"] for row in chunk}
         try:
             rows, _ = db.cypher_query(query, {"rows": chunk})
             chunk_published = set(rows[0][0] if rows else [])
             published_fingerprints.extend(sorted(chunk_published))
-            failed = expected - chunk_published
-            failed_fingerprints.extend(sorted(failed))
+            failed_fingerprints.extend(sorted(expected - chunk_published))
         except Exception as exc:
             failed_fingerprints.extend(sorted(expected))
-            errors.append(
-                {
-                    "chunk_start": str(idx),
-                    "chunk_size": str(len(chunk)),
-                    "error": f"{type(exc).__name__}: {exc}",
-                }
-            )
-
+            errors.append({"chunk_start": str(idx), "chunk_size": str(len(chunk)), "error": f"{type(exc).__name__}: {exc}"})
     return {
         "ok_count": len(published_fingerprints),
         "published_fingerprints": published_fingerprints,
         "failed_fingerprints": failed_fingerprints,
         "errors": errors,
     }
+
+
+def _publish_generic_record(record: dict[str, Any]) -> dict[str, Any]:
+    entity_type = _require_non_empty_str(record.get("entity_type"), "entity_type")
+    payload = _require_mapping(record.get("graph_payload"), "graph_payload")
+    relations = record.get("graph_relations") or []
+    if not isinstance(relations, list):
+        raise ValueError("graph_relations must be a list")
+    node_key = _require_non_empty_str(payload.get("key"), "graph_payload.key")
+    node_value = _require_non_empty_str(payload.get("id"), "graph_payload.id")
+    properties = payload.get("properties") or {}
+    if not isinstance(properties, dict):
+        raise ValueError("graph_payload.properties must be a dict")
+    query = """
+    MERGE (n:`%s` {%s: $node_value})
+      ON CREATE SET n.createdAt = datetime()
+      SET n += $properties, n.updatedAt = datetime()
+    RETURN $node_value as node_id
+    """ % (entity_type, node_key)
+    db.cypher_query(query, {"node_value": node_value, "properties": properties})
+
+    relation_results = []
+    for rel in relations:
+        rel = _require_mapping(rel, "graph_relations[]")
+        target_entity_type = _require_non_empty_str(rel.get("target_entity_type"), "graph_relations[].target_entity_type")
+        target_key = _require_non_empty_str(rel.get("target_key"), "graph_relations[].target_key")
+        relation_type = _require_non_empty_str(rel.get("relation_type"), "graph_relations[].relation_type")
+        target_id = _require_non_empty_str(rel.get("target_id"), "graph_relations[].target_id")
+        target_properties = rel.get("target_properties") or {}
+        relationship_properties = rel.get("relationship_properties") or {}
+        if not isinstance(target_properties, dict):
+            raise ValueError("graph_relations[].target_properties must be a dict")
+        if not isinstance(relationship_properties, dict):
+            raise ValueError("graph_relations[].relationship_properties must be a dict")
+        rel_query = """
+        MATCH (s:`%s` {%s: $source_value})
+        MERGE (t:`%s` {%s: $target_value})
+          ON CREATE SET t.createdAt = datetime()
+          SET t += $target_properties, t.updatedAt = datetime()
+        MERGE (s)-[r:%s]->(t)
+        SET r.updatedAt = datetime(), r += $rel_properties
+        RETURN $target_value as target_id
+        """ % (
+            entity_type,
+            node_key,
+            target_entity_type,
+            target_key,
+            relation_type,
+        )
+        db.cypher_query(
+            rel_query,
+            {
+                "source_value": node_value,
+                "target_value": target_id,
+                "target_properties": target_properties,
+                "rel_properties": relationship_properties,
+            },
+        )
+        relation_results.append(target_id)
+    return {"ok": True, "node_id": node_value, "relations": relation_results}
+
+
+def publish_record(record: dict[str, Any]) -> dict[str, Any]:
+    if record.get("entity_type") == "Project":
+        return publish_project_record(record)
+    return _publish_generic_record(record)
+
+
+def publish_records_batch(records: list[dict[str, Any]], batch_size: int = 200) -> dict[str, Any]:
+    if not records:
+        return {"ok_count": 0, "published_ids": [], "failed_ids": [], "errors": []}
+    project_records = [record for record in records if record.get("entity_type") == "Project"]
+    other_records = [record for record in records if record.get("entity_type") != "Project"]
+    published_ids: list[str] = []
+    failed_ids: list[str] = []
+    errors: list[dict[str, str]] = []
+    if project_records:
+        project_result = publish_project_records_batch(project_records, batch_size=batch_size)
+        published_ids.extend(project_result["published_fingerprints"])
+        failed_ids.extend(project_result["failed_fingerprints"])
+        errors.extend(project_result["errors"])
+    for record in other_records:
+        record_id = (record.get("graph_payload") or {}).get("id") or record.get("fingerprint") or ""
+        try:
+            publish_record(record)
+            published_ids.append(record_id)
+        except Exception as exc:
+            failed_ids.append(record_id)
+            errors.append({"entity_type": record.get("entity_type", "Unknown"), "record_id": record_id, "error": f"{type(exc).__name__}: {exc}"})
+    return {"ok_count": len(published_ids), "published_ids": published_ids, "failed_ids": failed_ids, "errors": errors}
