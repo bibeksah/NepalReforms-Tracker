@@ -87,9 +87,22 @@ def infer_fiscal_year(filename: str) -> str:
 def detect_source_type(source_path: str) -> str:
     lower = source_path.lower()
     suffix = Path(source_path).suffix.lower()
+    manifesto_markers = [
+        "manifesto",
+        "वाचा",
+        "वाचा पत्र",
+        "वाचापत्र",
+        "बाचा",
+        "बाचा पत्र",
+        "बाचापत्र",
+        "bacha patra",
+        "bacha_patra",
+        "vacha patra",
+        "vacha_patra",
+    ]
     if "lalkitab" in lower or "redbook" in lower:
         return "lal_kitab"
-    if "manifesto" in lower or ("rsp" in lower and suffix == ".csv"):
+    if any(marker in lower for marker in manifesto_markers) or ("rsp" in lower and suffix == ".csv"):
         return "manifesto"
     if "agenda" in lower and suffix == ".json":
         return "manifesto"
@@ -173,7 +186,18 @@ def _source_subtype(document: IngestionDocument | Any) -> str:
     if "rsp" in lower and suffix == ".csv":
         return "rsp_manifesto_csv"
     if suffix == ".pdf" and source_type == "manifesto":
-        if any(marker in lower for marker in ["????", "???? ????", "bacha patra", "bacha_patra", "vacha patra", "vacha_patra"]):
+        if any(marker in lower for marker in [
+            "????",
+            "???? ????",
+            "bacha patra",
+            "bacha_patra",
+            "vacha patra",
+            "vacha_patra",
+            "वाचा पत्र",
+            "वाचापत्र",
+            "बाचा पत्र",
+            "बाचापत्र",
+        ]):
             return "rsp_bacha_patra_pdf"
         return "manifesto_pdf"
     return getattr(document, "source_type", "other")

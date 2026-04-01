@@ -100,3 +100,28 @@ def test_run_command_executes_latest_job(monkeypatch):
     }
     assert payload["status"] == "completed"
     assert payload["published_count"] == 3
+
+
+@pytest.mark.django_db
+def test_submit_command_queues_bacha_patra_pdf_as_manifesto():
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        pdf_path = Path(tmp_dir) / "वाचा पत्र .pdf"
+        pdf_path.write_bytes(b"%PDF-1.4\n%stub\n")
+
+        out = io.StringIO()
+        call_command(
+            "ingestion_submit",
+            "--document",
+            str(pdf_path),
+            "--name",
+            "bacha-submit-job",
+            "--requested-by",
+            "pytest",
+            stdout=out,
+        )
+        payload = json.loads(out.getvalue())
+
+        job = IngestionJob.objects.get(id=payload["job_id"])
+        document = job.documents.get()
+        assert document.source_type == "manifesto"
+        assert document.source_document == "वाचा पत्र .pdf"

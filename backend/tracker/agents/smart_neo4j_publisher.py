@@ -8,6 +8,7 @@ assessment scaffolding.
 from __future__ import annotations
 
 import hashlib
+import json
 from typing import Any
 
 from neomodel import db
@@ -27,6 +28,22 @@ def _require_non_empty_str(value: Any, name: str) -> str:
 
 def normalize_text(value: str) -> str:
     return " ".join((value or "").strip().lower().split())
+
+
+def _coerce_property_value(value: Any) -> Any:
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, list):
+        if all(isinstance(item, (str, int, float, bool)) or item is None for item in value):
+            return value
+        return json.dumps(value, ensure_ascii=False, sort_keys=True)
+    if isinstance(value, dict):
+        return json.dumps(value, ensure_ascii=False, sort_keys=True)
+    return str(value)
+
+
+def _coerce_graph_properties(properties: dict[str, Any]) -> dict[str, Any]:
+    return {key: _coerce_property_value(value) for key, value in properties.items()}
 
 
 def compute_project_fingerprint(record: dict[str, Any]) -> str:
@@ -207,6 +224,7 @@ def _publish_generic_record(record: dict[str, Any]) -> dict[str, Any]:
     properties = payload.get("properties") or {}
     if not isinstance(properties, dict):
         raise ValueError("graph_payload.properties must be a dict")
+    properties = _coerce_graph_properties(properties)
     query = """
     MERGE (n:`%s` {%s: $node_value})
       ON CREATE SET n.createdAt = datetime()
@@ -228,6 +246,8 @@ def _publish_generic_record(record: dict[str, Any]) -> dict[str, Any]:
             raise ValueError("graph_relations[].target_properties must be a dict")
         if not isinstance(relationship_properties, dict):
             raise ValueError("graph_relations[].relationship_properties must be a dict")
+        target_properties = _coerce_graph_properties(target_properties)
+        relationship_properties = _coerce_graph_properties(relationship_properties)
         rel_query = """
         MATCH (s:`%s` {%s: $source_value})
         MERGE (t:`%s` {%s: $target_value})

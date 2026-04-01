@@ -17,6 +17,7 @@ def test_detect_source_type():
     assert engine.detect_source_type("C:/x/LalKitab/Federal/Redbook_2081_82.pdf") == "lal_kitab"
     assert engine.detect_source_type("C:/x/RSP_manifesto_2027.pdf") == "manifesto"
     assert engine.detect_source_type("C:/x/RSPdocs/rsp_commitments.csv") == "manifesto"
+    assert engine.detect_source_type("C:/x/RSPdocs/वाचा पत्र .pdf") == "manifesto"
     assert engine.detect_source_type("C:/x/citizen_report.json") == "citizen"
     assert engine.detect_source_type("C:/x/random.txt") == "other"
 
@@ -442,3 +443,15 @@ def test_run_job_publishes_reviewed_rsp_bacha_patra_structured_promises(monkeypa
         assert document.extra_metadata["ocr_workflow"]["ocr_status"] == "reviewed_artifact_supplied"
         assert ReviewQueueItem.objects.count() == 0
 
+
+
+def test_extract_nepalreforms_agenda_json_preserves_nested_structures_in_raw_payload():
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        agenda_path = Path(tmp_dir) / "nepalreforms_agenda.json"
+        agenda_path.write_text('{"organization":"NepalReforms","version":"2026 Baseline","effective_from":"2026-01-01","items":[{"id":"A-1","title":"Fix procurement transparency","description":"Open budgets and tenders","category":"Governance","timeline":"2026 Q2","priority":"high","problem":{"short":"bad","long":"worse"},"solution":{"short":["one"],"long":{"phases":[{"phase":"1"}]}}}]}', encoding="utf-8")
+        doc = SimpleNamespace(source_path=str(agenda_path), source_document=agenda_path.name, source_hash="hash-agenda", source_type="manifesto")
+
+        records = engine._extract_nepalreforms_agenda_json(doc)
+        agenda_item = records[2]
+        assert isinstance(agenda_item["raw_payload"]["problem"], dict)
+        assert isinstance(agenda_item["raw_payload"]["solution"], dict)
