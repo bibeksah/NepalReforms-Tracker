@@ -548,6 +548,98 @@ def _extract_nepalreforms_agenda_json(document: IngestionDocument | Any) -> list
                 target_id=timeline_id,
                 target_properties={"timelineTargetId": timeline_id, "name": validated.timeline},
             ))
+        if validated.legal_foundation:
+            legal_foundation_id = stable_id("legal_foundation", agenda_version_id, source_item_id, validated.legal_foundation)
+            relations.append(_make_related_node(
+                relation_type="HAS_LEGAL_FOUNDATION",
+                target_entity_type="LegalFoundation",
+                target_key="legalFoundationId",
+                target_id=legal_foundation_id,
+                target_properties={
+                    "legalFoundationId": legal_foundation_id,
+                    "agendaItemId": validated.agenda_item_id,
+                    "sourceItemId": validated.source_item_id,
+                    "text": validated.legal_foundation,
+                    "sourceReference": validated.source_reference,
+                },
+            ))
+        for performance_target in validated.performance_targets:
+            if not str(performance_target).strip():
+                continue
+            performance_target_id = stable_id("performance_target", agenda_version_id, source_item_id, performance_target)
+            relations.append(_make_related_node(
+                relation_type="HAS_PERFORMANCE_TARGET",
+                target_entity_type="PerformanceTarget",
+                target_key="performanceTargetId",
+                target_id=performance_target_id,
+                target_properties={
+                    "performanceTargetId": performance_target_id,
+                    "agendaItemId": validated.agenda_item_id,
+                    "sourceItemId": validated.source_item_id,
+                    "text": performance_target,
+                    "sourceReference": validated.source_reference,
+                },
+            ))
+        if validated.problem:
+            problem_statement_id = stable_id("problem_statement", agenda_version_id, source_item_id, json.dumps(validated.problem, sort_keys=True, ensure_ascii=False))
+            relations.append(_make_related_node(
+                relation_type="HAS_PROBLEM_STATEMENT",
+                target_entity_type="ProblemStatement",
+                target_key="problemStatementId",
+                target_id=problem_statement_id,
+                target_properties={
+                    "problemStatementId": problem_statement_id,
+                    "agendaItemId": validated.agenda_item_id,
+                    "sourceItemId": validated.source_item_id,
+                    "payload": validated.problem,
+                    "sourceReference": validated.source_reference,
+                },
+            ))
+        if validated.solution:
+            solution_plan_id = stable_id("solution_plan", agenda_version_id, source_item_id, json.dumps(validated.solution, sort_keys=True, ensure_ascii=False))
+            relations.append(_make_related_node(
+                relation_type="HAS_SOLUTION_PLAN",
+                target_entity_type="SolutionPlan",
+                target_key="solutionPlanId",
+                target_id=solution_plan_id,
+                target_properties={
+                    "solutionPlanId": solution_plan_id,
+                    "agendaItemId": validated.agenda_item_id,
+                    "sourceItemId": validated.source_item_id,
+                    "payload": validated.solution,
+                    "sourceReference": validated.source_reference,
+                },
+            ))
+        if validated.implementation:
+            implementation_plan_id = stable_id("implementation_plan", agenda_version_id, source_item_id, json.dumps(validated.implementation, sort_keys=True, ensure_ascii=False))
+            relations.append(_make_related_node(
+                relation_type="HAS_IMPLEMENTATION_PLAN",
+                target_entity_type="ImplementationPlan",
+                target_key="implementationPlanId",
+                target_id=implementation_plan_id,
+                target_properties={
+                    "implementationPlanId": implementation_plan_id,
+                    "agendaItemId": validated.agenda_item_id,
+                    "sourceItemId": validated.source_item_id,
+                    "payload": validated.implementation,
+                    "sourceReference": validated.source_reference,
+                },
+            ))
+        if validated.real_world_evidence:
+            real_world_evidence_summary_id = stable_id("real_world_evidence_summary", agenda_version_id, source_item_id, json.dumps(validated.real_world_evidence, sort_keys=True, ensure_ascii=False))
+            relations.append(_make_related_node(
+                relation_type="HAS_REAL_WORLD_EVIDENCE_SUMMARY",
+                target_entity_type="RealWorldEvidenceSummary",
+                target_key="realWorldEvidenceSummaryId",
+                target_id=real_world_evidence_summary_id,
+                target_properties={
+                    "realWorldEvidenceSummaryId": real_world_evidence_summary_id,
+                    "agendaItemId": validated.agenda_item_id,
+                    "sourceItemId": validated.source_item_id,
+                    "payload": validated.real_world_evidence,
+                    "sourceReference": validated.source_reference,
+                },
+            ))
         records.append(
             {
                 "entity_type": "AgendaItem",
