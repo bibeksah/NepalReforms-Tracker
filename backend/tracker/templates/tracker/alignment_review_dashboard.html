@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alignment Review Dashboard</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --panel: rgba(10, 19, 36, 0.88);
+            --panel-soft: rgba(17, 29, 52, 0.92);
+            --line: rgba(148, 163, 184, 0.18);
+            --text: #e5eefc;
+            --muted: #93a4c7;
+            --accent: #5ba7ff;
+            --accent-strong: #7cc8ff;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+            --radius: 20px;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(91, 167, 255, 0.16), transparent 28%),
+                radial-gradient(circle at top right, rgba(56, 189, 248, 0.12), transparent 24%),
+                linear-gradient(180deg, #08101d 0%, #0b1324 60%, #0a1120 100%);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+        .page { padding: 28px; display: grid; gap: 24px; }
+        .hero, .panel, .metric-card, .queue-item, .card, .decision-bar {
+            background: var(--panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+        .hero {
+            border-radius: 28px;
+            padding: 28px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .hero h1 { margin: 0 0 10px; font-size: clamp(1.7rem, 4vw, 2.6rem); line-height: 1.05; }
+        .hero p { margin: 0; max-width: 760px; color: var(--muted); line-height: 1.6; }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: flex-end; }
+        .button, button {
+            appearance: none;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: #031121;
+            font-weight: 700;
+            padding: 12px 16px;
+            cursor: pointer;
+        }
+        .button.secondary, button.secondary {
+            background: rgba(148, 163, 184, 0.12);
+            color: var(--text);
+            border: 1px solid var(--line);
+        }
+        .button.danger, button.danger { background: linear-gradient(135deg, #fb7185, #f43f5e); color: white; }
+        .button.success, button.success { background: linear-gradient(135deg, #34d399, #10b981); color: #051a14; }
+        .metrics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+        .metric-card { border-radius: var(--radius); padding: 18px; }
+        .metric-card .label { color: var(--muted); font-size: 0.88rem; }
+        .metric-card .value { margin-top: 10px; font-size: 1.9rem; font-weight: 800; }
+        .layout { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 24px; align-items: start; }
+        .panel { border-radius: 24px; overflow: hidden; }
+        .panel-header { padding: 18px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .panel-title { font-size: 1rem; font-weight: 700; }
+        .panel-subtitle { font-size: 0.86rem; color: var(--muted); margin-top: 4px; }
+        .filters { padding: 16px 20px; border-bottom: 1px solid var(--line); display: grid; gap: 12px; }
+        .filters form { display: grid; gap: 12px; }
+        .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        label { display: grid; gap: 6px; color: var(--muted); font-size: 0.82rem; }
+        select, input, textarea {
+            width: 100%; border-radius: 14px; border: 1px solid rgba(148, 163, 184, 0.18);
+            background: rgba(10, 19, 36, 0.78); color: var(--text); padding: 11px 12px; font: inherit;
+        }
+        textarea { min-height: 112px; resize: vertical; }
+        .queue-list { max-height: calc(100vh - 360px); overflow: auto; padding: 14px; display: grid; gap: 12px; }
+        .queue-item {
+            display: grid; gap: 12px; border-radius: 18px; padding: 16px; border: 1px solid transparent;
+            transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+        }
+        .queue-item:hover, .queue-item.active { transform: translateY(-1px); border-color: rgba(91, 167, 255, 0.42); background: var(--panel-soft); }
+        .queue-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .queue-item h3 { margin: 0; font-size: 0.98rem; line-height: 1.3; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip {
+            border-radius: 999px; padding: 6px 10px; font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 0.01em; border: 1px solid rgba(148, 163, 184, 0.16); color: var(--muted);
+            background: rgba(148, 163, 184, 0.08);
+        }
+        .chip.good { color: #071b16; background: rgba(52, 211, 153, 0.95); }
+        .chip.strong { color: #07111c; background: rgba(96, 165, 250, 0.95); }
+        .chip.caution { color: #241702; background: rgba(251, 191, 36, 0.94); }
+        .chip.weak { color: #fff1f2; background: rgba(244, 63, 94, 0.88); }
+        .content { display: grid; gap: 16px; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+        .card { border-radius: 20px; padding: 20px; display: grid; gap: 14px; }
+        .card h2, .card h3 { margin: 0; }
+        .entity-title { font-size: 1.1rem; line-height: 1.35; }
+        .entity-id { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--muted); font-size: 0.82rem; word-break: break-all; }
+        .kv { display: grid; gap: 10px; }
+        .kv-row { display: grid; grid-template-columns: 120px 1fr; gap: 12px; padding-top: 10px; border-top: 1px solid rgba(148, 163, 184, 0.1); }
+        .kv-row strong { color: var(--muted); font-size: 0.82rem; font-weight: 600; }
+        .stack { display: grid; gap: 16px; }
+        .score-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        .score-box { border-radius: 18px; background: rgba(148, 163, 184, 0.06); border: 1px solid rgba(148, 163, 184, 0.12); padding: 14px; }
+        .score-box .label { color: var(--muted); font-size: 0.82rem; }
+        .score-box .value { margin-top: 8px; font-size: 1.2rem; font-weight: 800; }
+        .decision-bar { border-radius: 24px; padding: 20px; display: grid; gap: 14px; }
+        .decision-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .empty-state { padding: 48px 24px; text-align: center; color: var(--muted); }
+        .message-list { display: grid; gap: 10px; }
+        .message { border-radius: 16px; padding: 14px 16px; border: 1px solid var(--line); }
+        .message.success { background: rgba(52, 211, 153, 0.12); }
+        .message.error { background: rgba(244, 63, 94, 0.12); }
+        .message.info { background: rgba(96, 165, 250, 0.12); }
+
+        @media (max-width: 1280px) {
+            .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .layout { grid-template-columns: 320px minmax(0, 1fr); }
+        }
+        @media (max-width: 980px) {
+            .layout, .comparison-grid, .field-grid, .score-grid, .metrics { grid-template-columns: 1fr; }
+            .queue-list { max-height: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <section class="hero">
+            <div>
+                <h1>Alignment Review Dashboard</h1>
+                <p>
+                    A focused human-review workstation for deterministic alignment candidates. Nothing here creates graph links directly.
+                    Approved items still go through the existing guarded publish path.
+                </p>
+            </div>
+            <div class="hero-actions">
+                <a class="button secondary" href="/admin/tracker/reviewqueueitem/?entity_type=AlignmentAssessment">Open Django admin</a>
+                <a class="button secondary" href="/admin/">Admin home</a>
+            </div>
+        </section>
+
+        {% if messages %}
+        <div class="message-list">
+            {% for message in messages %}
+            <div class="message {{ message.tags|default:'info' }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <section class="metrics">
+            <div class="metric-card"><div class="label">Total candidates</div><div class="value">{{ metrics.total|default:0 }}</div></div>
+            <div class="metric-card"><div class="label">Pending review</div><div class="value">{{ metrics.pending|default:0 }}</div></div>
+            <div class="metric-card"><div class="label">Approved</div><div class="value">{{ metrics.approved|default:0 }}</div></div>
+            <div class="metric-card"><div class="label">Rejected</div><div class="value">{{ metrics.rejected|default:0 }}</div></div>
+            <div class="metric-card"><div class="label">Resolved</div><div class="value">{{ metrics.resolved|default:0 }}</div></div>
+            <div class="metric-card"><div class="label">0.78+ confidence</div><div class="value">{{ metrics.high_confidence|default:0 }}</div></div>
+        </section>
+
+        <section class="layout">
+            <aside class="panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title">Review queue</div>
+                        <div class="panel-subtitle">Filter, scan, and pick one candidate at a time.</div>
+                    </div>
+                </div>
+                <div class="filters">
+                    <form method="get">
+                        <div class="field-grid">
+                            <label>
+                                Status
+                                <select name="status">
+                                    {% for option in status_options %}
+                                    <option value="{{ option }}" {% if filters.status == option %}selected{% endif %}>{{ option }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label>
+                                Confidence band
+                                <select name="confidence">
+                                    {% for value, label in confidence_options %}
+                                    <option value="{{ value }}" {% if filters.confidence == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+                        <label>
+                            Search key or fingerprint
+                            <input type="text" name="q" value="{{ filters.q }}" placeholder="procurement, governance, agenda:1, stable id" />
+                        </label>
+                        {% if selected %}<input type="hidden" name="selected" value="{{ selected.id }}" />{% endif %}
+                        <div class="decision-actions">
+                            <button type="submit">Apply filters</button>
+                            <a class="button secondary" href="/reviews/alignment/">Reset</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="queue-list">
+                    {% for item in queue %}
+                    <a class="queue-item {% if selected and selected.id == item.id %}active{% endif %}" href="?status={{ filters.status }}&confidence={{ filters.confidence }}&q={{ filters.q|urlencode }}&selected={{ item.id }}">
+                        <div class="queue-top">
+                            <div class="chip {{ item.risk_tone }}">{{ item.confidence_percent }}%</div>
+                            <div class="chip">{{ item.status }}</div>
+                        </div>
+                        <div>
+                            <h3>{{ item.agenda_item.title|truncatechars:60 }}</h3>
+                            <div class="panel-subtitle">vs {{ item.political_promise.title|truncatechars:60 }}</div>
+                        </div>
+                        <div class="chips">
+                            <div class="chip">{{ item.relation_type }}</div>
+                            <div class="chip">{{ item.confidence_bucket }}</div>
+                            {% if item.workflow.category_match %}<div class="chip">Shared category</div>{% endif %}
+                            {% if item.workflow.timeline_match %}<div class="chip">Timeline match</div>{% endif %}
+                            {% if item.workflow.responsible_entity_match %}<div class="chip">Entity hint</div>{% endif %}
+                        </div>
+                        <div class="panel-subtitle">{{ item.record_key|truncatechars:64 }}</div>
+                    </a>
+                    {% empty %}
+                    <div class="empty-state">
+                        <h3>No candidates match this filter.</h3>
+                        <p>Try widening the confidence band or generating more candidates.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </aside>
+
+            <div class="content">
+                {% if selected %}
+                <section class="comparison-grid">
+                    <article class="card">
+                        <div><div class="chip strong">Agenda item</div></div>
+                        <div>
+                            <h2 class="entity-title">{{ selected.agenda_item.title }}</h2>
+                            <div class="entity-id">{{ selected.agenda_item.id }}</div>
+                        </div>
+                        <div class="kv">
+                            <div class="kv-row"><strong>Summary</strong><div>{{ selected.agenda_item.summary|default:"--" }}</div></div>
+                            <div class="kv-row"><strong>Description</strong><div>{{ selected.agenda_item.description|default:"--" }}</div></div>
+                            <div class="kv-row"><strong>Category</strong><div>{{ selected.agenda_item.category }}</div></div>
+                            <div class="kv-row"><strong>Timeline</strong><div>{{ selected.agenda_item.timeline }}</div></div>
+                            <div class="kv-row"><strong>Responsible</strong><div>{{ selected.agenda_item.responsible_entity }}</div></div>
+                        </div>
+                    </article>
+
+                    <article class="card">
+                        <div><div class="chip strong">Political promise</div></div>
+                        <div>
+                            <h2 class="entity-title">{{ selected.political_promise.title }}</h2>
+                            <div class="entity-id">{{ selected.political_promise.id }}</div>
+                        </div>
+                        <div class="kv">
+                            <div class="kv-row"><strong>Summary</strong><div>{{ selected.political_promise.summary|default:"--" }}</div></div>
+                            <div class="kv-row"><strong>Description</strong><div>{{ selected.political_promise.description|default:"--" }}</div></div>
+                            <div class="kv-row"><strong>Category</strong><div>{{ selected.political_promise.category }}</div></div>
+                            <div class="kv-row"><strong>Timeline</strong><div>{{ selected.political_promise.timeline }}</div></div>
+                            <div class="kv-row"><strong>Responsible</strong><div>{{ selected.political_promise.responsible_entity }}</div></div>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="comparison-grid">
+                    <article class="card stack">
+                        <div>
+                            <h3>Why this candidate exists</h3>
+                            <div class="panel-subtitle">Deterministic evidence only. No LLM hallucination path.</div>
+                        </div>
+                        <div class="score-grid">
+                            {% for key, value in selected.score_breakdown.items %}
+                            <div class="score-box">
+                                <div class="label">{{ key|cut:"_"|title }}</div>
+                                <div class="value">{{ value }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div>
+                            <div class="panel-subtitle">Shared tokens</div>
+                            <div class="chips" style="margin-top:10px;">
+                                {% for token in selected.shared_tokens %}
+                                <div class="chip">{{ token }}</div>
+                                {% empty %}
+                                <div class="chip">No shared tokens captured</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="kv">
+                            <div class="kv-row"><strong>Rule note</strong><div>{{ selected.notes }}</div></div>
+                            <div class="kv-row"><strong>Generator</strong><div>{{ selected.workflow.candidate_generation_method }}</div></div>
+                            <div class="kv-row"><strong>Source subtype</strong><div>{{ selected.workflow.source_subtype }}</div></div>
+                            <div class="kv-row"><strong>Existing-target safety</strong><div>{% if selected.require_existing_target %}Enabled on both graph relations{% else %}Missing or partial{% endif %}</div></div>
+                        </div>
+                    </article>
+
+                    <article class="card stack">
+                        <div>
+                            <h3>Review contract</h3>
+                            <div class="panel-subtitle">Approved items still publish through the existing guarded reviewed-alignment pipeline.</div>
+                        </div>
+                        <div class="chips">
+                            <div class="chip {{ selected.risk_tone }}">{{ selected.confidence_percent }}% confidence</div>
+                            <div class="chip">{{ selected.relation_type }}</div>
+                            <div class="chip">{{ selected.status }}</div>
+                        </div>
+                        <div class="kv">
+                            <div class="kv-row"><strong>Record key</strong><div class="entity-id">{{ selected.record_key }}</div></div>
+                            <div class="kv-row"><strong>Current reviewer</strong><div>{{ selected.reviewer|default:"--" }}</div></div>
+                            <div class="kv-row"><strong>Reviewed at</strong><div>{{ selected.reviewed_at|default:"--" }}</div></div>
+                            <div class="kv-row"><strong>Notes</strong><div>{{ selected.reviewer_notes|default:"No reviewer note yet" }}</div></div>
+                        </div>
+                        <div class="chips">
+                            {% for flag in selected.flags %}
+                            <div class="chip">{{ flag }}</div>
+                            {% empty %}
+                            <div class="chip">No extra flags</div>
+                            {% endfor %}
+                        </div>
+                    </article>
+                </section>
+
+                <section class="decision-bar">
+                    <div>
+                        <h3>Decision</h3>
+                        <div class="panel-subtitle">Approve if it should proceed to the reviewed publish path. Reject if it is a bad or misleading match. Defer keeps it in queue.</div>
+                    </div>
+                    <form method="post" action="/reviews/alignment/{{ selected.id }}/decision/">
+                        {% csrf_token %}
+                        <label>
+                            Reviewer notes
+                            <textarea name="reviewer_notes" placeholder="Why approve or reject? Add provenance concerns, wording mismatch, or merge rationale."></textarea>
+                        </label>
+                        <div class="decision-actions">
+                            <button type="submit" class="success" name="decision" value="approve">Approve for guarded publish</button>
+                            <button type="submit" class="danger" name="decision" value="reject">Reject candidate</button>
+                            <button type="submit" class="secondary" name="decision" value="defer">Keep pending</button>
+                        </div>
+                    </form>
+                </section>
+                {% else %}
+                <section class="panel empty-state">
+                    <h2>No review item selected</h2>
+                    <p>Once candidates exist, pick one from the queue to inspect both sides and make a decision.</p>
+                </section>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+</body>
+</html>

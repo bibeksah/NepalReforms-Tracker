@@ -12,13 +12,14 @@ from tracker.models import ReviewQueueItem
 _FETCH_AGENDA_ITEMS_QUERY = """
 MATCH (a:AgendaItem)
 OPTIONAL MATCH (a)-[:IN_CATEGORY]->(pc:PolicyCategory)
+WITH a, [name IN collect(DISTINCT pc.name) WHERE name IS NOT NULL AND trim(name) <> ""] AS categories
 RETURN {
   agenda_item_id: a.agendaItemId,
   title: coalesce(a.title, ""),
   description: coalesce(a.description, ""),
   summary: coalesce(a.summary, ""),
-  category: coalesce(a.category, pc.name, ""),
-  timeline: coalesce(a.timeline, a.timelineTargetLabel, ""),
+  category: coalesce(a.category, head(categories), ""),
+  timeline: coalesce(a.timeline, ""),
   responsible_entity: coalesce(a.responsibleEntity, "")
 } AS row
 """
@@ -27,14 +28,17 @@ _FETCH_PROMISES_QUERY = """
 MATCH (p:PoliticalPromise)
 OPTIONAL MATCH (p)-[:IN_CATEGORY]->(pc:PolicyCategory)
 OPTIONAL MATCH (p)-[:ASSIGNED_TO]->(re:ResponsibleEntity)
+WITH p,
+     [name IN collect(DISTINCT pc.name) WHERE name IS NOT NULL AND trim(name) <> ""] AS categories,
+     [name IN collect(DISTINCT re.name) WHERE name IS NOT NULL AND trim(name) <> ""] AS responsible_entities
 RETURN {
   political_promise_id: p.politicalPromiseId,
   title: coalesce(p.title, ""),
   summary: coalesce(p.summary, ""),
   description: coalesce(p.description, ""),
-  category: coalesce(p.category, pc.name, ""),
-  timeline: coalesce(p.timeline, p.timelineTargetLabel, ""),
-  responsible_entity: coalesce(p.responsible_entity, re.name, "")
+  category: coalesce(p.category, head(categories), ""),
+  timeline: coalesce(p.timeline, ""),
+  responsible_entity: coalesce(p.responsible_entity, head(responsible_entities), "")
 } AS row
 """
 
@@ -55,13 +59,13 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("--dry-run", action="store_true", help="Preview candidates without creating ReviewQueueItem rows.")
         parser.add_argument("--limit", type=int, default=100, help="Maximum candidates to emit/create after scoring and dedupe.")
-        parser.add_argument("--review-threshold", type=float, default=0.66, help="Minimum score to consider for human review.")
+        parser.add_argument("--review-threshold", type=float, default=0.40, help="Minimum score to consider for human review.")
         parser.add_argument("--approval-threshold", type=float, default=0.78, help="Higher confidence marker used only for relation strength labeling.")
 
     def handle(self, *args, **options):
         dry_run = bool(options.get("dry_run"))
         limit = max(1, int(options.get("limit", 100)))
-        review_threshold = float(options.get("review_threshold", 0.66))
+        review_threshold = float(options.get("review_threshold", 0.40))
         approval_threshold = float(options.get("approval_threshold", 0.78))
 
         agenda_rows, _ = db.cypher_query(_FETCH_AGENDA_ITEMS_QUERY)
@@ -110,8 +114,10 @@ class Command(BaseCommand):
                 score_buckets["0.85+"] += 1
             elif candidate.confidence >= 0.75:
                 score_buckets["0.75-0.84"] += 1
+            elif candidate.confidence >= 0.60:
+                score_buckets["0.60-0.74"] += 1
             else:
-                score_buckets["0.66-0.74"] += 1
+                score_buckets["0.40-0.59"] += 1
 
             preview.append({
                 "agenda_item_id": candidate.agenda_item_id,
@@ -135,7 +141,7 @@ class Command(BaseCommand):
                 proposed_payload=payload,
                 provenance={
                     "source_subtype": "agenda_promise_alignment_review",
-                    "candidate_generation_method": "deterministic_rules_v1",
+                    "candidate_generation_method": "deterministic_rules_v2",
                     "score_breakdown": candidate.score_breakdown,
                     "shared_tokens": candidate.shared_tokens,
                     "agenda_item_id": candidate.agenda_item_id,
