@@ -97,6 +97,18 @@ class PoliticalPromiseRecord(BaseModel):
     responsible_entity: str = ""
 
 
+class PoliticalPartyRecord(BaseModel):
+    political_party_id: str
+    canonical_name: str = Field(min_length=2)
+    short_name: str = ""
+    country: str = "Nepal"
+    scope: str = "national"
+    party_type: str = "political_party"
+    source_reference: str
+    election_symbol: str = ""
+    description: str = ""
+
+
 class ReviewedOCRPoliticalPromiseInput(BaseModel):
     title: str = Field(min_length=10)
     summary: str = ""

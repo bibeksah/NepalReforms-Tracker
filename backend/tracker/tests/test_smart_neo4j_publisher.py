@@ -204,3 +204,52 @@ def test_publish_record_supports_explicit_source_node_and_target_lookup(monkeypa
     assert any("RETURN s.solutionPlanId AS target_id" in query for query, _ in calls)
     merge_call = [query for query, _ in calls if "ALIGNS_WITH_SOLUTION_PLAN" in query][-1]
     assert "MATCH (s:`PoliticalPromise` {politicalPromiseId: $source_value})" in merge_call
+
+
+def test_ensure_smart_constraints_includes_political_party(monkeypatch):
+    statements = []
+
+    def fake_cypher_query(query, _params=None):
+        statements.append(query.strip())
+        return [], None
+
+    monkeypatch.setattr(publisher.db, "cypher_query", fake_cypher_query)
+
+    publisher.ensure_smart_constraints()
+
+    assert any("PoliticalParty" in stmt and "politicalPartyId" in stmt for stmt in statements)
+
+
+def test_publish_record_political_party_with_manifesto_relation(monkeypatch):
+    calls = []
+
+    def fake_cypher_query(query, params):
+        calls.append((query, params))
+        return [[params.get("node_value") or params.get("target_value")]], None
+
+    monkeypatch.setattr(publisher.db, "cypher_query", fake_cypher_query)
+
+    result = publisher.publish_record({
+        "entity_type": "ManifestoDocument",
+        "graph_payload": {
+            "id": "manifesto_document:1",
+            "key": "manifestoDocumentId",
+            "properties": {"manifesto_document_id": "manifesto_document:1", "name": "rsp_manifesto.csv"},
+        },
+        "graph_relations": [{
+            "target_entity_type": "PoliticalParty",
+            "target_key": "politicalPartyId",
+            "target_id": "political_party:rsp",
+            "relation_type": "ISSUED_BY",
+            "target_properties": {
+                "politicalPartyId": "political_party:rsp",
+                "political_party_id": "political_party:rsp",
+                "canonical_name": "Rastriya Swatantra Party",
+                "short_name": "RSP",
+            },
+        }],
+    })
+
+    assert result["ok"] is True
+    assert len(calls) == 2
+    assert "MERGE (t:`PoliticalParty` {politicalPartyId: $target_value})" in calls[1][0]

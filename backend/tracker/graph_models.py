@@ -99,6 +99,19 @@ class Project(TemporalMixin, StructuredNode):
     managed_by = RelationshipTo("Ministry", "MANAGED_BY")
 
 
+class PoliticalParty(TemporalMixin, StructuredNode):
+    uid = UniqueIdProperty()
+    political_party_id = StringProperty(unique_index=True, required=True)
+    canonical_name = StringProperty(unique_index=True, required=True)
+    short_name = StringProperty(index=True)
+    country = StringProperty(default="Nepal")
+    scope = StringProperty(default="national")
+    party_type = StringProperty(default="political_party")
+    source_reference = StringProperty()
+    election_symbol = StringProperty()
+    description = StringProperty()
+
+
 class ManifestoPromise(TemporalMixin, StructuredNode):
     uid = UniqueIdProperty()
     text = StringProperty(required=True, index=True)
@@ -142,6 +155,9 @@ def install_constraints():
         "CREATE CONSTRAINT province_name IF NOT EXISTS FOR (p:Province) REQUIRE p.name IS UNIQUE",
         "CREATE CONSTRAINT ministry_name IF NOT EXISTS FOR (m:Ministry) REQUIRE m.name IS UNIQUE",
         "CREATE CONSTRAINT promise_uid IF NOT EXISTS FOR (m:ManifestoPromise) REQUIRE m.uid IS UNIQUE",
+        "CREATE CONSTRAINT political_party_uid IF NOT EXISTS FOR (p:PoliticalParty) REQUIRE p.uid IS UNIQUE",
+        "CREATE CONSTRAINT political_party_id IF NOT EXISTS FOR (p:PoliticalParty) REQUIRE p.political_party_id IS UNIQUE",
+        "CREATE CONSTRAINT political_party_name IF NOT EXISTS FOR (p:PoliticalParty) REQUIRE p.canonical_name IS UNIQUE",
         "CREATE CONSTRAINT evidence_uid IF NOT EXISTS FOR (e:Evidence) REQUIRE e.uid IS UNIQUE",
     ]
 
@@ -150,6 +166,7 @@ def install_constraints():
         "CREATE TEXT INDEX project_title_text IF NOT EXISTS FOR (p:Project) ON (p.title)",
         "CREATE TEXT INDEX project_title_ne_text IF NOT EXISTS FOR (p:Project) ON (p.title_ne)",
         "CREATE TEXT INDEX promise_text_text IF NOT EXISTS FOR (m:ManifestoPromise) ON (m.text)",
+        "CREATE TEXT INDEX political_party_name_text IF NOT EXISTS FOR (p:PoliticalParty) ON (p.canonical_name)",
         "CREATE INDEX project_status IF NOT EXISTS FOR (p:Project) ON (p.status)",
         "CREATE INDEX project_budget IF NOT EXISTS FOR (p:Project) ON (p.budget)",
     ]

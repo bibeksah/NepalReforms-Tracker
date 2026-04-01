@@ -71,6 +71,7 @@ def ensure_smart_constraints() -> None:
         "CREATE CONSTRAINT agenda_version_id IF NOT EXISTS FOR (n:AgendaVersion) REQUIRE n.agendaVersionId IS UNIQUE",
         "CREATE CONSTRAINT agenda_item_id IF NOT EXISTS FOR (n:AgendaItem) REQUIRE n.agendaItemId IS UNIQUE",
         "CREATE CONSTRAINT political_promise_id IF NOT EXISTS FOR (n:PoliticalPromise) REQUIRE n.politicalPromiseId IS UNIQUE",
+        "CREATE CONSTRAINT political_party_id IF NOT EXISTS FOR (n:PoliticalParty) REQUIRE n.politicalPartyId IS UNIQUE",
         "CREATE CONSTRAINT policy_category_id IF NOT EXISTS FOR (n:PolicyCategory) REQUIRE n.policyCategoryId IS UNIQUE",
         "CREATE CONSTRAINT responsible_entity_id IF NOT EXISTS FOR (n:ResponsibleEntity) REQUIRE n.responsibleEntityId IS UNIQUE",
         "CREATE CONSTRAINT timeline_target_id IF NOT EXISTS FOR (n:TimelineTarget) REQUIRE n.timelineTargetId IS UNIQUE",

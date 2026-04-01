@@ -31,6 +31,7 @@ from .schemas import (
     AlignmentAssessmentRecord,
     ManifestoCommitment,
     ManifestoDocumentRecord,
+    PoliticalPartyRecord,
     PoliticalPromiseRecord,
     ReviewedAlignmentAssessmentBundle,
     ReviewedOCRPromiseBundle,
@@ -316,6 +317,37 @@ goal: maximize recall while preserving auditability.
         "fields_to_extract": ["entity_text", "claims", "evidence_refs"],
         "reason": "Default non-budget planner strategy.",
         "estimated_pages": page_count,
+    }
+
+
+def _political_party_record(document: IngestionDocument | Any, *, canonical_name: str, short_name: str = "", language: str = "en", election_symbol: str = "", description: str = "") -> dict[str, Any]:
+    political_party_id = stable_id("political_party", canonical_name)
+    validated = PoliticalPartyRecord(
+        political_party_id=political_party_id,
+        canonical_name=canonical_name.strip(),
+        short_name=short_name.strip(),
+        source_reference=getattr(document, "source_reference_override", "") or getattr(document, "source_path", ""),
+        election_symbol=election_symbol.strip(),
+        description=description.strip(),
+    )
+    props = validated.model_dump()
+    return {
+        "entity_type": "PoliticalParty",
+        "record_identity": validated.political_party_id,
+        "confidence": 0.99,
+        "risk_flags": [],
+        "graph_payload": {
+            "id": validated.political_party_id,
+            "key": "politicalPartyId",
+            "properties": props,
+        },
+        "graph_relations": [],
+        "raw_payload": props,
+        "source_type": getattr(document, "source_type", "manifesto"),
+        "source_subtype": _source_subtype(document),
+        "source_document": getattr(document, "source_document", ""),
+        "source_path": getattr(document, "source_path", ""),
+        "source_hash": getattr(document, "source_hash", ""),
     }
 
 
@@ -661,8 +693,18 @@ def _extract_nepalreforms_agenda_json(document: IngestionDocument | Any) -> list
 
 def _extract_rsp_manifesto_csv(document: IngestionDocument | Any) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
+    party_record = _political_party_record(document, canonical_name="Rastriya Swatantra Party", short_name="RSP")
     manifesto_record = _manifesto_document_record(document, owner_type="political_party", owner_name="Rastriya Swatantra Party", language="en")
-    records.append(manifesto_record)
+    manifesto_record["graph_relations"] = [
+        _make_related_node(
+            relation_type="ISSUED_BY",
+            target_entity_type="PoliticalParty",
+            target_key="politicalPartyId",
+            target_id=party_record["record_identity"],
+            target_properties=party_record["graph_payload"]["properties"],
+        )
+    ]
+    records.extend([party_record, manifesto_record])
     with Path(document.source_path).open("r", encoding="utf-8-sig", newline="") as fh:
         reader = csv.DictReader(fh)
         for idx, row in enumerate(reader, start=1):
@@ -697,7 +739,14 @@ def _extract_rsp_manifesto_csv(document: IngestionDocument | Any) -> list[dict[s
                     target_key="manifestoDocumentId",
                     target_id=manifesto_record["record_identity"],
                     target_properties=manifesto_record["graph_payload"]["properties"],
-                )
+                ),
+                _make_related_node(
+                    relation_type="MADE_BY",
+                    target_entity_type="PoliticalParty",
+                    target_key="politicalPartyId",
+                    target_id=party_record["record_identity"],
+                    target_properties=party_record["graph_payload"]["properties"],
+                ),
             ]
             if category:
                 category_id = stable_id("policy_category", category)

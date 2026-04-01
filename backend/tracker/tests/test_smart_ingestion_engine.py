@@ -105,8 +105,13 @@ def test_extract_rsp_manifesto_csv():
         doc = SimpleNamespace(source_path=str(csv_path), source_document=csv_path.name, source_hash="hash-rsp", source_type="manifesto")
 
         records = engine._extract_rsp_manifesto_csv(doc)
-        assert [record["entity_type"] for record in records] == ["ManifestoDocument", "PoliticalPromise"]
-        promise = records[1]
+        assert [record["entity_type"] for record in records] == ["PoliticalParty", "ManifestoDocument", "PoliticalPromise"]
+        party = records[0]
+        manifesto = records[1]
+        promise = records[2]
+        assert party["graph_payload"]["key"] == "politicalPartyId"
+        assert any(rel["relation_type"] == "ISSUED_BY" and rel["target_entity_type"] == "PoliticalParty" for rel in manifesto["graph_relations"])
+        assert any(rel["relation_type"] == "MADE_BY" and rel["target_entity_type"] == "PoliticalParty" for rel in promise["graph_relations"])
         assert any(rel["target_entity_type"] == "PolicyCategory" for rel in promise["graph_relations"])
         assert any(rel["target_entity_type"] == "TimelineTarget" for rel in promise["graph_relations"])
         assert any(rel["target_entity_type"] == "ResponsibleEntity" for rel in promise["graph_relations"])
@@ -312,14 +317,14 @@ def test_run_job_holds_low_confidence_non_project_records(monkeypatch):
         assert result["status"] == "review_hold"
         assert result["processed"] == 1
         assert result["published_count"] == 0
-        assert result["held_count"] == 2
+        assert result["held_count"] == 3
         assert document.status == "review_hold"
         assert document.payload_schema == "rsp_manifesto_csv_v1"
-        assert document.extracted_count == 2
+        assert document.extracted_count == 3
         assert document.published_count == 0
-        assert document.held_count == 2
-        assert len(review_items) == 2
-        assert {item.entity_type for item in review_items} == {"ManifestoDocument", "PoliticalPromise"}
+        assert document.held_count == 3
+        assert len(review_items) == 3
+        assert {item.entity_type for item in review_items} == {"PoliticalParty", "ManifestoDocument", "PoliticalPromise"}
         assert all(item.status == "pending_review" for item in review_items)
 
 
