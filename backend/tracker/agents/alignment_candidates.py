@@ -39,6 +39,15 @@ _DECOMPOSITION_FIELD_WEIGHTS = {
     "real_world_evidence": 0.03,
 }
 
+_DECOMPOSITION_FIELD_MATCH_CAPS = {
+    "problem": 4,
+    "solution": 6,
+    "implementation": 6,
+    "performance_targets": 5,
+    "legal_foundation": 3,
+    "real_world_evidence": 3,
+}
+
 
 @dataclass(frozen=True)
 class AlignmentCandidateMatch:
@@ -210,9 +219,14 @@ def _score_decomposition_overlap(agenda: dict[str, Any], promise_tokens: set[str
         field_text = _extract_payload_text(agenda.get(field_name))
         field_tokens = _signal_tokens(set(tokenize_text(field_text)))
         overlap = _token_jaccard(field_tokens, promise_tokens)
-        contribution = round(min(max_weight, overlap * (max_weight / 0.12)) if overlap > 0 else 0.0, 3)
+        shared_tokens = field_tokens & promise_tokens
+        shared_count = len(shared_tokens)
+        max_shared_count = max(1, _DECOMPOSITION_FIELD_MATCH_CAPS.get(field_name, 4))
+        shared_ratio = min(1.0, shared_count / max_shared_count)
+        weighted_overlap = max(overlap, shared_ratio * 0.18)
+        contribution = round(min(max_weight, weighted_overlap * (max_weight / 0.18)) if weighted_overlap > 0 else 0.0, 3)
         if contribution > 0:
-            shared_signal_tokens.extend(sorted((field_tokens & promise_tokens))[:4])
+            shared_signal_tokens.extend(sorted(shared_tokens)[:6])
         breakdown[field_name] = contribution
         total += contribution
     return round(min(total, 0.18), 3), breakdown, sorted(dict.fromkeys(shared_signal_tokens))

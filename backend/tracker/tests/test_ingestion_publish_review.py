@@ -577,8 +577,13 @@ def test_publish_review_command_adds_direct_promise_alignment_links(monkeypatch)
     assert "ALIGNS_WITH_AGENDA_ITEM" in relation_types
     assert "ALIGNS_WITH_SOLUTION_PLAN" in relation_types
     assert "ALIGNS_WITH_IMPLEMENTATION_PLAN" in relation_types
+    assert "ASSESSES_SOLUTION_PLAN" in relation_types
+    assert "ASSESSES_IMPLEMENTATION_PLAN" in relation_types
     direct_agenda = next(rel for rel in relations if rel["relation_type"] == "ALIGNS_WITH_AGENDA_ITEM")
     assert direct_agenda["source_entity_type"] == "PoliticalPromise"
     assert direct_agenda["source_id"] == "political_promise:def"
+    direct_solution_assessment = next(rel for rel in relations if rel["relation_type"] == "ASSESSES_SOLUTION_PLAN")
+    assert direct_solution_assessment["source_entity_type"] == "AlignmentAssessment"
+    assert direct_solution_assessment["source_id"] == "alignment:reviewed:direct-links"
     assert direct_agenda["relationship_properties"]["alignmentAssessmentId"] == "alignment:reviewed:direct-links"
     assert direct_agenda["relationship_properties"]["approvalState"] == "approved"

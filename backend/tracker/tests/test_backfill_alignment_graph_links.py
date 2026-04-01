@@ -74,3 +74,41 @@ def test_backfill_alignment_graph_links_runs_publish_record(monkeypatch):
     assert payload["direct_relations_created"] >= 1
     assert published
     assert published[0]["graph_relations"][0]["source_entity_type"] == "PoliticalPromise"
+
+
+@pytest.mark.django_db
+def test_backfill_alignment_graph_links_includes_alignment_assessment_plan_edges(monkeypatch):
+    from tracker.management.commands import backfill_alignment_graph_links as command_module
+
+    published = []
+
+    def fake_cypher_query(query, params=None):
+        if "MATCH (aa:AlignmentAssessment)" in query:
+            return [[{
+                "alignment_assessment_id": "alignment:1",
+                "agenda_item_id": "agenda:1",
+                "political_promise_id": "promise:1",
+                "relation_type": "PARTIALLY_ALIGNS",
+                "confidence": 0.62,
+                "approval_state": "approved",
+            }]], None
+        if "count(t) AS count" in query:
+            return [[0]], None
+        raise AssertionError(f"Unexpected query: {query}")
+
+    def fake_publish_record(payload):
+        published.append(payload)
+        return {"ok": True, "node_id": payload["record_identity"]}
+
+    monkeypatch.setattr(command_module.db, "cypher_query", fake_cypher_query)
+    monkeypatch.setattr(command_module, "publish_record", fake_publish_record)
+
+    out = io.StringIO()
+    call_command("backfill_alignment_graph_links", stdout=out)
+
+    relation_types = [payload["graph_relations"][0]["relation_type"] for payload in published]
+    assert "ASSESSES_SOLUTION_PLAN" in relation_types
+    assert "ASSESSES_IMPLEMENTATION_PLAN" in relation_types
+    solution_payload = next(payload for payload in published if payload["graph_relations"][0]["relation_type"] == "ASSESSES_SOLUTION_PLAN")
+    assert solution_payload["graph_relations"][0]["source_entity_type"] == "AlignmentAssessment"
+    assert solution_payload["graph_relations"][0]["source_id"] == "alignment:1"

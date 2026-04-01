@@ -124,3 +124,28 @@ def test_score_alignment_candidate_uses_agenda_decomposition_text():
     assert candidate.score_breakdown["decomposition_overlap"] > 0
     assert "teacher" in candidate.shared_tokens
     assert candidate.to_review_queue_payload()["review_context"]["workflow"]["candidate_generation_method"] == "deterministic_rules_v3"
+
+
+def test_score_alignment_candidate_uses_payload_json_string_decomposition_text():
+    candidate = score_alignment_candidate(
+        {
+            "agenda_item_id": "agenda:payload-json",
+            "title": "Modernize transport systems",
+            "description": "Broader transport modernization agenda.",
+            "category": "Transport",
+            "solution": '{"summary": "Build electric bus charging depots and integrated e-ticketing for public transport."}',
+            "implementation": '{"steps": ["electric bus charging depots", "integrated e-ticketing rollout"]}',
+        },
+        {
+            "political_promise_id": "promise:payload-json",
+            "title": "Build electric bus charging depots and launch e-ticketing",
+            "summary": "Cleaner public transport and integrated ticketing.",
+            "category": "Transport",
+        },
+    )
+
+    assert candidate is not None
+    assert candidate.score_breakdown["solution"] > 0
+    assert candidate.score_breakdown["implementation"] > 0
+    assert candidate.score_breakdown["decomposition_overlap"] >= 0.08
+    assert "ticketing" in candidate.shared_tokens or "charging" in candidate.shared_tokens
