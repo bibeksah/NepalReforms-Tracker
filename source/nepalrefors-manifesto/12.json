@@ -1,0 +1,136 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "12",
+      "title": "Promote Local Production and Innovation, Ensure Quality",
+      "description": "Reduce import dependency by supporting local businesses through public-private investment funds, tax incentives, supply chain help, and university partnerships.",
+      "category": "Economic Development",
+      "priority": "Medium",
+      "timeline": "3 years",
+      "problem": {
+        "short": "Nepal remains import-dependent with weak farmer protections and high costs keeping local production uncompetitive while entrepreneurs face high land prices, bureaucracy, and unreliable energy.",
+        "long": "Nepal remains import-dependent and agriculture-heavy, with weak legal protections for farmers and high costs that have kept local production uncompetitive. Entrepreneurs face very high land prices, bureaucracy, and extremely unreliable energy sources, discouraging investment."
+      },
+      "solution": {
+        "short": [
+          "Industrial Growth Fund with 20% equity stakes and mandatory private co-investment requirement",
+          "Forward purchase agreements guaranteeing minimum prices for farmers supplying manufacturers",
+          "Preferential government procurement from certified local producers",
+          "University Innovation Fund with Technology Transfer Offices and IP support",
+          "Performance-based tax incentives tied to capacity targets and employment milestones"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Financial Instruments",
+              "title": "Industrial Growth Fund and Investment Incentives",
+              "items": [
+                "Public-private blended finance vehicle taking maximum 20% equity stakes in commercially vetted local firms",
+                "Independent governance with private sector experts, technical specialists, Auditor-General oversight",
+                "Market discipline: mandatory 1:1 or 2:1 private co-investment requirement to crowd in capital",
+                "Performance-based releases: tranched funding tied to capacity targets, local sourcing quotas, employment milestones"
+              ]
+            },
+            {
+              "phase": "Supply Chain Development",
+              "title": "Raw Material and Market Linkages",
+              "items": [
+                "Forward purchase agreements: government/cooperatives guarantee minimum prices for farmers supplying local manufacturers",
+                "Input aggregation hubs: public-private processing centers providing reliable supply with quality grading",
+                "Preferential government procurement: schools, hospitals, public works buy from certified local producers",
+                "Supply chain registration: import VAT exemptions require suppliers to document local sourcing efforts"
+              ]
+            },
+            {
+              "phase": "Innovation Ecosystem",
+              "title": "University-Industry Collaboration",
+              "items": [
+                "Competitive University Innovation Fund: Ministry of Education/Investment Board matching grants for applied R&D",
+                "Technology Transfer Offices in major universities with IP support and incubation facilities",
+                "Tax credits for firms investing in university R&D or purchasing university-developed technology",
+                "Impact Fund pooling CSR contributions from BFIs and corporates for university innovation projects"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Malaysia achieved 7.3% annual GDP growth 1961-2023 with manufacturing reaching 36.8% of GDP",
+          "Chile diversified beyond mining through upstream/downstream linkages supporting high-income transition",
+          "OECD analysis shows performance-based incentives outperform unconditional support in developing countries"
+        ],
+        "long": [
+          {
+            "country": "Malaysia",
+            "details": "Resource-based industrial development achieved 7.3% annual GDP growth 1961-2023",
+            "impact": "Manufacturing reached 36.8% of GDP through coordinated public investment, tax incentives, and supply chain development"
+          },
+          {
+            "country": "Chile",
+            "details": "Diversified beyond mining into salmon, fruits, wine, and wood products through upstream/downstream linkages",
+            "impact": "Supported high-income transition with similar policy combinations of public investment and private sector development"
+          },
+          {
+            "country": "OECD Analysis",
+            "details": "Conditional tax holidays with performance triggers and university-industry linkages significantly outperform unconditional incentives",
+            "impact": "Developing country contexts show better outcomes with performance-based incentives rather than blanket support"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-6: Fund establishment with independent governance and tax incentive framework design",
+          "Year 1: First IGF investments, raw material aggregation pilots, and Technology Transfer Office establishment",
+          "Years 2-3: Scale successful models and optimize based on job creation and export generation metrics"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "Fund Establishment and Framework Design",
+            "details": [
+              "Industrial Growth Fund establishment with independent governance structure",
+              "Tax incentive framework design with performance-linked benefits and clawback mechanisms",
+              "University partnership agreements for Technology Transfer Office establishment",
+              "Competitive selection criteria development for transparent fund allocation"
+            ]
+          },
+          {
+            "timeline": "Year 1",
+            "description": "Initial Implementation and Pilot Programs",
+            "details": [
+              "First IGF investments with private co-investment requirements and performance monitoring",
+              "Raw material aggregation pilots with forward purchase agreements for farmers",
+              "Technology Transfer Office establishment at major universities with incubation support",
+              "Preferential procurement program launch for certified local producers"
+            ]
+          },
+          {
+            "timeline": "Years 2-3",
+            "description": "Scaling and System Optimization",
+            "details": [
+              "Scale successful models based on performance evaluation and impact assessment",
+              "University Innovation Fund operational with competitive grant allocation",
+              "Supply chain integration improvements with quality standards and market linkages",
+              "System optimization based on job creation, export generation, and technology transfer metrics"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "50% increase in local content of manufactured goods within 5 years",
+        "200 new manufacturing jobs per 10 crore fund investment",
+        "30% increase in university-industry collaborative projects",
+        "25% reduction in key raw material import dependency"
+      ]
+    }
+  ]
+}

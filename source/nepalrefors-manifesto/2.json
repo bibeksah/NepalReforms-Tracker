@@ -1,0 +1,167 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "2",
+      "title": "Hold Free and Fair Elections (March 2026)",
+      "description": "Conduct parliamentary elections in March 2026 with critical reforms to prevent corrupt politicians from returning through strict candidate vetting, campaign finance transparency, and overseas voting implementation.",
+      "category": "Electoral Reform",
+      "priority": "High",
+      "timeline": "Until March 5, 2026",
+      "updatedOn": "7 Nov 2025",
+      "problem": {
+        "short": "After Gen Z protests forced parliament's dissolution in September 2025, elections are set for March 5, 2026. But critical reforms to prevent the same corrupt politicians from returning remain unimplemented. Without these reforms now, we'll just get another corrupt government.",
+        "long": "After Gen Z protests forced parliament's dissolution in September 2025, elections are set for March 5, 2026. But critical reforms to prevent the same corrupt politicians from returning remain unimplemented. Without these reforms now, we'll just get another corrupt government. The election system allows criminals and corrupt people to run for office, and voters don't know where campaign money comes from. The window to get this right is closing fast."
+      },
+      "solution": {
+        "short": [
+          "Ban candidates with proven criminal and corruption charges AND pending corruption indictments",
+          "Real-time campaign finance transparency with all donations and spending published online within 24 hours",
+          "Ban corporate donations - only verified individual contributions allowed",
+          "Implement overseas voting for Nepali diaspora as mandated by Supreme Court (2017)",
+          "Add 'None of the Above' (NOTA) option - if it wins, hold fresh elections with new candidates"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Candidate Vetting",
+              "title": "Must Implement Before Nominations (January 2026)",
+              "items": [
+                "Ban candidates with proven criminal and corruption charges AND pending corruption indictments",
+                "Election Commission publishes detailed candidate profiles including education, experience, wealth sources, and complete criminal/corruption case status",
+                "Amend electoral laws NOW to enable disqualification - window closing fast",
+                "Clear vetting criteria with due process protections to prevent weaponization"
+              ]
+            },
+            {
+              "phase": "Campaign Finance Transparency",
+              "title": "Launch Before Campaign Begins",
+              "items": [
+                "Real-time campaign finance transparency: All candidates must disclose budgets, funding sources, and spending online within 24 hours",
+                "Ban corporate donations: Only verified individual contributions allowed",
+                "Campaign spending limits: Strict ceiling with live monitoring and immediate penalties for violations",
+                "Public finance dashboard: Election Commission provides real-time tracking of all donations and expenditures",
+                "Mandatory audited expense reports within 30 days of polls with heavy penalties for violations"
+              ]
+            },
+            {
+              "phase": "Overseas Voting",
+              "title": "Implement Supreme Court Order (2017)",
+              "items": [
+                "Government has committed to overseas voting but legal and logistical barriers remain",
+                "Supreme Court ordered (April 2017): Allow voting for Nepalis who haven't renounced citizenship, hold voter ID, and are registered with diplomatic missions",
+                "Start with pilot countries where permissions secured",
+                "Address legal conflicts (Voter Registration Act) through ordinance",
+                "Risk: If delayed 'for next time,' millions remain disenfranchised"
+              ]
+            },
+            {
+              "phase": "Additional Electoral Reforms",
+              "title": "Democratic Enhancement Measures",
+              "items": [
+                "Voter education campaign: Know your candidates' backgrounds, not just their rally promises",
+                "NOTA option: If 'None of the Above' wins in a constituency, re-election with entirely new candidates",
+                "Reform electoral laws to ensure all transparency measures are enforceable"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Canada requires real-time disclosure of donations over $200 within 3 days",
+          "Philippines has robust overseas voting with 1.3+ million voters abroad",
+          "Countries with stricter campaign finance rules have higher public trust in elections"
+        ],
+        "long": [
+          {
+            "country": "Canada",
+            "details": "Requires real-time disclosure of donations over $200 within 3 days",
+            "impact": "Creates transparency and enables public scrutiny of political funding sources"
+          },
+          {
+            "country": "Australia",
+            "details": "Mandates disclosure of all donations over $15,200 annually",
+            "impact": "Countries with stricter campaign finance rules show higher public trust in elections and lower political corruption"
+          },
+          {
+            "country": "Philippines",
+            "details": "Has robust overseas voting system with 1.3+ million voters abroad in 2022 elections",
+            "impact": "Enables diaspora participation in democratic process"
+          },
+          {
+            "country": "India",
+            "details": "Implemented overseas voting cautiously starting in 2011",
+            "impact": "Demonstrates feasibility of diaspora voting in South Asian context"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "NOW (Nov-Dec 2025): Interim government issues ordinances to amend electoral laws",
+          "Before Nominations (Jan 2026): Disqualification criteria codified and public",
+          "During Campaign (Jan-Mar 2026): Real-time spending dashboard live",
+          "March 5, 2026: Elections with reformed system"
+        ],
+        "long": [
+          {
+            "timeline": "NOW (November-December 2025)",
+            "description": "Emergency Legal and Institutional Preparation",
+            "details": [
+              "Interim government issues ordinances to amend electoral laws",
+              "Establish candidate vetting criteria with clear due process protections",
+              "Launch campaign finance transparency portal development",
+              "Finalize overseas voting pilot countries where permissions secured"
+            ]
+          },
+          {
+            "timeline": "Before Nominations (January 2026)",
+            "description": "System Operationalization",
+            "details": [
+              "Disqualification criteria codified and made public",
+              "Campaign finance disclosure system operational and tested",
+              "Candidate profile requirements published with supporting documentation standards",
+              "Overseas voting infrastructure ready in pilot countries"
+            ]
+          },
+          {
+            "timeline": "During Campaign (January-March 2026)",
+            "description": "Active Monitoring and Enforcement",
+            "details": [
+              "Real-time spending dashboard live with 24-hour disclosure requirement",
+              "Voter education campaign on candidate backgrounds running continuously",
+              "Heavy penalties enforced immediately for violations",
+              "Election Commission actively monitoring and publishing campaign finance data"
+            ]
+          },
+          {
+            "timeline": "Election Day: March 5, 2026",
+            "description": "Conduct Reformed Elections",
+            "details": [
+              "Elections held with reformed vetting and transparency systems",
+              "NOTA option available in all constituencies",
+              "Overseas voting operational in pilot countries",
+              "Complete electoral process with enhanced accountability"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Complete background verification for 100% of candidates before nominations",
+        "Real-time tracking of all campaign donations and spending with 24-hour disclosure",
+        "Zero tolerance for hidden campaign funding with immediate enforcement",
+        "Complete electoral process on March 5, 2026 with reformed system",
+        "Overseas voting operational in pilot countries",
+        "NOTA option available in all constituencies with clear re-election procedures"
+      ],
+      "legalFoundation": "Electoral laws can be amended through ordinance by interim government. Supreme Court order (April 2017) mandates overseas voting implementation."
+    }
+  ]
+}

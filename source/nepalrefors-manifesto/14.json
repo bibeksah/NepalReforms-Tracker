@@ -1,0 +1,151 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "14",
+      "title": "Make Security Services Merit-Based with Health Checks",
+      "description": "Choose security personnel based on capability rather than loyalty, with transparent performance tracking, rotation limits, and mandatory health evaluations.",
+      "category": "Security Reform",
+      "priority": "Medium",
+      "timeline": "5 years",
+      "problem": {
+        "short": "Security personnel are chosen for loyalty rather than capability, undermining professionalism. Lack of routine health and integrity checks results in officers with substance abuse, untreated stress disorders, or compromised fitness remaining in positions that risk public safety.",
+        "long": "Nepal's security services—Nepal Police, Armed Police Force (APF), and other law enforcement agencies—suffer from systematic appointment and promotion practices prioritizing political loyalty over professional capability. This undermines operational effectiveness, public trust, and institutional professionalism. Political patronage drives appointments to senior positions, particularly Inspector General of Police (IGP) and top leadership roles. Officers are selected based on party affiliation, personal connections, or regional quotas rather than merit, competence, or track record of effective service delivery. Additionally, routine health and integrity checks are absent or poorly enforced. Officers with substance abuse issues, untreated mental health conditions (PTSD, stress disorders from conflict-era service), or compromised physical fitness remain in positions requiring critical decision-making and public interaction. This poses risks to both public safety and officer wellbeing. Performance evaluations lack objectivity and transparency, with promotions often determined by seniority or political connections rather than demonstrated competence, ethical conduct, or results-based assessment. There is no systematic tracking of officers' health, fitness, or integrity over their careers."
+      },
+      "solution": {
+        "short": [
+          "Merit-based promotions through PSC-administered competitive examinations for all senior positions",
+          "Mandatory annual health checks including mental health screening and quarterly drug/alcohol testing",
+          "Rotation limits with maximum 3-year tenure per posting preventing entrenchment",
+          "Transparent performance scorecards published online with security-appropriate redactions",
+          "Whistleblower protection for officers reporting political interference in appointments"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1 (Administrative Reforms)",
+              "title": "Merit-Based Selection System and Health Standards",
+              "items": [
+                "Merit-Based Promotions: Public Service Commission administers competitive examinations for all promotions to Senior Superintendent of Police (SSP) and above; exams test leadership, management, law, ethics, strategic thinking; structured performance reviews weighing measurable outcomes (crime reduction, case clearance rates, community trust surveys, operational efficiency); transparent scorecards published online with security-sensitive data redacted; independent oversight through PSC examiners and civil-society observers; diversified expertise recruitment from varied technical backgrounds (cybercrime, forensics, financial investigation, human rights, community policing)",
+                "Routine Health and Fitness Examinations: Annual comprehensive health checks including mental health evaluations (PTSD screening, stress management assessment, psychological fitness); quarterly drug and alcohol screening for all officers with random testing protocols; physical fitness tests required for promotion eligibility with standardized age-appropriate benchmarks; psychological evaluations assessing decision-making under pressure, ethical judgment, and interpersonal skills; officers failing health standards provided treatment and rehabilitation support with return-to-duty protocols; health monitoring integrated into annual performance reviews",
+                "Rotation and Tenure Limits: Maximum 3-year tenure per posting preventing entrenchment and local political capture; no repeat posting in same city or province within 5 years preventing power concentration; automatic rotation triggers for IGP and senior leadership; exceptions only through independent review board approval with published justification; rotation policy applies to all ranks above inspector level",
+                "Whistleblower Protection: Legal safeguards for officers reporting political interference in appointments or operations; anonymous reporting channels through Ombudsman and Anti-Corruption Commission; protection from retaliation, transfer, or demotion; rewards for verified reports leading to accountability actions; regular internal surveys on political interference and institutional pressure"
+              ]
+            },
+            {
+              "phase": "Phase 2 (Institutional Capacity Building)",
+              "title": "Digital Integration and Civilian Oversight",
+              "items": [
+                "Digital HR and Health Monitoring Platform: Comprehensive digital system tracking officer performance, health records, training, certifications, postings, and disciplinary history; automated rotation triggers based on tenure limits; public dashboard showing aggregate statistics (average tenure, promotion rates, health compliance, performance metrics) without compromising individual privacy; integration with National ID and civil service databases preventing falsification",
+                "Enhanced Civilian Oversight: Auditor-General expanded mandate to review security service expenditures and performance metrics; National Human Rights Commission oversight of use-of-force incidents and rights violations; Parliamentary committee quarterly hearings on security service performance, budgets, and leadership appointments; civilian observers in PSC examination processes; annual public reports on security service professionalism and public trust",
+                "Independent Leadership Vetting Panel: Security & Civil Service Promotions Advisory Panel established with retired judges, senior civil servants, security experts, and civil society representatives; panel reviews shortlists for IGP, APF Chief, and other top positions; conducts interviews, reviews performance records, solicits confidential input from colleagues and subordinates; provides binding recommendations to government; government must publicly justify any deviation from panel recommendations"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Singapore's Public Service Commission independence (1951) created world-class bureaucracy with merit-based appointments",
+          "UK's College of Policing mandates annual fitness tests and health screening for all officers",
+          "German federal police implement strict rotation policies preventing local capture",
+          "Estonia's digital civil service reconstruction achieved transparent performance management"
+        ],
+        "long": [
+          {
+            "country": "Singapore",
+            "details": "Public Service Commission independence established in 1951 created merit-based selection and promotion systems for civil service and security services. Competitive examinations, structured career progression, performance-based advancement, and transparent evaluation criteria applied universally",
+            "impact": "Contributed to building one of world's most efficient and least corrupt bureaucracies; security services enjoy high public trust; 100x GDP per capita increase 1959-2009 supported by professional governance"
+          },
+          {
+            "country": "United Kingdom",
+            "details": "College of Policing established 2012 as professional body for law enforcement setting standards for training, health, fitness, and ethics. Annual fitness tests mandatory for all officers; regular psychological evaluations; substance abuse screening; health monitoring throughout career",
+            "impact": "Enhanced professionalism and public trust; reduced health-related performance issues; improved officer wellbeing; clear accountability standards"
+          },
+          {
+            "country": "Germany",
+            "details": "Federal and state police forces implement strict rotation policies preventing officers from serving in same locality beyond fixed terms. Health and fitness standards strictly enforced with annual evaluations and mandatory retirement ages",
+            "impact": "Prevents local political capture and corruption; maintains operational effectiveness; ensures physical and mental fitness for demanding roles"
+          },
+          {
+            "country": "Estonia",
+            "details": "Digital civil service reconstruction after independence in 1991 achieved comprehensive performance management, transparent HR systems, and merit-based advancement across all government services including security forces",
+            "impact": "99% government service availability online; virtually eliminated corruption in routine government operations; professional security services with high public confidence"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-6: Amend Police Rules for PSC exams, issue rotation directive, establish health screening protocols",
+          "Months 7-12: First competitive examinations held, health checks begin, performance scorecard system launched",
+          "Years 2-3: Digital HR platform deployed, civilian oversight expanded, Leadership Vetting Panel operational",
+          "Years 4-5: Full merit system operational, 100% health compliance achieved, public trust metrics improve significantly"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "Legal and Administrative Foundation",
+            "details": [
+              "Amend Nepal Police Rules and APF Regulations requiring PSC-administered competitive examinations for all promotions to SSP and above",
+              "Ministry of Home Affairs issues rotation directive establishing 3-year maximum tenure per posting with automatic triggers",
+              "Establish health screening protocols through Ministry of Health collaboration; procure testing facilities and train medical personnel",
+              "Draft whistleblower protection regulations providing legal safeguards for officers reporting political interference",
+              "Form working committee to design performance scorecard system with input from security professionals, civil society, and international experts"
+            ]
+          },
+          {
+            "timeline": "Months 7-12",
+            "description": "Operational Implementation of Core Reforms",
+            "details": [
+              "Public Service Commission holds first competitive examinations for pending promotions; exams test leadership, law, ethics, strategic management",
+              "All officers undergo baseline health assessments including mental health screening; quarterly drug/alcohol testing begins",
+              "Performance scorecard system goes live with first batch of senior officers evaluated and results published online with appropriate redactions",
+              "First automatic rotations triggered for officers exceeding 3-year tenure; new postings allocated through transparent process",
+              "Establish anonymous reporting channels for political interference through Ombudsman and CIAA"
+            ]
+          },
+          {
+            "timeline": "Years 2-3",
+            "description": "Institutional Capacity Building and Oversight Expansion",
+            "details": [
+              "Deploy digital HR and health monitoring platform tracking performance, health records, training, postings, and disciplinary history across all security services",
+              "Expand Public Service Commission mandate formally through legislative amendment to cover all senior security service promotions",
+              "Establish Security & Civil Service Promotions Advisory Panel with retired judges, senior civil servants, and civil society representatives for top leadership vetting",
+              "Auditor-General and National Human Rights Commission expand oversight mandates to review security service performance, budgets, and rights compliance",
+              "Parliamentary committee begins quarterly hearings on security service leadership appointments and institutional performance",
+              "Health and integrity check compliance integrated into promotion eligibility; officers failing standards provided rehabilitation support"
+            ]
+          },
+          {
+            "timeline": "Years 3-5",
+            "description": "Full System Operation and Continuous Improvement",
+            "details": [
+              "100% of senior positions filled through merit-based competitive process; political appointments eliminated",
+              "Digital platform operational with public dashboard showing aggregate statistics on promotions, health compliance, rotation adherence",
+              "Annual public trust surveys and community satisfaction metrics integrated into officer performance evaluations",
+              "Leadership Vetting Panel provides binding recommendations on all IGP and APF Chief appointments; government publicly justifies any deviations",
+              "Civilian oversight bodies publish annual comprehensive reports on security service professionalism, use of force incidents, and public confidence",
+              "Continuous system refinement based on performance data, public feedback, and international best practices"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Merit System: 100% of SSP-and-above promotions through competitive PSC examinations by Year 2; zero political appointments",
+        "Health Compliance: 95% annual health evaluation compliance within Year 1; 100% by Year 3; zero active-duty officers with unmanaged substance abuse or critical mental health issues",
+        "Rotation Enforcement: 100% adherence to 3-year tenure limits with zero unauthorized exceptions by Year 2",
+        "Public Trust: 40% reduction in public complaints against security services by Year 3; 60% improvement in public trust ratings measured through independent surveys",
+        "Performance Transparency: 100% senior officers with published performance scorecards accessible to public within Year 2",
+        "Whistleblower Protection: Zero retaliation incidents against officers reporting political interference; functional anonymous reporting channels operational within 6 months"
+      ],
+      "legalFoundation": "Nepal Police Act 2012 and Armed Police Force Act 2058 provide framework for professional management. Public Service Commission Act 2015 enables merit-based selection. Ministry of Home Affairs has administrative authority to issue rotation directives and health standards through executive orders. Constitutional Article 242 mandates PSC role in public service appointments. Reforms achievable through regulatory amendments; enhanced oversight may require legislative changes."
+    }
+  ]
+}

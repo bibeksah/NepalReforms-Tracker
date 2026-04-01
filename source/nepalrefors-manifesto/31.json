@@ -1,0 +1,148 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "31",
+      "title": "Open Data and Transparency for Tourism Statistics",
+      "description": "Create comprehensive open tourism data portal consolidating fragmented statistics from 7+ agencies into unified, real-time, machine-readable platform reducing data publication lag from 6-18 months to monthly updates with 100% public accessibility.",
+      "category": "Tourism Data",
+      "priority": "High",
+      "timeline": "3 years",
+      "updatedOn": "24 Nov 2025",
+      "problem": {
+        "short": "Nepal's tourism statistics are fragmented across multiple agencies with inconsistent methodologies, significant publication delays (6-18 months), lack of granular data, and no centralized public access platform, preventing evidence-based decision-making by government, businesses, and researchers.",
+        "long": "Nepal's tourism statistics are fragmented across multiple agencies with inconsistent methodologies, significant publication delays, lack of granular data, and no centralized public access platform. Current fragmented system spreads tourism data across Nepal Tourism Board (NTB) publishes annual Nepal Tourism Statistics but data arrives 8-12 months late, aggregated at national level without district/route breakdowns, lacks demographic details beyond nationality; Department of Immigration tracks visa issuance and border crossings but data not publicly accessible, no integration with NTB statistics, inconsistent categorization of tourist types; Department of Tourism manages trekking permits (TIMS cards) but manual record-keeping in field offices, delayed aggregation, no real-time visibility; Department of National Parks issues conservation area permits (ACAP, Sagarmatha NP) with separate databases not linked to tourism statistics; Nepal Rastra Bank tracks foreign exchange earnings but tourism revenue estimates based on surveys, not transaction data, published annually with 12-18 month lag; Tribhuvan International Airport Corporation records passenger arrivals but limited demographic data collection, not disaggregated by purpose of visit. Documented problems include inconsistent tourist counts where NTB reports 1.2M tourists (2019) while Immigration reports different figures due to varying definitions; lack of real-time data preventing rapid response to trends, crises, or opportunities; no subnational granularity making provincial/district planning impossible; researchers and businesses cannot access raw data for analysis; international incomparability as Nepal's statistics don't meet UNWTO standards for tourism satellite accounts. World Bank Doing Business indicators and UNWTO Tourism Statistics frameworks both highlight Nepal's data transparency gaps as barriers to investment and planning."
+      },
+      "solution": {
+        "short": [
+          "Cabinet Tourism Data Governance Directive mandating all agencies share tourism data through unified platform",
+          "Build National Tourism Data Portal (data.tourism.gov.np) with API access for public, businesses, researchers",
+          "Real-time data integration from Immigration, Tourism, Parks, NTB, Airport through automated API feeds",
+          "Standardize definitions and methodologies aligned with UNWTO Tourism Statistics framework",
+          "Monthly publication schedule replacing current 6-18 month delays",
+          "Open data licensing (Creative Commons) enabling commercial and research use without restrictions"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1 (Months 1-12)",
+              "title": "Foundation and Pilot Data Portal",
+              "items": [
+                "Establish Legal and Institutional Foundation: Cabinet Tourism Data Governance Directive (Months 1-3) where Prime Minister/interim government issues executive order mandating all tourism-related agencies share data through unified national platform; establishes Tourism Data Governance Committee at Cabinet level chaired by Minister of MoCTCA with members from Home (Immigration), Forest (Parks), Finance (Revenue), Civil Aviation; Technical Secretariat led by NTB with MoCTCA and Department of Tourism; clear mandate requires monthly data sharing from all agencies within 36 months; Data Sharing Protocols include API specifications, data formats (CSV, JSON, XML), metadata standards, update frequencies; Open Data Licensing framework adopting Creative Commons Attribution 4.0 International allowing free use, sharing, adaptation with attribution; Inter-Agency Technical Working Group (Months 1-6) with IT representatives from all data-producing agencies holding mandatory monthly coordination meetings, developing unified data dictionary, creating dispute resolution mechanism",
+                "Standardize Definitions and Methodologies: Unified Tourist Definition adopting UNWTO International Recommendations for Tourism Statistics 2008 defining tourist as visitor staying at least one night but less than one year with primary purpose of leisure, business, or visiting friends/relatives excluding border workers, diplomats, military personnel; Visitor Categories standardizing international tourist, domestic tourist, same-day visitor, business traveler, pilgrim, medical tourist; Statistical Standards for accommodation nights, tourist expenditure, origin-destination flows, seasonal patterns; Measurement Protocols aligning immigration records, hotel registration data, permit issuances, airport passenger surveys; Implement Tourism Satellite Account framework measuring tourism's economic contribution following UNWTO methodology",
+                "Build National Tourism Data Portal (Months 4-12): Single web portal data.tourism.gov.np or integrated into nepal.gov.np/tourism using open-source CKAN data management system or similar platform with cloud hosting for scalability; Data Visualization Dashboard providing interactive maps, time-series charts, demographic breakdowns, seasonal trends; API Access offering RESTful APIs for programmatic data retrieval with rate limiting and authentication; Download Center enabling bulk downloads in CSV, JSON, Excel, PDF formats; Documentation Portal containing data dictionaries, methodology notes, user guides, API documentation; Search and Filter Tools allowing users to query by time period, nationality, region, tourism type; Mobile-Responsive Design ensuring accessibility on all devices",
+                "Pilot Data Integration (Months 7-12): Phase 1a Immigration Data starting with Department of Immigration tourist visa issuances, border crossing records, visa extensions with daily automated feeds via API; nationality breakdowns, entry/exit points, duration of stay; Phase 1b Airport Data integrating Tribhuvan International Airport passenger arrival statistics, flight origins, seasonal patterns with weekly automated updates; Phase 1c Trekking Permits adding Department of Tourism TIMS card issuances, popular trekking routes (Annapurna, Everest, Langtang), permit demographics with monthly manual uploads transitioning to automated feeds; Target: 40% of core tourism statistics available on portal within 12 months",
+                "Data Quality Assurance: Validation Rules checking for outliers, missing values, inconsistencies across datasets; Cross-Verification comparing immigration arrivals vs airport passengers, permit issuances vs hotel registrations; Error Reporting Mechanism allowing users to flag data issues; Quarterly Data Audit by independent statisticians; Transparency Reports publishing data quality metrics, known limitations, improvement plans",
+                "Stakeholder Training and Engagement: Government Training (Months 6-12) for 200+ staff across agencies covering data collection standards, portal usage, API integration, data privacy; dedicated helpdesk team of 10 staff; Industry Engagement (Months 8-12) training 500+ tourism businesses, research institutions, media organizations through workshops in Kathmandu, Pokhara, major tourism hubs; demonstrating how to access data via portal and APIs; business benefits including market intelligence, trend analysis, competitive benchmarking; Academic Partnerships (Months 9-12) collaborating with Tribhuvan University, Kathmandu University, NATHM to integrate portal into research and curriculum; organizing data hackathons and visualization competitions"
+              ]
+            },
+            {
+              "phase": "Phase 2 (Months 13-24)",
+              "title": "Comprehensive Data Integration and Enhanced Analytics",
+              "items": [
+                "Full Data Integration Across All Agencies: Conservation Area Permits (Months 13-18) integrating Department of National Parks data for ACAP, MCAP, Sagarmatha NP, Kanchenjunga with visitor numbers by nationality, entry points, seasonal patterns, permit revenues; Domestic Tourism Data (Months 16-20) collecting hotel registration records from Nepal Hotel Association, internal flight passenger data from domestic airlines, local festival attendance, pilgrimage statistics with NTB coordination for consistent methodology; Economic Data (Months 19-24) integrating Nepal Rastra Bank foreign exchange earnings, tourist expenditure surveys, employment statistics from labor force surveys, tourism business revenues from tax records with privacy protections; Target: 80% of all tourism-related datasets integrated by Month 24",
+                "Advanced Analytics and Predictive Tools: Real-Time Dashboards (Months 18-24) for MoCTCA, NTB, provincial governments showing live tourist arrivals, occupancy rates, revenue trends, seasonal comparisons; Predictive Analytics using machine learning to forecast permit demand, peak seasons, emerging routes, revenue projections; Geospatial Analysis providing interactive maps showing tourist density by district, popular routes, infrastructure gaps, carrying capacity; Trend Analysis identifying growth markets, declining segments, shift in tourist preferences, impact of policy changes; Public Transparency Portal offering monthly automated reports on tourist volumes, economic impact, environmental indicators, comparative regional performance",
+                "Subnational Data Granularity: Provincial Breakdown disaggregating all statistics to 7 provinces showing arrivals, permits, spending, accommodation; District-Level Data for all 77 districts covering tourist visits, trekking permits, hotel registrations, monument entries; Route-Specific Data tracking Annapurna Circuit, Everest Base Camp, Upper Mustang, Langtang, Manaslu, and 50+ other routes; Municipality Data for major tourist destinations like Pokhara, Lumbini, Chitwan, Bhaktapur showing granular visitor flows",
+                "Enhanced Stakeholder Engagement: Tourism Business Intelligence Portal (Months 20-24) providing premium analytics for registered tourism businesses including competitor benchmarking, market segmentation, pricing trends, customer demographics; partnership with TAAN, HAN, NATTA; Research Data Repository (Months 22-24) offering anonymized microdata for academic research, historical time-series for longitudinal studies, survey instruments and questionnaires, collaboration with universities; International Data Sharing (Months 18-24) providing data to UNWTO, World Bank, regional tourism organizations, bilateral partners following international standards and agreements",
+                "Data Privacy and Security: Privacy Framework ensuring tourist data anonymized with no personally identifiable information in public datasets; hotel/business data aggregated to prevent competitive harm; compliance with data protection principles; Security Measures including SSL encryption, role-based access control, regular security audits, DDoS protection, backup and disaster recovery; Ethical Use Guidelines prohibiting discriminatory uses, requiring attribution, encouraging responsible interpretation"
+              ]
+            },
+            {
+              "phase": "Phase 3 (Months 25-36)",
+              "title": "Advanced Features and Long-Term Sustainability",
+              "items": [
+                "Tourism Satellite Account Implementation (Months 25-36): Full TSA following UNWTO framework measuring tourism's contribution to GDP, employment, government revenue, investment; sectoral breakdown for accommodation, food services, transportation, recreation, shopping; comparison with other industries; annual publication with quarterly updates; international comparability enabling benchmarking against regional competitors",
+                "Impact Assessment and Scenario Modeling Tools: Environmental Impact Tracking monitoring tourist volumes vs carrying capacity for national parks, trekking routes, heritage sites; linking to pollution indicators, waste generation, resource consumption; Economic Impact Simulator allowing policymakers to model effects of visa policy changes, infrastructure investments, marketing campaigns, external shocks (pandemics, disasters); Social Impact Indicators tracking employment in tourism sector, gender distribution, community benefits, cultural preservation",
+                "Integration with National Data Infrastructure: Linkage with National ID System connecting tourist permits to digital identity for fraud prevention and tracking; Integration with Tax System aligning tourism business revenues with tax filings for compliance monitoring; Connection to Geospatial Platform integrating with national GIS infrastructure for spatial planning; Federal Data Portal ensuring tourism data feeds into broader nepal.gov.np open data initiative",
+                "Sustainability and Long-Term Operations: Dedicated Data Unit within MoCTCA with Data Director + 12 Analysts + 3 Developers + 2 Database Administrators managing platform maintenance, data quality, user support, feature development; Ongoing Budget of NPR 15-20 million annually for server hosting, software licenses, staff salaries, training, upgrades; Revenue Model exploring premium analytics services for commercial users, API usage fees for high-volume applications, consulting services while maintaining free public access to core data; Quarterly Platform Reviews collecting user feedback, analyzing usage statistics, identifying gaps, planning improvements; Annual Independent Audit by external data scientists evaluating quality, completeness, timeliness, usability; Five-Year Strategic Roadmap planning advanced AI/ML features, real-time data streams, mobile applications, international partnerships"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Singapore's Tourism Analytics Network provides real-time data to 5,000+ businesses enabling precision marketing",
+          "New Zealand's MBIE Tourism Dashboard offers monthly district-level statistics with 95% data completeness",
+          "Mexico's DATATUR open platform publishes 200+ datasets with 500K+ annual users",
+          "Australia's Tourism Research Australia provides granular data driving $60B industry"
+        ],
+        "long": [
+          {
+            "country": "Singapore",
+            "details": "Tourism Analytics Network integrates data from Immigration & Checkpoints Authority, hotels, attractions, retail transactions. Provides real-time dashboards to 5,000+ tourism businesses. Monthly publication with 2-week lag (vs Nepal's 6-18 months). Granular data by visitor origin, spending patterns, attractions visited, accommodation types",
+            "impact": "Enabled precision marketing campaigns increasing high-value tourist segments by 23% (2015-2019). Businesses credit data access with improving revenue per visitor from SGD 1,340 to SGD 1,450"
+          },
+          {
+            "country": "New Zealand",
+            "details": "Ministry of Business, Innovation and Employment (MBIE) Tourism Dashboard offers monthly statistics at district level. Open API with 50+ datasets. International Visitor Survey provides detailed expenditure and activity data. Regional Tourism Estimates allocate spending to territorial authorities. 95% data completeness within 60 days of month-end",
+            "impact": "Enabled evidence-based regional tourism strategies. Queenstown used data to implement visitor management plan addressing over-tourism while maintaining satisfaction above 85%"
+          },
+          {
+            "country": "Mexico",
+            "details": "DATATUR (Datatur.sectur.gob.mx) open platform launched 2016. Publishes 200+ datasets covering arrivals, spending, employment, infrastructure. Real-time airport arrivals, monthly accommodation statistics, quarterly economic impact. API access with Creative Commons licensing. Mobile app for tourists and businesses",
+            "impact": "500,000+ annual users including researchers, investors, tourism operators. World Bank cited as model for tourism data transparency in Latin America"
+          },
+          {
+            "country": "Australia",
+            "details": "Tourism Research Australia (TRA) publishes International Visitor Survey, National Visitor Survey with detailed microdata. Monthly state/territory statistics, quarterly regional data. Open data portal with CSV/Excel downloads. Academic research agreements enabling anonymized microdata access",
+            "impact": "Supports $60B tourism industry. Used by state governments for infrastructure planning, private sector for investment decisions, universities for 200+ research papers annually"
+          },
+          {
+            "country": "Estonia",
+            "details": "Statistics Estonia publishes monthly tourism statistics within 35 days. Integration with X-Road data exchange platform enabling cross-agency data sharing. Open API with JSON/XML formats. Automated data collection from accommodation providers",
+            "impact": "Estonia ranks #1 in Europe for government data transparency (Open Data Barometer). Tourism stakeholders report 40% reduction in time spent gathering market intelligence"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Year 1 (Months 1-12): Legal foundation, standardize definitions, pilot portal with Immigration/Airport/Trekking data, 40% core statistics available",
+          "Year 2 (Months 13-24): Full agency integration, advanced analytics, subnational granularity, 80% datasets integrated",
+          "Year 3 (Months 25-36): Tourism Satellite Account, impact assessment tools, national infrastructure integration, sustainability model confirmed"
+        ],
+        "long": [
+          {
+            "timeline": "Year 1 (Months 1-12)",
+            "description": "Foundation and Pilot Portal",
+            "details": [
+              "Months 1-3: Cabinet issues Tourism Data Governance Directive; Tourism Data Governance Committee established; inter-agency working group formed",
+              "Months 4-6: Unified definitions finalized following UNWTO standards; data sharing protocols agreed; CKAN platform deployed and configured",
+              "Months 7-12: Immigration, Airport, Trekking permit data integrated; data.tourism.gov.np portal launched publicly; 200 government staff trained; 500 industry stakeholders engaged; first monthly statistics published; 40% of core datasets available"
+            ]
+          },
+          {
+            "timeline": "Year 2 (Months 13-24)",
+            "description": "Comprehensive Integration and Analytics",
+            "details": [
+              "Months 13-18: Conservation area permits, domestic tourism data integrated; hotel registration records linked; real-time dashboards operational",
+              "Months 19-24: Economic data from NRB integrated; predictive analytics deployed; provincial and district-level breakdowns available; business intelligence portal launched; 80% of all tourism datasets integrated; monthly publication schedule routine"
+            ]
+          },
+          {
+            "timeline": "Year 3 (Months 25-36)",
+            "description": "Advanced Features and Sustainability",
+            "details": [
+              "Months 25-30: Tourism Satellite Account published following UNWTO framework; environmental and social impact indicators operational; scenario modeling tools deployed",
+              "Months 31-36: Integration with National ID, tax systems, geospatial platform; dedicated Data Unit fully staffed and operational; long-term maintenance contracts signed; financial sustainability model confirmed; independent audit completed; five-year roadmap published; 95% of tourism data publicly accessible with monthly updates"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Year 1: 40% of core tourism statistics available on public portal; monthly publication schedule for integrated datasets; data lag reduced from 6-18 months to 30-60 days; platform uptime 95%; 1,000+ registered users",
+        "Year 2: 80% of all tourism datasets integrated; subnational data available for all 7 provinces and major districts; real-time dashboards operational; predictive analytics deployed; data lag reduced to 15-30 days; platform uptime 98%; 5,000+ registered users; 100+ media citations",
+        "Year 3: 95% of tourism data publicly accessible; Tourism Satellite Account published annually; monthly updates for all major indicators; data lag reduced to 7-15 days; platform uptime 99.5%; 10,000+ registered users; Nepal achieves UNWTO Category 1 data standards; independent audit confirms data quality >90%; tourism stakeholder satisfaction 80% rate data as good or excellent",
+        "Long-term (5 years): 100% digital data collection; real-time statistics for high-frequency indicators; international recognition as regional leader in tourism data transparency; platform cited in 50+ academic publications; business intelligence services financially self-sustaining"
+      ],
+      "legalFoundation": "Tourism Act 2035 (1978) grants MoCTCA authority over tourism sector coordination. Nepal Tourism Board Act 2053 (1996) establishes NTB's role in tourism promotion and research. Electronic Transactions Act 2063 (2008) provides framework for digital data management. Right to Information Act 2064 (2007) mandates proactive disclosure of government data. Statistics Act 2058 (2002) governs official statistics and Nepal Central Bureau of Statistics coordination. Implementation requires Cabinet Directive (fastest route during interim government) or Tourism Data Act (more durable but requires Parliament)."
+    }
+  ]
+}

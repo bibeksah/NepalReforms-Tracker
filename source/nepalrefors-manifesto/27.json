@@ -1,0 +1,143 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "27",
+      "title": "Reform Financial Management System",
+      "description": "Modernize public financial management through integrated systems, citizen budget portals, scientific budgeting, and strengthened oversight to eliminate waste and enhance accountability.",
+      "category": "Financial Management",
+      "priority": "High",
+      "timeline": "2 years",
+      "problem": {
+        "short": "Public financial management suffers from fragmented systems, weak accountability, and outdated processes. LMBIS, Provincial LMBIS, SuTRA, and RMS not interoperable while budgeting disconnected from implementation.",
+        "long": "Public financial management suffers from fragmented systems, weak accountability, and outdated processes. LMBIS, Provincial LMBIS, SuTRA, and RMS are not interoperable while budgeting and expenditure decisions are disconnected from implementation. Multiple incompatible financial management systems operate across federal, provincial, and local levels without data sharing or integration. Budgets prepared with unrealistic revenue projections and expenditure estimates disconnected from implementation capacity. National Planning Commission duplicates Ministry of Finance functions creating confusion and delays. Public Procurement Act's risk-averse provisions paralyze bureaucrats fearing prosecution for good-faith decisions, leading to delays and lowest-bidder selection ignoring quality. No citizen access to real-time budget or expenditure data. Auditor General focuses on legal compliance rather than performance evaluation, missing wasteful spending that technically follows rules. Result: low budget execution rates, wasteful projects, procurement delays, and zero public accountability for financial performance."
+      },
+      "solution": {
+        "short": [
+          "Integrate LMBIS, Provincial LMBIS, SuTRA, RMS into interoperable system within 1-2 years",
+          "Citizen budget portal with real-time ward-level budget and implementation data",
+          "Amend Public Procurement Act protecting good-faith bureaucrats, digitize procurement",
+          "Establish Parliamentary Budget Office for independent oversight and analysis",
+          "Mandatory performance audits by Auditor General alongside compliance audits"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "System Integration and Transparency",
+              "title": "Interoperable Financial Systems and Citizen Access",
+              "items": [
+                "Integrate financial systems making LMBIS, Provincial LMBIS, SuTRA, RMS interoperable within 1-2 years",
+                "Citizen budget portal providing real-time ward-level budget and implementation data for public scrutiny",
+                "Scientific budgeting ensuring revenue and expenditure projections are evidence-based with accountability",
+                "Complete system interoperability with citizen-friendly interface and mobile SMS alerts"
+              ]
+            },
+            {
+              "phase": "Procurement Reform and Legal Protection",
+              "title": "Digital Procurement and Bureaucratic Protection",
+              "items": [
+                "Amend Public Procurement Act to protect bureaucrats acting in good faith from arbitrary prosecution",
+                "Digitize procurement processes prioritizing performance and quality over lowest price",
+                "Enforce strong Conflict of Interest rules with transparent compliance monitoring",
+                "Performance-based bid evaluation replacing automatic lowest-bidder selection"
+              ]
+            },
+            {
+              "phase": "Planning Streamline and Oversight Strengthening",
+              "title": "Fiscal Discipline and Enhanced Accountability",
+              "items": [
+                "Replace National Planning Commission with planning division in Ministry of Finance",
+                "Enforce hard budget constraints following Mid-Term Expenditure Report guidelines",
+                "Establish Parliamentary Budget Office for independent budget oversight and analysis",
+                "Mandatory performance audits by Auditor General alongside legal compliance audits"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "South Korea, Chile, Philippines have citizen budget portals enabling real-time transparency",
+          "India and Philippines show mandatory performance audits reduce fund misuse and improve outcomes",
+          "Kenya and Rwanda's digitized procurement with conflict-of-interest rules reduces corruption",
+          "New Zealand's hard budget constraints and evidence-based projections achieve higher execution rates"
+        ],
+        "long": [
+          {
+            "country": "Global Best Practice",
+            "details": "Countries like South Korea, Chile, and Philippines have citizen budget portals and integrated financial management systems",
+            "impact": "Enable real-time transparency and improved fiscal discipline through citizen oversight"
+          },
+          {
+            "country": "Performance Audit Success",
+            "details": "India and Philippines demonstrate mandatory performance audits improve project outcomes",
+            "impact": "Reduced misuse of funds and better value-for-money through systematic performance evaluation"
+          },
+          {
+            "country": "Digital Procurement Benefits",
+            "details": "Kenya and Rwanda show digitized procurement with conflict-of-interest rules reduces corruption",
+            "impact": "Improved value for money and transparent processes through systematic digitization"
+          },
+          {
+            "country": "Budget Discipline",
+            "details": "New Zealand's adherence to hard budget constraints and evidence-based projections",
+            "impact": "Achieved higher budget execution rates and more efficient public spending"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-12: Map systems, develop interoperable platform, build citizen budget portal",
+          "Months 12-24: Amend Procurement Act, digitize procurement, establish Parliamentary Budget Office",
+          "Year 2: Close NPC, enforce budget constraints, require performance audits, 50% efficiency improvement"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-12",
+            "description": "System Integration and Portal Development",
+            "details": [
+              "Map all existing financial management systems (LMBIS, Provincial LMBIS, SuTRA, RMS)",
+              "Design and develop interoperable platform linking all systems with citizen access",
+              "Build citizen budget portal with ward-level real-time budget and expenditure data",
+              "Conduct training for officials on proper usage, data entry, and transparency requirements"
+            ]
+          },
+          {
+            "timeline": "Months 12-24",
+            "description": "Procurement Reform and Legal Framework",
+            "details": [
+              "Amend Public Procurement Act providing legal protection for good faith bureaucratic actions",
+              "Digitize procurement processes with performance-based evaluation of bids",
+              "Strengthen Conflict of Interest rules and enforce strict compliance monitoring",
+              "Establish Parliamentary Budget Office for independent budget oversight and analysis"
+            ]
+          },
+          {
+            "timeline": "Year 2",
+            "description": "Planning Restructure and Oversight Enhancement",
+            "details": [
+              "Close National Planning Commission and establish planning division in Ministry of Finance",
+              "Enforce hard budget constraints following Mid-Term Expenditure Report guidelines",
+              "Require performance audits by Auditor General alongside compliance audits",
+              "Complete system optimization with 50% improvement in budget execution efficiency"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Complete system interoperability within 2 years",
+        "Real-time ward-level budget data accessible to all citizens",
+        "Scientific budgeting with evidence-based projections",
+        "50% improvement in budget execution efficiency"
+      ],
+      "legalFoundation": "Financial Procedure Act 2019 and Public Finance Management Act provide comprehensive framework"
+    }
+  ]
+}

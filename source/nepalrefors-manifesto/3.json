@@ -1,0 +1,150 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "3",
+      "title": "Decentralize Power from Kathmandu to Provinces and Local Levels",
+      "description": "Give real decision-making power and budget control to provincial and local governments through phased implementation with capacity building, so people don't have to go to Kathmandu for every approval.",
+      "category": "Federalism",
+      "priority": "High",
+      "timeline": "5-10 years (phased)",
+      "updatedOn": "18 Nov 2025",
+      "problem": {
+        "short": "Too much power concentrated in Kathmandu creates corruption bottlenecks. Every decision, every budget, every project approval goes through the center, creating opportunities for bribes and delays.",
+        "long": "Too much power concentrated in Kathmandu creates corruption bottlenecks. Every decision, every budget, every project approval goes through the center, creating opportunities for bribes and delays. Despite constitutional federalism, implementation remains incomplete. Research shows 200 local governments lack executive officers, with critical legislation delayed. Federal government continues bypassing subnational governments while local capacity gaps persist, creating a gap between constitutional authority and operational reality."
+      },
+      "solution": {
+        "short": [
+          "Enforce constitutional decentralization through existing Schedules 5-9",
+          "60% budget decentralization with formula-based fiscal transfers that cannot be arbitrarily withheld",
+          "40% provincial tax retention from locally collected revenues",
+          "50 crore local approval authority for municipalities",
+          "Independent regional audit units preventing corruption from relocating to local level",
+          "Phased pilot implementation with 15-20 municipalities receiving intensive capacity building"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1 (Years 1-2)",
+              "title": "Pilot Program with Intensive Capacity Building",
+              "items": [
+                "Enforce constitutional decentralization: Implement existing Schedules 5-9 that already grant provinces and local governments exclusive powers over health, education, and infrastructure",
+                "Address jurisdictional ambiguities: Clarify overlapping powers within Schedules 5-9 through federal framework legislation",
+                "Pilot program with 15-20 municipalities receiving enhanced powers alongside intensive capacity development",
+                "Establish 25-30 regional audit hubs serving clusters of local governments with independent auditors, fixed-term appointments, and mandatory public reporting",
+                "Implement formula-based fiscal transfers with legal enforceability: Transparent, predictable allocation formulas that cannot be arbitrarily withheld",
+                "Subnational governments have direct legal recourse if federal transfers are delayed, ending current discretionary system",
+                "Intensive capacity building with embedded technical assistance in pilot municipalities"
+              ]
+            },
+            {
+              "phase": "Phase 2 (Years 3-5)",
+              "title": "Expansion Based on Pilot Lessons",
+              "items": [
+                "60% budget decentralization: Direct allocation to provinces and local levels with ring-fenced sector transfers to prevent federal reclaim",
+                "40% provincial tax retention: Provinces keep income tax, VAT share, and natural resource royalties collected within their borders",
+                "50 crore local approval authority: Municipalities approve projects independently without federal sign-off",
+                "Provincial civil service: Provinces recruit and manage their own staff instead of waiting for federal appointments",
+                "Classify all governments into asymmetric capacity tiers: full autonomy, partial autonomy, limited autonomy based on demonstrated capacity",
+                "Real-time financial transparency portals and citizen complaint mechanisms prevent corruption from relocating to local level",
+                "Scale successful models from pilot phase"
+              ]
+            },
+            {
+              "phase": "Phase 3 (Years 5-10)",
+              "title": "Full Implementation with Continued Development",
+              "items": [
+                "Full implementation with continued capacity development across all municipalities",
+                "Periodic tier reassessment allowing municipalities to progress from limited to full autonomy",
+                "Gradual federal service delivery reduction as local capacity strengthens",
+                "Federal role limited to monitoring: Central government audits performance but doesn't control day-to-day decisions except for national strategic projects",
+                "Independent regional audit units ensure accountability without federal control",
+                "Formula-based transfers eliminate federal discretion that creates bribery opportunities"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Indonesia reduced central dependency from 82% to 48% through decentralization",
+          "Philippines increased local transfers by 55% giving real power and resources",
+          "Switzerland demonstrates ideal federalism with decisions at local level creating efficient government"
+        ],
+        "long": [
+          {
+            "country": "Indonesia",
+            "details": "2001 decentralization reduced central dependency from 82% to 48% of subnational revenue by 2020. However, initial 'Big Bang' approach without capacity building caused service delivery problems, leading to subsequent asymmetric reforms where authority is delegated based on demonstrated capacity",
+            "impact": "Local governments became more responsive and efficient where capacity existed. Lesson: Capacity building must accompany devolution"
+          },
+          {
+            "country": "Philippines",
+            "details": "Local Government Code with Mandanas Ruling increased local transfers by 55% to ₱1.08 trillion (4.8% of GDP) in 2022, giving local governments real power and resources",
+            "impact": "Research shows capacity can follow function through learning-by-doing when adequate support accompanies devolution"
+          },
+          {
+            "country": "Switzerland",
+            "details": "Apart from foreign affairs and defense, almost all decisions are made at cantonal and municipal levels without central oversight. Independent cantonal audit offices ensure accountability without federal control",
+            "impact": "Created one of the world's least corrupt and most efficient governments through local accountability"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Phase 1 (Years 1-2): Pilot 15-20 municipalities, establish audit hubs, implement formula-based transfers",
+          "Phase 2 (Years 3-5): Expand based on lessons, classify governments into capacity tiers",
+          "Phase 3 (Years 5-10): Full implementation with continued capacity development"
+        ],
+        "long": [
+          {
+            "timeline": "Phase 1 (Years 1-2)",
+            "description": "Pilot Program with Intensive Capacity Building",
+            "details": [
+              "Pilot program with 15-20 municipalities receiving enhanced powers",
+              "Establish 25-30 regional audit hubs serving clusters of local governments",
+              "Implement formula-based fiscal transfers with legal enforceability",
+              "Intensive capacity building with embedded technical assistance",
+              "Enforce existing constitutional provisions through amended federal laws and phased administrative decentralization"
+            ]
+          },
+          {
+            "timeline": "Phase 2 (Years 3-5)",
+            "description": "Expansion and Asymmetric Implementation",
+            "details": [
+              "Expand based on pilot lessons learned",
+              "Classify all governments into asymmetric capacity tiers (full autonomy, partial autonomy, limited autonomy)",
+              "High-capacity municipalities receive full autonomy immediately",
+              "Low-capacity municipalities receive extended federal support until ready",
+              "Scale successful models from pilot phase",
+              "Real-time financial transparency portals operational in all municipalities"
+            ]
+          },
+          {
+            "timeline": "Phase 3 (Years 5-10)",
+            "description": "Full Implementation and Maturation",
+            "details": [
+              "Full implementation with continued capacity development",
+              "Periodic tier reassessment every 2 years",
+              "Gradual federal service delivery reduction as local capacity strengthens",
+              "100% audit coverage through independent regional units",
+              "Citizens can more easily monitor local officials they interact with regularly"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Year 2: 80% of pilot governments demonstrate measurable capacity improvement; 100% audit coverage in pilot areas",
+        "Year 5: 40% of municipalities operating at full autonomy; 90% of fiscal transfers follow formula without delays; public financial dashboards operational",
+        "Year 10: 70% of municipalities at full autonomy; service delivery improvements of 30%; citizen satisfaction exceeds 60%"
+      ],
+      "legalFoundation": "Constitution Articles and Schedules 5-9 already grant provinces and local governments exclusive powers. Implementation requires enforcing existing constitutional provisions through amended federal laws."
+    }
+  ]
+}

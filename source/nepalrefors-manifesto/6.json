@@ -1,0 +1,123 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "6",
+      "title": "Constitutional Reform for Stable Governance",
+      "description": "Create independent oversight of government appointments, strengthen anti-corruption powers, and work toward long-term constitutional changes for political stability.",
+      "category": "Constitutional Reform",
+      "priority": "High",
+      "timeline": "5 years",
+      "problem": {
+        "short": "Nepal's parliamentary system creates chronic instability, coalition governments that collapse frequently, and allows unqualified party loyalists to become ministers without independent checks.",
+        "long": "Nepal's current parliamentary system creates chronic instability, coalition governments that collapse frequently, and allows unqualified party loyalists to become ministers. There are no independent checks on executive appointments and insufficient separation of powers to prevent abuse."
+      },
+      "solution": {
+        "short": [
+          "Create independent commission to review all ministerial appointments publicly",
+          "Require education and experience standards for all ministers",
+          "Give anti-corruption commission independent prosecution powers",
+          "Allow overseas Nepalis to vote in elections",
+          "Long-term goal: Direct presidential elections separate from legislature"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1",
+              "title": "Immediate Statutory Reforms",
+              "items": [
+                "Independent Commission on Executive Appointments (ICEA) with advisory powers and mandatory public vetting",
+                "Ministerial Qualifications Act with education/experience requirements for all portfolios",
+                "Enhanced CIAA powers with independent prosecution wing through CIAA Act amendment",
+                "Overseas voting implementation through Election Commission regulation and embassy infrastructure",
+                "All reforms achievable through simple Parliamentary acts within 6-12 months"
+              ]
+            },
+            {
+              "phase": "Phase 2",
+              "title": "Long-term Constitutional Goals",
+              "items": [
+                "Direct Presidential Elections requiring constitutional amendment but providing stability precedent from France, South Korea",
+                "Separation of Executive/Legislative where ministers cannot simultaneously be MPs",
+                "Constitutional amendment in Article 78 ensuring professional governance over political loyalties",
+                "Constitutional budget protection for independent institutions",
+                "Requires broad political consensus and 2/3 Parliamentary majority over 2-5 years"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Singapore's merit-based appointment system contributed to 100x GDP growth over 60 years",
+          "South Korea's 1987 constitutional reforms created stable democratic institutions",
+          "Estonia combined immediate reforms with long-term constitutional development"
+        ],
+        "long": [
+          {
+            "country": "Singapore",
+            "details": "Statutory Public Service Commission (1951) created merit-based appointments without constitutional change",
+            "impact": "Contributed to 100x GDP growth over 60 years by ensuring competent administration and policy continuity"
+          },
+          {
+            "country": "South Korea",
+            "details": "1987 constitutional reforms required years of political consensus-building but established direct elections and independent institutions",
+            "impact": "Supported economic miracle and democratic consolidation through stable governance structures and professional administration"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Phase 1 (0-12 months): Create appointment commission, pass qualification laws",
+          "Phase 2 (2-5 years): Build political consensus for constitutional amendments",
+          "Show that immediate reforms work before proposing constitutional changes"
+        ],
+        "long": [
+          {
+            "timeline": "Months 0-12",
+            "description": "Phase 1: Immediate Statutory Reforms",
+            "details": [
+              "ICEA establishment through Parliamentary legislation with advisory powers and public vetting requirements",
+              "Ministerial Qualifications Act passage with sectoral expertise requirements",
+              "CIAA strengthening through enhanced prosecution powers and budget independence",
+              "Overseas voting implementation through Election Commission infrastructure development"
+            ]
+          },
+          {
+            "timeline": "Years 1-2",
+            "description": "Demonstration of Reform Effectiveness",
+            "details": [
+              "ICEA operational with public vetting of all ministerial nominees and published scorecards",
+              "100% ministerial appointments meeting qualification standards with parliamentary justification",
+              "Enhanced CIAA prosecution capabilities operational with increased conviction rates",
+              "Overseas voting successful implementation for diaspora political participation"
+            ]
+          },
+          {
+            "timeline": "Years 2-5",
+            "description": "Phase 2: Constitutional Amendment Process",
+            "details": [
+              "Build political consensus for constitutional amendments based on Phase 1 success",
+              "Direct presidential election amendment process with broad stakeholder consultation",
+              "Executive/legislative separation constitutional changes for professional governance",
+              "Constitutional protection for independent institutions and merit-based appointments"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Independent commission reviews all ministerial appointments publicly",
+        "100% ministerial appointments meet qualification standards",
+        "Anti-corruption commission gets prosecution powers within 12 months",
+        "Build political consensus for constitutional amendments"
+      ]
+    }
+  ]
+}

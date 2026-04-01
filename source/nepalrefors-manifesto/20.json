@@ -1,0 +1,138 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "20",
+      "title": "Track All Government Spending in Real-Time",
+      "description": "Create digital system where every government transaction is published online within 24 hours so citizens can see how their tax money is spent.",
+      "category": "Financial Transparency",
+      "priority": "High",
+      "timeline": "18 months",
+      "problem": {
+        "short": "Citizens have no access to information about government spending while financial transactions happen in darkness, enabling massive corruption and waste. Real-time tracking systems are absent despite legal requirements.",
+        "long": "Citizens have no access to information about government spending while financial transactions happen in darkness, enabling massive corruption and waste. The Right to Information Act 2007 requires proactive financial disclosure and the Auditor General Act establishes audit authority, but real-time tracking systems are absent. Government expenditure occurs through opaque processes where budget allocations, procurement contracts, and payment disbursements remain hidden from public scrutiny. Citizens cannot track how tax revenues are spent, which contractors receive government business, or whether funds reach intended beneficiaries. This opacity enables systematic corruption: inflated contracts, ghost beneficiaries, fund diversion, and wasteful spending. Without transparency pressure, officials face no public accountability for financial decisions. Existing financial management systems (LMBIS, SuTRA, provincial systems) operate in silos without public-facing interfaces or real-time disclosure."
+      },
+      "solution": {
+        "short": [
+          "Every transaction online within 24 hours with complete details accessible to all citizens",
+          "Searchable public database tracking specific projects, contractors, and spending categories",
+          "Monthly verified statements and quarterly independent audits for all government levels",
+          "Mandatory annual audited asset declarations for all senior officials published online",
+          "Mobile-friendly interface with SMS alerts for major expenditures in citizens' constituencies"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Real-Time Digital Ledger System",
+              "title": "Complete Transaction Transparency",
+              "items": [
+                "Every transaction online within 24 hours: all government spending from central allocation to final payment",
+                "Complete transaction details: amount, purpose, beneficiary, approval authority, procurement process",
+                "Searchable public database: citizens track specific projects, contractors, spending categories",
+                "Mobile-friendly interface with SMS alerts for major expenditures in citizen's constituency"
+              ]
+            },
+            {
+              "phase": "Comprehensive Reporting Structure",
+              "title": "Systematic Financial Accountability",
+              "items": [
+                "Monthly verified statements: all ministries and local governments publish audited financial reports",
+                "Quarterly independent audits: external auditors examine spending patterns and compliance",
+                "Semi-annual performance reviews: public assessment of budget execution and outcomes",
+                "Annual comprehensive reports: Auditor General's detailed analysis accessible to all citizens"
+              ]
+            },
+            {
+              "phase": "Mandatory Asset Declarations",
+              "title": "Official Wealth Monitoring",
+              "items": [
+                "All senior officials: ministers, judges, secretaries, commissioners file annual audited wealth statements",
+                "Public accessibility: asset declarations published on central transparency portal within 30 days",
+                "Change tracking: automatic red-flag system for unexplained wealth increases above salary",
+                "Family member inclusion: spouse and dependent children assets included in declarations"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Estonia publishes all transactions in real-time achieving 95% citizen trust in financial management",
+          "Brazil's Transparency Portal led to discovery of major corruption and 40% waste reduction",
+          "South Korea's digital budget tracking exposed massive corruption cases through citizen oversight",
+          "All demonstrate real-time transparency dramatically reduces corruption and improves accountability"
+        ],
+        "long": [
+          {
+            "country": "Estonia",
+            "details": "Digital government publishes all transactions in real-time achieving comprehensive transparency",
+            "impact": "95% citizen trust in government financial management while virtually eliminating corruption in routine transactions"
+          },
+          {
+            "country": "Brazil",
+            "details": "Transparency Portal allows citizens to track every government expenditure with detailed search capabilities",
+            "impact": "Led to discovery of major corruption schemes and 40% reduction in waste through citizen oversight"
+          },
+          {
+            "country": "South Korea",
+            "details": "Digital budget tracking enabled citizen oversight that exposed massive corruption cases",
+            "impact": "Contributed to democratic accountability and economic development through transparent financial management"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-12: Launch digital platform integrating all financial systems with 24-hour disclosure",
+          "Months 6-18: Train officials, build audit capacity, integrate asset declaration system",
+          "Months 12-24: Full transparency operational with all transactions online and monitored"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-12",
+            "description": "Digital Platform Development and Integration",
+            "details": [
+              "Digital platform launch integrating existing government financial systems",
+              "Real-time transaction publishing system with 24-hour disclosure requirement",
+              "Mobile-friendly interface development with citizen search and alert capabilities",
+              "Legal amendments to mandate real-time disclosure under Right to Information Act"
+            ]
+          },
+          {
+            "timeline": "Months 6-18",
+            "description": "Capacity Building and Training",
+            "details": [
+              "Training program for all financial officers on transparent reporting requirements",
+              "Audit capacity building for Auditor General and provincial audit offices",
+              "Asset declaration system integration with automatic verification capabilities",
+              "Public education campaigns on financial transparency and citizen monitoring rights"
+            ]
+          },
+          {
+            "timeline": "Months 12-24",
+            "description": "Full System Operation and Optimization",
+            "details": [
+              "Complete government financial transparency with all transactions online",
+              "Comprehensive reporting structure operational with regular audit cycles",
+              "Asset declaration monitoring with automatic red-flag investigation triggers",
+              "Performance measurement and system optimization based on citizen engagement and corruption reduction"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "100% government transactions online within 18 months",
+        "90% citizen awareness of spending in their area within 2 years",
+        "50% reduction in financial irregularities through transparency pressure",
+        "Real-time public access to all non-sensitive financial data"
+      ],
+      "legalFoundation": "Right to Information Act 2007 requires proactive disclosure. Article 27 guarantees information access"
+    }
+  ]
+}

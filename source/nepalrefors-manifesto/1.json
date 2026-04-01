@@ -1,0 +1,143 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "1",
+      "title": "Transform CIAA into a Truly Independent Anti-Corruption Force",
+      "description": "Restructure the Commission for the Investigation of Abuse of Authority (CIAA) to become an effective, independent anti-corruption body with operational capacity and prosecutorial powers.",
+      "category": "Anti-Corruption",
+      "priority": "High",
+      "timeline": "3-5 years",
+      "updatedOn": "11 Nov 2025",
+      "problem": {
+        "short": "CIAA remains largely ineffective despite having strong legal powers on paper due to politicized leadership, lack of operational independence, weak institutional capacity, and selective enforcement against low-level officials while high-level political figures escape scrutiny.",
+        "long": "Nepal's Commission for the Investigation of Abuse of Authority (CIAA), though constitutionally established under Articles 238 and 239 of the Constitution (2015) and governed by the CIAA Act 2048 (1991) and its Rules 2049, remains largely ineffective despite having strong legal powers on paper. The CIAA holds extensive legal authority under Section 19 (particularly Subsections 6 and 8) of the CIAA Act, which allows it to: Seize documents and property relevant to an investigation, Arrest or take into custody accused persons when necessary, and Directly file and prosecute corruption cases before the Special Court without having to route them through the district courts. However, despite these powers, the CIAA's effectiveness is severely undermined by structural and political weaknesses: Politicised leadership where the Chief Commissioner and other member Commissioners are politically appointed and the Chief Commissioner wields sole discretionary power to approve or block cases; Lack of operational independence where CIAA depends on the Ministry of Finance for its budget; Narrowed jurisdiction where the 2015 Constitution removed its authority to investigate 'improper conduct'; Weak institutional capacity with understaffed investigation and prosecution units lacking advanced forensic and digital tools; Absence of prosecutorial standards enabling selective enforcement; and Incomplete asset recovery framework with weak inter-agency coordination limiting actual recoveries."
+      },
+      "solution": {
+        "short": [
+          "Phase 1: Immediate statutory reforms strengthening investigation, prosecution, and asset recovery powers",
+          "Enhanced asset disclosure including family wealth monitoring",
+          "Mandatory public prosecutorial guidelines preventing selective prosecution",
+          "Phase 2: Constitutional reforms establishing independent budget allocation and merit-based appointments"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1",
+              "title": "Immediate Statutory Reforms",
+              "items": [
+                "Strengthening Investigation & Prosecution: Build integrated investigation-prosecution teams with legal experts working alongside investigators; collaborate with Office of Attorney General by seconding prosecutors; provide mandatory 6-7 month intensive training for new staff; significantly expand staffing through competitive hiring; enforce strict code of conduct with minimum two-year service terms and public quarterly performance reports",
+                "Enhanced Asset Disclosure and Family Wealth Monitoring: All public officials must declare assets for themselves and immediate/extended family members (spouses, dependent children, parents, siblings); enhanced scrutiny mechanisms cross-reference land registry databases and financial institution records with declared assets; CIAA establishes dedicated units for wealth verification with access to banking, property, and corporate ownership records; targeted transparency with privacy protections applying exclusively to public officials, not general populace",
+                "Procedural and Operational Reforms: Authorize court-supervised asset freezing during investigations; establish comprehensive asset recovery mechanisms including full asset recovery, forfeiture, and repatriation procedures; strengthen inter-agency coordination with Department of Money Laundering Investigation, Financial Intelligence Unit, and international counterparts; create dedicated Asset Recovery Unit within CIAA; clarify rules to remove 'policy decision' exemptions for ministers and restore jurisdiction over improper conduct cases",
+                "Mandatory Public Prosecutorial Guidelines: CIAA shall publish clear, objective criteria governing case selection, investigation prioritization, and prosecution decisions; guidelines must establish transparent standards for threshold evidence requirements, risk-based prioritization factors, timelines for investigation stages, circumstances warranting case closure, and appeal mechanisms for complainants",
+                "Transparent Utilization of Recovered Assets: All funds recovered through corruption prosecutions deposited in dedicated Recovered Assets Fund with public transparency; fund utilization restricted to public infrastructure construction, strengthening anti-corruption capacity, victim compensation, and public development projects; CIAA maintains public, real-time digital dashboard showing total amounts recovered, source cases, allocation decisions, implementation status, and completed projects"
+              ]
+            },
+            {
+              "phase": "Phase 2",
+              "title": "Constitutional Reforms (Requires Amendment)",
+              "items": [
+                "Independence Guarantees: Constitutional budget allocation providing independent funding line not dependent on Finance Ministry (Article 238-239 amendment); merit-based appointments where Chief Commissioner and Commissioners selected through competitive examination by independent panel, not Constitutional Council",
+                "Chief Commissioner Criteria: Select from among experienced Commissioners, retired justices, or senior thematic experts, with no political affiliations, proven integrity, and knowledge of institutional functioning",
+                "Merit-based Commissioner Selection: Introduce open competitive examinations with clear criteria (minimum 7-10 years of specialized professional experience in finance, revenue, land administration, public procurement, or legal/judicial service)",
+                "Fixed Tenure Protection: Introduce 5-8 year fixed term tenure to prevent capture while avoiding lifetime appointments",
+                "Jurisdiction Over Corruption and Improper Conduct: Amending Article 239 and extending CIAA's jurisdiction",
+                "Diverse Expertise: Recruit Commissioners from varied technical backgrounds to cover the breadth of corruption cases"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Singapore's CPIB achieved 98% conviction rate through complete independence",
+          "Hong Kong's ICAC eliminated government corruption within a decade",
+          "Indonesia's KPK demonstrates phased approach with 77% conviction rate"
+        ],
+        "long": [
+          {
+            "country": "Singapore",
+            "details": "CPIB achieved complete independence, direct prosecution powers, and asset recovery authority through critical sequencing: First strengthened powers through legislation (1952), then achieved full independence through constitutional protection (1965)",
+            "impact": "98% conviction rate with high-level prosecutions becoming routine"
+          },
+          {
+            "country": "Hong Kong",
+            "details": "ICAC reformed gradually: 1974 initial legislation gave prosecution powers, 1997 constitutional entrenchment secured independence. ICAC maintains published operational guidelines and transparent procedures",
+            "impact": "Went from investigating 2,300 cases annually to virtually eliminating government corruption within a decade. Sustained public trust for over 50 years"
+          },
+          {
+            "country": "Indonesia",
+            "details": "KPK demonstrates phased approach: 2002 law created prosecution authority, 2004 constitutional amendment secured independence",
+            "impact": "77% conviction rate with major high-level prosecutions"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-6: CIAA Act amendment for prosecution powers and asset recovery",
+          "Months 7-12: Specialized courts establishment and professional staff recruitment",
+          "Years 2-3: Build political consensus for constitutional amendments",
+          "Years 3-5: Constitutional amendment process and full independence achievement"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "CIAA Act Amendment and Initial Reforms",
+            "details": [
+              "Amend CIAA Act for prosecution powers, asset freezing and recovery authority, expanded jurisdiction",
+              "Establish mandatory prosecutorial guidelines",
+              "Implement family asset disclosure requirements",
+              "Establish recovered assets fund"
+            ]
+          },
+          {
+            "timeline": "Months 7-12",
+            "description": "Operational Capacity Building",
+            "details": [
+              "Establish specialized courts",
+              "Recruit professional staff through competitive process",
+              "Deploy digital capabilities",
+              "Operationalize Asset Recovery Unit",
+              "Launch public transparency dashboards for prosecutorial guidelines and recovered funds"
+            ]
+          },
+          {
+            "timeline": "Years 2-3",
+            "description": "Political Consensus Building and System Implementation",
+            "details": [
+              "Build political consensus for constitutional amendments on budget independence and appointment reform",
+              "Fully implement family wealth monitoring systems with cross-agency data integration",
+              "Publish first comprehensive annual report on asset recoveries and fund utilization"
+            ]
+          },
+          {
+            "timeline": "Years 3-5",
+            "description": "Constitutional Reform and Full Independence",
+            "details": [
+              "Complete constitutional amendment process",
+              "Achieve full independence with constitutional budget protection",
+              "Implement merit-based appointment system for Chief Commissioner and Commissioners"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "80% conviction rate for corruption cases within 2 years",
+        "Average case resolution time reduced from 3+ years to 6 months",
+        "90% of major corruption cases reach prosecution (vs. current 30%)",
+        "Full asset recovery in 60% of proven corruption cases with transparent public reporting",
+        "100% compliance with published prosecutorial guidelines with annual public review",
+        "Comprehensive family wealth disclosures for all public officials within 18 months, with at least 30% verified through cross-referencing within 2 years",
+        "Public recovered assets dashboard operational within 12 months showing real-time fund flows and project completions"
+      ],
+      "legalFoundation": "CIAA was established under Article 238 and 239 of Constitution 2015 with investigation authority. CIAA Act 2048 (1991) governs operations. Commission for Investigation of Abuse of Authority Rules 2049 provides procedural framework. Some reforms use existing authority; others require constitutional amendment."
+    }
+  ]
+}

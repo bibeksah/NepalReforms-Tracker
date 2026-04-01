@@ -1,0 +1,130 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "9",
+      "title": "Break Monopolies and Strengthen Consumer Protection",
+      "description": "Stop monopolistic business practices through strong competition enforcement, temporary import relaxation, and consumer protection courts in every district.",
+      "category": "Competition Policy",
+      "priority": "Medium",
+      "timeline": "2 years",
+      "problem": {
+        "short": "Monopolistic practices are widespread through unregulated associations controlling transport fares, routes, and agricultural supply chains, leaving consumers with inflated prices and farmers with minimal value from their produce.",
+        "long": "Monopolistic practices are widespread, particularly through unregulated associations. The transport associations set fares and restrict vehicle routes, while agricultural middlemen control prices and supply chains, leaving farmers with only a fraction of the value."
+      },
+      "solution": {
+        "short": [
+          "Temporary import liberalization with simplified licensing for essential goods facing monopoly pricing",
+          "Strengthen Competition Commission with enhanced cartel investigation and enforcement authority",
+          "Establish consumer protection courts in every district with penalty powers",
+          "Implement price monitoring and crowdsourced reporting systems",
+          "Cross-check international compliance to prevent blacklisted firms from entering market"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Import Liberalization",
+              "title": "Temporary Competition Enhancement",
+              "items": [
+                "Temporarily ease import restrictions on goods where monopolies inflate prices (cooking gas, food, medication)",
+                "Small Importer License: simplified digital licensing for individuals (NPR 30,000/month) and SMEs (NPR 9.5 million/year)",
+                "Implement monitoring mechanisms to prevent smuggling while maintaining safety standards",
+                "Category restrictions: medicines meet Department of Drug Administration standards, gas safety certification"
+              ]
+            },
+            {
+              "phase": "Competition Law Enforcement",
+              "title": "Strengthen Competition Commission",
+              "items": [
+                "Investigate cartels and dominant firms abusing market power with enhanced authority",
+                "Impose antitrust and structural remedies to large conglomerates where necessary",
+                "Cross-check companies' international compliance to prevent blacklisted firm entry",
+                "Encourage whistleblowers with legal protection and financial incentives for reporting"
+              ]
+            },
+            {
+              "phase": "Consumer Protection",
+              "title": "District-Level Consumer Courts and Monitoring",
+              "items": [
+                "Consumer courts in every district with power to impose penalties and regular service checks",
+                "Price monitoring with heavy fines for selling above Maximum Retail Price",
+                "Citizen awareness campaigns on rights, price checks, and reporting channels",
+                "Crowdsourced monitoring apps for citizens to report overpricing or cartel activity"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "South Korea transitioned from protecting chaebols to serious competition enforcement post-1997, contributing to developed economy status",
+          "India's Competition Act 2002 replaced monopoly protection, paralleling GDP growth acceleration through market competition"
+        ],
+        "long": [
+          {
+            "country": "South Korea",
+            "details": "Transformed from protecting large business groups (chaebols) in 1970s to serious competition enforcement post-1997",
+            "impact": "Coincided with transition from developing to developed economy, manufacturing growing from 10.4% to 22.6% of GDP"
+          },
+          {
+            "country": "India",
+            "details": "Replaced old monopoly protection law with Competition Act in 2002 during economic liberalization",
+            "impact": "Paralleled economic liberalization and GDP growth acceleration through increased market competition"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 0-6: Issue Temporary Import Liberalization Order with digital permit system for SMEs and individuals",
+          "Months 7-12: Implement monitoring framework with compliance audits and consumer court establishment",
+          "Years 1-2: Assess impact on prices and competition, optimize based on results"
+        ],
+        "long": [
+          {
+            "timeline": "Months 0-6",
+            "description": "Temporary Import Liberalization and System Setup",
+            "details": [
+              "Draft and issue Temporary Import Liberalization Order for monopolized essential goods",
+              "Launch digital SME/individual permit system with simplified one-page application process",
+              "Establish monitoring framework with mandatory customs e-filing and cross-checking systems",
+              "Set up blacklist system for traders who exceed thresholds or misdeclare goods"
+            ]
+          },
+          {
+            "timeline": "Months 7-12",
+            "description": "Monitoring and Enforcement Implementation",
+            "details": [
+              "Track imports with enforced barcoding and publish open dashboards for transparency",
+              "Conduct safety and smuggling risk audits with regular compliance monitoring",
+              "Competition Commission begins enhanced cartel investigations with new authority",
+              "Consumer court establishment in districts with penalty powers and staff training"
+            ]
+          },
+          {
+            "timeline": "Year 1-2",
+            "description": "Assessment and Policy Optimization",
+            "details": [
+              "Assess impact on local production, competition levels, and consumer prices",
+              "Conduct full evaluation of liberalization effects on market competition",
+              "Decide on extension, modification, or termination of liberalization based on results",
+              "Optimize consumer protection mechanisms based on early performance data"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "30% average price reduction in essential goods within 18 months",
+        "500% increase in registered small importers",
+        "50% reduction in consumer complaints about monopolistic pricing",
+        "Consumer courts operational in 100% of districts"
+      ]
+    }
+  ]
+}

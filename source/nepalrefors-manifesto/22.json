@@ -1,0 +1,138 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "22",
+      "title": "Add 'None of the Above' Option in All Elections",
+      "description": "Allow voters to reject all candidates by choosing 'None of the Above' - if NOTA wins, hold fresh elections with entirely new candidates.",
+      "category": "Electoral Reform",
+      "priority": "Medium",
+      "timeline": "6 months",
+      "problem": {
+        "short": "Citizens forced to choose between inadequate candidates have no way to reject all options, reducing democratic legitimacy. Supreme Court has mandated NOTA implementation but it remains pending.",
+        "long": "Citizens forced to choose between inadequate candidates have no way to reject all options, reducing democratic legitimacy and voter satisfaction. Article 17 protects freedom of expression including the right to reject, and the Supreme Court has mandated Nepal Government and Election Commission to guarantee None of the Above in ballot papers, but implementation is pending. Voters facing choices between incompetent, corrupt, or otherwise unsuitable candidates must either vote for unsatisfactory option or not vote at all. This forces participation in legitimizing inadequate representation or abstention signaling apathy rather than dissatisfaction. Result: elected representatives often lack genuine popular support; parties nominate poor candidates knowing voters have no rejection mechanism; democratic legitimacy weakened when officials claim mandate despite voter dissatisfaction. NOTA would provide meaningful democratic voice allowing citizens to formally reject all candidates, pressuring parties to improve candidate quality."
+      },
+      "solution": {
+        "short": [
+          "NOTA on all ballots for every election at all government levels",
+          "Mandatory re-election if NOTA wins plurality with all original candidates disqualified",
+          "Transparent counting with NOTA votes published like any other candidate",
+          "Voter education campaigns explaining NOTA's democratic purpose and impact",
+          "Election Commission regulation for implementation within 3-6 months"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "NOTA Implementation",
+              "title": "Universal NOTA Option Deployment",
+              "items": [
+                "NOTA on all ballots for every election and position at all levels of government",
+                "Mandatory re-election trigger if NOTA wins plurality with clear procedural framework",
+                "Candidate disqualification: all original candidates banned from re-election forcing better selections",
+                "Transparent counting with NOTA votes published and reported like any other candidate"
+              ]
+            },
+            {
+              "phase": "Voter Education and Awareness",
+              "title": "Democratic Choice Enhancement",
+              "items": [
+                "Voter education campaigns explaining NOTA option and its democratic purpose",
+                "Public awareness programs on NOTA significance for democratic accountability",
+                "Training for election officials on proper counting and reporting of NOTA votes",
+                "Legal framework for re-election procedures when NOTA wins with timeline specifications"
+              ]
+            },
+            {
+              "phase": "System Integration",
+              "title": "Electoral Process Enhancement",
+              "items": [
+                "Election Commission regulation for ballot design including NOTA within 3 months",
+                "Integration with existing electoral systems and processes without disruption",
+                "Monitoring and evaluation system for NOTA impact on candidate quality",
+                "Continuous improvement based on democratic legitimacy and voter satisfaction metrics"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "India's NOTA (2013) improving candidate quality as parties respond to voter dissatisfaction pressure",
+          "Nevada's NOTA since 1975 forces parties to reconsider candidate selection when performing well",
+          "Colombia's blank vote option maintains participation while allowing rejection of inadequate choices",
+          "All demonstrate NOTA empowers citizens and pressures parties to improve candidate quality"
+        ],
+        "long": [
+          {
+            "country": "India",
+            "details": "NOTA option introduced in 2013 provides voters democratic choice to reject inadequate candidates",
+            "impact": "Improving candidate quality in subsequent elections as parties respond to NOTA pressure and voter dissatisfaction"
+          },
+          {
+            "country": "Nevada, USA",
+            "details": "NOTA used since 1975 giving voters meaningful choice and democratic expression of dissatisfaction",
+            "impact": "Occasionally forcing political parties to reconsider candidate selection when NOTA performs well"
+          },
+          {
+            "country": "Colombia",
+            "details": "Blank vote option serves similar function empowering citizens to express dissatisfaction with options",
+            "impact": "Maintains democratic participation while allowing rejection of inadequate political choices"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-3: Election Commission regulation, legal framework for re-election procedures",
+          "Months 3-6: Voter education campaigns, training for election officials",
+          "Months 6-12: NOTA available in all elections, monitoring impact on candidate quality"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-3",
+            "description": "Regulatory Framework and Ballot Design",
+            "details": [
+              "Election Commission regulation issuance for ballot design requirements including NOTA",
+              "Legal framework development for re-election procedures when NOTA wins plurality",
+              "Training material development for election officials on NOTA counting and reporting",
+              "Integration planning with existing electoral systems and processes"
+            ]
+          },
+          {
+            "timeline": "Months 3-6",
+            "description": "Implementation and Education",
+            "details": [
+              "Voter education campaign launch on NOTA option and democratic significance",
+              "Training program implementation for election officials on proper procedures",
+              "Public awareness activities explaining NOTA purpose and democratic benefits",
+              "System testing and preparation for first elections with NOTA option"
+            ]
+          },
+          {
+            "timeline": "Months 6-12",
+            "description": "Full Implementation and Monitoring",
+            "details": [
+              "NOTA option available in all elections within 6 months of system deployment",
+              "Monitoring and evaluation system for measuring NOTA impact on candidate quality",
+              "90% voter awareness achievement through comprehensive education campaigns",
+              "Democratic legitimacy enhancement measurement through meaningful voter choice"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "NOTA option available in all elections within 6 months",
+        "90% voter awareness of NOTA option within 1 year",
+        "Measurable improvement in candidate quality as parties respond to NOTA pressure",
+        "Enhanced democratic legitimacy through meaningful voter choice"
+      ],
+      "legalFoundation": "Article 17 protects freedom of expression including right to reject. Supreme Court mandate requires NOTA implementation"
+    }
+  ]
+}

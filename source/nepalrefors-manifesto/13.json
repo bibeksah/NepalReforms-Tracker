@@ -1,0 +1,131 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "13",
+      "title": "Reform Student Politics into Civic Education",
+      "description": "Ban political party control of student unions and replace with independent student councils while teaching proper civic education in all schools and universities.",
+      "category": "Education Reform",
+      "priority": "Medium",
+      "timeline": "3 years",
+      "problem": {
+        "short": "Student unions act as extensions of political parties causing campus violence and strikes while young people graduate without meaningful civic education.",
+        "long": "Student unions act as extensions of national political parties, leading to intimidation, strikes, property damage, and campus violence. Young people graduate without meaningful civic education despite being Nepal's future leaders."
+      },
+      "solution": {
+        "short": [
+          "Ban direct party affiliation of student unions through Education Regulations amendment",
+          "Replace party-backed unions with elected student councils with gender and minority quotas",
+          "Comprehensive civic education covering constitutional literacy, public finance, and governance",
+          "Strengthen National Youth Council for student-to-governance pathways",
+          "Autonomous campus governance removing political interference"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Campus Autonomy and Depoliticization",
+              "title": "Remove Party Control from Student Organizations",
+              "items": [
+                "Ban direct party affiliation of student unions through Education Regulations amendment",
+                "Prohibit political party symbols, flags, or financing inside campuses under university codes",
+                "Autonomous campus governance under independent boards removing Home Ministry political interference",
+                "Campus security neutrality from external political pressure with institutional protection"
+              ]
+            },
+            {
+              "phase": "Independent Student Governance",
+              "title": "Democratic Student Council System",
+              "items": [
+                "Replace party-backed unions with elected councils recognized under University Acts",
+                "Independent candidate elections with mandatory gender and minority representation quotas",
+                "Focused mandate: academic affairs, student welfare, scholarships, housing, health services",
+                "Structured policy debates replacing destructive strikes and protests"
+              ]
+            },
+            {
+              "phase": "Civic Education and National Integration",
+              "title": "Comprehensive Democratic Education",
+              "items": [
+                "Constitutional literacy: basic rights, parliamentary functions, separation of powers",
+                "Public finance education: budget processes, taxation, anti-corruption mechanisms",
+                "Strengthen National Youth Council for student-to-governance pathways",
+                "Debate and deliberation skills through parliamentary-style classroom discussions"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Germany's student government system separates unions from party politics while maintaining high civic engagement",
+          "Finland's civic education integration produces world's highest political knowledge levels",
+          "South Korea's post-1987 student council reforms eliminated campus violence while consolidating democracy"
+        ],
+        "long": [
+          {
+            "country": "Germany",
+            "details": "Student government system separates student unions from party politics while maintaining civic engagement",
+            "impact": "Contributes to high political knowledge and participation rates among graduates without campus violence"
+          },
+          {
+            "country": "Finland",
+            "details": "Civic education integration from secondary through university produces informed democratic citizens",
+            "impact": "Citizens demonstrate among world's highest levels of political knowledge and democratic participation"
+          },
+          {
+            "country": "South Korea",
+            "details": "Post-democratization student council reforms (1987-1990) channeled activist energy into constructive engagement",
+            "impact": "Contributed to democratic consolidation while eliminating campus violence and political party control"
+          }
+        ]
+      },
+      "implementation": {
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "Legal Framework and Institutional Transition",
+            "details": [
+              "Education regulations amendment banning direct party affiliation of student organizations",
+              "University code adoption prohibiting political party symbols and financing on campus",
+              "Student council transition planning with election preparation and institutional support",
+              "Campus autonomy establishment with independent governance boards"
+            ]
+          },
+          {
+            "timeline": "Year 1",
+            "description": "Democratic Elections and Curriculum Development",
+            "details": [
+              "Independent student council elections with gender and minority representation requirements",
+              "Civic education curriculum development from secondary through university levels",
+              "Constitutional literacy programs covering rights, governance structures, democratic processes",
+              "Graduated accountability system implementation with community service focus"
+            ]
+          },
+          {
+            "timeline": "Years 2-3",
+            "description": "National Integration and Governance Pathways",
+            "details": [
+              "National Youth Council integration for structured democratic participation",
+              "Student-to-governance pathways through local government observation and youth budgets",
+              "Parliamentary Youth Hearings establishment for policy proposal development",
+              "System evaluation and optimization based on campus violence reduction and civic knowledge metrics"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "80% reduction in campus violence incidents within 2 years",
+        "90% of graduates demonstrate basic constitutional knowledge",
+        "50 student-led civic projects launched annually",
+        "Zero incidents of party-political interference in campus governance"
+      ]
+    }
+  ]
+}

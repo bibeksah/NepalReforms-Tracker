@@ -1,0 +1,136 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "10",
+      "title": "Reform Public Transportation with Smart Urban Planning",
+      "description": "Create efficient public transport through dedicated bus lanes, massive electric bus expansion, intelligent traffic systems, and integrated payment systems.",
+      "category": "Transportation",
+      "priority": "Medium",
+      "timeline": "3 years",
+      "problem": {
+        "short": "Traffic chaos, pollution, and unreliable public transport create daily hardships for citizens and economic inefficiency across urban areas.",
+        "long": "Traffic chaos, pollution, and unreliable public transport create daily hardships for citizens and economic inefficiency."
+      },
+      "solution": {
+        "short": [
+          "Multi-modal dedicated lanes: 2 lanes for electric buses, 2 for walking/cycling, 2 for private vehicles",
+          "Massive Sajha Yatayat expansion: 1 electric bus per 500-1,000 urban residents",
+          "Intelligent traffic lights GPS-linked to buses for priority flow optimization",
+          "Integrated fare system with card-based and mobile app ticketing",
+          "Real-time tracking with public GPS app showing live bus locations and arrival times"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Smart Infrastructure Design",
+              "title": "Multi-Modal Transportation Infrastructure",
+              "items": [
+                "Multi-modal dedicated lanes: 2 lanes electric buses, 2 lanes walking/cycling, 2 lanes private vehicles",
+                "Strict enforcement with camera monitoring and automatic fines for lane violations",
+                "Intelligent traffic lights GPS-linked to bus locations for priority flow optimization",
+                "Transfer hubs at major intersections with sheltered waiting areas and integrated ticketing"
+              ]
+            },
+            {
+              "phase": "Fleet Expansion and Service Quality",
+              "title": "Massive Sajha Yatayat Transformation",
+              "items": [
+                "Fleet expansion target: 1 electric bus per 500-1,000 urban residents in Kathmandu and Pokhara",
+                "Integrated fare system with card-based and mobile app ticketing across all buses and vans",
+                "Public-private partnerships for rapid coverage expansion with dedicated budget lines",
+                "Performance-based payments: operator compensation linked to punctuality and reliability metrics"
+              ]
+            },
+            {
+              "phase": "Service Integration and Accountability",
+              "title": "Comprehensive Transport System",
+              "items": [
+                "Frequency targets: buses every 5 minutes on major routes, electric vans every 10-15 minutes on secondary roads",
+                "Real-time tracking with public GPS app showing live bus locations and arrival times",
+                "Infrastructure accountability: pre-construction planning and utilities synchronization mandate",
+                "Public participation framework with mandatory city-wide consultations and environmental assessments"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Bogota's TransMilenio achieved 32% travel time reduction and 40% air pollution reduction serving 1.6 million daily passengers",
+          "Curitiba's BRT system serves 70-80% of commuters at $200,000/km vs $90 million for subways",
+          "Lagos BRT reduced travel time by 40%, CO₂ emissions by 13%, and passenger fares by 30%"
+        ],
+        "long": [
+          {
+            "country": "Bogotá, Colombia",
+            "details": "TransMilenio achieved 32% travel time reduction and carries 1.6 million daily passengers",
+            "impact": "40% air pollution reduction through dedicated lanes and integrated systems while serving major urban population"
+          },
+          {
+            "country": "Curitiba, Brazil",
+            "details": "Integrated BRT system serves 70-80% of commuters with construction costs of $200,000 per kilometer",
+            "impact": "Compared to $90 million for subways, achieved 25% lower per capita emissions through systematic approach"
+          },
+          {
+            "country": "Lagos, Nigeria",
+            "details": "BRT system implementation with dedicated lane enforcement and fleet electrification",
+            "impact": "Reduced travel time by 40% and CO₂ emissions by 13% while cutting passenger fares by 30%"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Year 1: Comprehensive route planning with GIS modeling, environmental assessments, and pilot corridor implementation",
+          "Year 2: Major route implementation with dedicated lanes, GPS systems, and integrated ticketing launch",
+          "Year 3: Full network operation with 90% on-time performance targets and system optimization"
+        ],
+        "long": [
+          {
+            "timeline": "Year 1",
+            "description": "Planning and Infrastructure Preparation",
+            "details": [
+              "Comprehensive route planning with GIS and traffic simulation modeling for evidence-based optimization",
+              "Environmental impact assessments required under Environmental Protection Act compliance",
+              "Fleet procurement for electric buses and e-rickshaws with pilot corridor implementation",
+              "Public consultation framework with mandatory city-wide consultations before major route implementation"
+            ]
+          },
+          {
+            "timeline": "Year 2",
+            "description": "Infrastructure Implementation and System Integration",
+            "details": [
+              "Major route implementation with dedicated multi-modal lanes and transfer hubs",
+              "GPS systems installation with intelligent traffic light integration for bus priority",
+              "Integrated ticketing system launch with card-based and mobile app functionality",
+              "Performance monitoring system deployment for real-time service tracking"
+            ]
+          },
+          {
+            "timeline": "Year 3",
+            "description": "Full Network Operation and Optimization",
+            "details": [
+              "Full network operation with 90% on-time performance targets and frequency standards",
+              "Performance optimization based on ridership data and citizen feedback",
+              "Expansion planning for additional routes and service improvements",
+              "System evaluation and refinement for long-term sustainability"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "40% reduction in average commute times within 3 years",
+        "80% of urban residents within 500m of reliable public transport",
+        "50% reduction in private vehicle use during peak hours",
+        "90% on-time performance for scheduled services"
+      ]
+    }
+  ]
+}

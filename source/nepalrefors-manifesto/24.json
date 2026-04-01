@@ -1,0 +1,138 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "24",
+      "title": "Reform Government Property Management",
+      "description": "Transform disposal of seized vehicles and government property through transparent systems, educational donations, and revenue generation while protecting owner rights.",
+      "category": "Public Administration",
+      "priority": "Low",
+      "timeline": "18 months",
+      "problem": {
+        "short": "Thousands of seized vehicles rot in police stations while students lack practical learning materials for technical education. Government property management creates corruption opportunities and wastes public resources.",
+        "long": "Thousands of seized vehicles rot in police stations while students lack practical learning materials for technical education. Government property management creates corruption opportunities and wastes public resources. The Public Property Protection Act provides disposal authority, but lack of transparent systems and clear procedures leads to inefficiency and potential misuse. Seized vehicles—from traffic violations, criminal cases, abandoned imports—accumulate indefinitely in police compounds across Nepal. No clear timelines for disposal, no public registry, no transparent auction processes. Result: valuable assets deteriorate while consuming storage space; genuine owners face obstacles reclaiming property; disposal processes vulnerable to favoritism and corruption; technical education institutions desperately need practical training materials that literally sit unused in government custody. This represents both massive waste and missed opportunity—wasted resources and wasted educational potential."
+      },
+      "solution": {
+        "short": [
+          "6-month reclaim deadline with digital registry showing photos, VIN, case status, deadlines",
+          "Technical school priority: non-roadworthy vehicles donated to engineering colleges for training",
+          "Public online auctions for roadworthy vehicles with transparent bidding and revenue tracking",
+          "Owner protection: genuine owners can reclaim anytime before disposal with valid documents",
+          "Certified recycling for unrepairable vehicles with proceeds to road safety fund"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Transparent Vehicle Disposal System",
+              "title": "Digital Registry and Clear Procedures",
+              "items": [
+                "6-month reclaim deadline: unclaimed seized vehicles automatically enter public disposal after deadline or final court decision",
+                "Digital registry: online portal with photos, VIN numbers, case status, reclaim deadlines for all seized vehicles",
+                "Owner protection: genuine owners can reclaim anytime before disposal by paying fines and presenting valid documents",
+                "Legal framework establishment for transparent disposal procedures with due process protection"
+              ]
+            },
+            {
+              "phase": "Educational Resource Program",
+              "title": "Technical Education Support",
+              "items": [
+                "Technical school priority: non-roadworthy vehicles first offered to engineering colleges and vocational schools",
+                "Student training projects: vehicle donation for mechanical training, EV retrofitting, innovation laboratories",
+                "Research institution access: universities receive vehicles for automotive research and design projects",
+                "Educational partnerships: formal agreements with technical institutions for vehicle donation programs"
+              ]
+            },
+            {
+              "phase": "Revenue Generation System",
+              "title": "Transparent Auction and Recycling",
+              "items": [
+                "Public online auctions: roadworthy vehicles sold through transparent bidding process",
+                "Certified recycling: unrepairable vehicles sent to licensed dismantlers with transparent proceeds recording",
+                "Treasury deposit: all auction and recycling proceeds go to national road safety fund or general treasury",
+                "Performance measurement: tracking of disposal efficiency, educational benefit, and revenue generation"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Germany and Japan donate seized vehicles to technical universities improving student practical skills",
+          "India's IITs receive impounded vehicles for EV conversion combining waste reduction with innovation",
+          "Philippines' transparent auction system eliminated corruption while generating significant revenue",
+          "All demonstrate systematic approach eliminates waste while creating educational and financial benefits"
+        ],
+        "long": [
+          {
+            "country": "Germany and Japan",
+            "details": "Donate seized vehicles to technical universities for research improving student practical skills",
+            "impact": "Solves storage problems while enhancing technical education and research capabilities"
+          },
+          {
+            "country": "India",
+            "details": "IIT and technical universities receive impounded vehicles for EV conversion projects",
+            "impact": "Combines waste reduction with innovation while providing practical learning opportunities for students"
+          },
+          {
+            "country": "Philippines",
+            "details": "Transparent vehicle auction system eliminated corruption in disposal while generating significant public revenue",
+            "impact": "Demonstrates how systematic approach can eliminate waste while creating public benefits"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-6: Launch digital registry, create legal framework, train staff",
+          "Months 6-12: Establish educational partnerships, launch transparent auction system",
+          "Months 12-18: 90% storage reduction, 100 vehicles donated annually, significant revenue generation"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "Digital Registry and Legal Framework",
+            "details": [
+              "Digital registry launch with online platform operational within 6 months",
+              "Legal framework creation for transparent disposal procedures with owner protection",
+              "Digital system integration with existing government platforms for seamless operation",
+              "Staff training for police and administrative officials on new procedures"
+            ]
+          },
+          {
+            "timeline": "Months 6-12",
+            "description": "Educational Partnerships and Auction System",
+            "details": [
+              "Educational partnerships establishment with technical institutions for vehicle donations",
+              "Transparent auction system establishment integrated with government procurement platforms",
+              "Revenue tracking and treasury deposit system implementation",
+              "Public awareness campaign on new disposal procedures and owner rights"
+            ]
+          },
+          {
+            "timeline": "Months 12-18",
+            "description": "Full System Operation and Optimization",
+            "details": [
+              "90% reduction in police station vehicle storage through efficient disposal system",
+              "100 vehicles donated annually to educational institutions for practical training",
+              "Significant revenue generation for road safety fund through transparent auctions",
+              "50% increase in transparency of public property disposal with public accountability"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "90% reduction in police station vehicle storage within 18 months",
+        "100 vehicles donated to educational institutions annually",
+        "50% increase in transparency of public property disposal",
+        "Significant revenue generation for road safety fund"
+      ],
+      "legalFoundation": "Public Property Protection Act provides disposal authority. Education Act enables educational institution partnerships"
+    }
+  ]
+}

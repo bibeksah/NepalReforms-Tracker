@@ -1,0 +1,147 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "16",
+      "title": "Make Proportional Representation More Democratic",
+      "description": "Reform PR candidate selection through open party primaries and regional constituencies while maintaining constitutional inclusion requirements for marginalized communities.",
+      "category": "Electoral Reform",
+      "priority": "Medium",
+      "timeline": "3 years",
+      "problem": {
+        "short": "Party leaders appoint PR representatives without voter input, weakening democratic accountability. Constitutional Article 84 mandates 110 PR seats ensuring inclusion for marginalized communities, but selection processes lack transparency and democratic legitimacy.",
+        "long": "Nepal's mixed electoral system under Article 84 allocates 110 of 275 House seats through Proportional Representation (PR) to ensure inclusion of women, Dalits, indigenous communities, Madhesis, Tharus, Muslims, and backward regions. However, party leaders appoint PR candidates without meaningful voter input, creating representatives accountable to party bosses rather than constituents or communities they represent. Selection criteria remain opaque with no public disclosure of qualifications, party member consultation, or competitive evaluation. Result: PR representatives often lack competence, community connection, or democratic legitimacy despite serving vital inclusion function. System weakens overall democratic accountability while undermining the very inclusion goal it aims to achieve—marginalized communities deserve both representation AND quality representatives selected through transparent, participatory processes rather than top-down patronage appointments."
+      },
+      "solution": {
+        "short": [
+          "Mandatory open party primaries for PR nominations with registered member voting",
+          "Regional PR constituencies instead of single national list for geographic accountability",
+          "Public disclosure of selection criteria, candidate qualifications, and voting processes",
+          "Maintain constitutional quotas for marginalized communities while improving selection quality",
+          "Performance scorecards for all MPs (FPTP and PR) with public quarterly reporting"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1 (Administrative Reforms)",
+              "title": "Democratic PR Nominations and Transparency",
+              "items": [
+                "Mandatory Open Party Primaries: All parties must conduct open primaries for PR nominations where registered party members vote; competitive selection within inclusion categories maintaining constitutional quotas (e.g., women candidates selected by members, Dalit candidates selected by members, etc.); public disclosure of primary voting results, turnout, and selection rationale; Election Commission oversight ensuring fair primary processes with published guidelines",
+                "Public Disclosure Requirements: Selection criteria for PR candidates published in advance; candidate qualifications, experience, education, and community connection disclosed publicly; primary voting processes transparent with independent observers; shortlisting rationale explained for public scrutiny",
+                "Regional PR Constituencies: Divide 110 PR seats into provincial or regional constituencies instead of single national list; each region elects PR representatives with maintained inclusion quotas applied regionally; enhances geographic accountability while preserving constitutional inclusion mandates",
+                "Performance-Based Evaluation: Party members evaluate sitting PR representatives' performance before renomination decisions; public scorecards tracking legislative activity, constituency engagement, committee participation; competitive primary challenges allowed for underperforming incumbents"
+              ]
+            },
+            {
+              "phase": "Phase 2 (Enhanced Accountability Mechanisms)",
+              "title": "Comprehensive MP Accountability System",
+              "items": [
+                "Public Reporting Requirements: Monthly constituency reports mandatory for ALL MPs regardless of election method (FPTP or PR); reports detail legislative activity, constituent services, development initiatives, committee work; published online with citizen feedback mechanisms",
+                "Parliamentary Performance Scorecards: Quarterly scorecards for all members measuring attendance, bill sponsorship, committee participation, constituency engagement, responsiveness; published by Parliament Secretariat with public access; integrated into party primary evaluation processes",
+                "Recall Provisions: Establish recall mechanisms applicable to both FPTP and PR representatives for serious misconduct (corruption conviction, criminal activity, sustained non-performance); requires petition from significant portion of constituents or party members; subject to Electoral Tribunal review preventing abuse",
+                "Open-List PR System Consideration: Long-term reform allowing voters to select specific candidates within party lists rather than parties controlling order; maintains inclusion quotas while enhancing voter choice; requires constitutional amendment but achievable through political consensus"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Germany's mixed-member system combines constituency accountability with proportional inclusion",
+          "New Zealand's MMP reformed party lists increasing democratic input while maintaining proportional outcomes",
+          "Scotland's additional member system maintains accountability through regional representation",
+          "Brazil's open-list PR gives voters control over candidate selection within party lists"
+        ],
+        "long": [
+          {
+            "country": "Germany",
+            "details": "Mixed-Member Proportional (MMP) system since 1949 combines direct constituency elections (50%) with party-list PR (50%). Party lists organized regionally by state (Länder) rather than nationally, creating geographic accountability. Inclusion achieved through party internal processes and candidate quality rather than imposed quotas",
+            "impact": "Achieves both democratic legitimacy and diverse representation; regional lists ensure PR representatives maintain constituency connections; system widely considered among world's best for balancing multiple democratic values"
+          },
+          {
+            "country": "New Zealand",
+            "details": "MMP adopted 1996 reformed party list processes to increase democratic input through party primary systems, regional list organization, and public candidate ranking transparency. Inclusion achieved organically through party competition for diverse voter support",
+            "impact": "Demonstrates how democratizing PR selection processes preserves proportional outcomes while improving representative quality and accountability; public satisfaction with electoral system significantly increased"
+          },
+          {
+            "country": "Scotland",
+            "details": "Additional Member System for Scottish Parliament uses regional PR lists (56 of 129 seats) instead of national list. Parties select candidates through internal democratic processes with public disclosure. Maintains both constituency and regional representation",
+            "impact": "Shows how regional PR seats maintain accountability while ensuring proportional outcomes; representatives remain connected to specific geographic areas and communities"
+          },
+          {
+            "country": "Brazil",
+            "details": "Open-list PR system allows voters to select specific candidates within party lists rather than parties controlling candidate order. Voters choose either party or individual candidate; candidates with most votes get seats first regardless of party ranking",
+            "impact": "Demonstrates how enhanced voter choice within PR systems can improve democratic legitimacy while maintaining proportional representation and inclusion goals"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-6: Election Commission regulations for mandatory open party primaries",
+          "Months 7-12: Regional PR constituency framework, public reporting requirements operational",
+          "Years 1-2: Open primary system fully operational, performance scorecard system launched",
+          "Years 2-3: Build political consensus for deeper constitutional reforms (open-list PR, recall provisions)"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "Regulatory Framework and Party Primary Requirements",
+            "details": [
+              "Election Commission issues regulations requiring mandatory open party primaries for all PR nominations",
+              "Primary process guidelines published: voter eligibility (registered party members), timeline requirements, ballot procedures, observer access",
+              "Public disclosure requirements established: candidate qualifications, selection criteria, primary results must be published",
+              "Regional PR constituency framework designed dividing 110 seats into provincial/regional allocations while maintaining constitutional inclusion quotas"
+            ]
+          },
+          {
+            "timeline": "Months 7-12",
+            "description": "System Implementation and Accountability Mechanisms",
+            "details": [
+              "Parties conduct first open primaries under Election Commission oversight for PR candidate selection",
+              "Regional PR representation structure operational with geographic accountability framework",
+              "Public reporting requirements implemented: all MPs publish monthly constituency reports online",
+              "Parliament Secretariat develops performance scorecard system with transparent metrics for legislative effectiveness"
+            ]
+          },
+          {
+            "timeline": "Years 1-2",
+            "description": "Full System Operation and Performance Evaluation",
+            "details": [
+              "Open primary system fully operational with high party member participation and transparent processes",
+              "Regional PR representatives demonstrate enhanced constituency engagement compared to previous national-list system",
+              "Performance scorecards published quarterly for all MPs with public access and media coverage",
+              "Community input mechanisms operational allowing constituents to provide feedback on all representatives",
+              "System evaluation assesses democratic participation improvement, representative quality, and continued inclusion compliance"
+            ]
+          },
+          {
+            "timeline": "Years 2-3",
+            "description": "Constitutional Reform Consensus Building",
+            "details": [
+              "Build political consensus for deeper constitutional reforms based on Phase 1 success: open-list PR system allowing voter choice of specific candidates; recall provisions for serious misconduct; permanent protection of democratic selection processes",
+              "Parliamentary committee study tours to Germany, New Zealand, Scotland examining successful mixed-member systems",
+              "Constitutional amendment drafting with broad stakeholder consultation ensuring maintained inclusion while enhancing democracy",
+              "Public awareness campaign explaining benefits of proposed reforms for democratic accountability and representative quality"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Democratic Participation: 100% PR nominations through open party primaries by Year 1; average party member turnout 40%+ in primary elections",
+        "Transparency: 100% parties publish selection criteria, candidate qualifications, and primary results within Year 1",
+        "Regional Accountability: All 110 PR seats allocated through regional constituencies by Year 1; measurable increase in constituency engagement",
+        "Performance Reporting: 100% MPs publish monthly constituency reports by Year 1; quarterly performance scorecards operational",
+        "Maintained Inclusion: Constitutional quotas for marginalized communities 100% complied with while enhancing candidate quality through competitive selection",
+        "Public Satisfaction: 50% improvement in public satisfaction with PR representative accountability measured through independent surveys by Year 3"
+      ],
+      "legalFoundation": "Constitution Article 84 mandates mixed electoral system with 110 PR seats ensuring inclusion of marginalized communities. Representation of the People Act 2017 governs electoral processes. Election Commission has constitutional authority under Article 245 to issue regulations for electoral procedures including candidate nomination processes. Most reforms achievable through Election Commission regulations and Political Parties Act amendments; open-list PR and recall provisions would require constitutional amendment under Article 274."
+    }
+  ]
+}

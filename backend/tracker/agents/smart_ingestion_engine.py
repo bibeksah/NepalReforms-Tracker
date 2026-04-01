@@ -186,6 +186,8 @@ def _source_subtype(document: IngestionDocument | Any) -> str:
     source_type = getattr(document, "source_type", "")
     if "agenda" in lower and suffix == ".json":
         return "nepalreforms_agenda_json"
+    if suffix == ".json" and source_type == "manifesto":
+        return "nepalreforms_agenda_json"
     if "rsp" in lower and suffix == ".csv":
         return "rsp_manifesto_csv"
     if suffix == ".pdf" and source_type == "manifesto":
@@ -317,16 +319,16 @@ goal: maximize recall while preserving auditability.
     }
 
 
-def _manifesto_document_record(document: IngestionDocument | Any, *, owner_type: str, owner_name: str, language: str = "en") -> dict[str, Any]:
+def _manifesto_document_record(document: IngestionDocument | Any, *, owner_type: str, owner_name: str, language: str = "en", record_identity_override: str = "") -> dict[str, Any]:
     subtype = _source_subtype(document)
-    manifesto_document_id = stable_id("manifesto_document", owner_type, owner_name, getattr(document, "source_hash", ""), subtype)
+    manifesto_document_id = record_identity_override or stable_id("manifesto_document", owner_type, owner_name, getattr(document, "source_hash", ""), subtype)
     validated = ManifestoDocumentRecord(
         manifesto_document_id=manifesto_document_id,
         owner_type=owner_type,
         owner_name=owner_name,
         name=getattr(document, "source_document", Path(getattr(document, "source_path", "document")).name),
         language=language,
-        source_reference=getattr(document, "source_path", ""),
+        source_reference=getattr(document, "source_reference_override", "") or getattr(document, "source_path", ""),
     )
     props = validated.model_dump()
     return {
@@ -443,18 +445,26 @@ def _extract_nepalreforms_agenda_json(document: IngestionDocument | Any) -> list
     effective_from = raw.get("effective_from") or raw.get("published_at") or ""
     items = raw.get("items") or raw.get("agenda_items") or []
     records: list[dict[str, Any]] = []
+    source_reference = str(raw.get("source_reference") or document.source_path)
+    setattr(document, "source_reference_override", source_reference)
 
-    manifesto_record = _manifesto_document_record(document, owner_type="civic_platform", owner_name=owner_name, language=language)
+    manifesto_record = _manifesto_document_record(
+        document,
+        owner_type="civic_platform",
+        owner_name=owner_name,
+        language=language,
+        record_identity_override=str(raw.get("manifesto_document_id") or "").strip(),
+    )
     records.append(manifesto_record)
 
-    agenda_version_id = stable_id("agenda_version", manifesto_record["record_identity"], version_name, effective_from)
+    agenda_version_id = str(raw.get("agenda_version_id") or "").strip() or stable_id("agenda_version", manifesto_record["record_identity"], version_name, effective_from)
     version = AgendaVersionRecord(
         agenda_version_id=agenda_version_id,
         name=version_name,
         baseline_count=len(items),
         effective_from=effective_from,
         status=raw.get("status") or "baseline",
-        source_reference=document.source_path,
+        source_reference=source_reference,
     )
     version_props = version.model_dump()
     records.append(
@@ -499,16 +509,16 @@ def _extract_nepalreforms_agenda_json(document: IngestionDocument | Any) -> list
             description=item.get("description") or item.get("summary") or "",
             language=item.get("language") or language,
             active=bool(item.get("active", True)),
-            source_reference=document.source_path,
+            source_reference=source_reference,
             category=category_classification.display_name,
             priority=item.get("priority") or "",
             timeline=item.get("timeline") or "",
-            legal_foundation=item.get("legal_foundation") or "",
-            performance_targets=list(item.get("performance_targets") or []),
+            legal_foundation=item.get("legal_foundation") or item.get("legalFoundation") or "",
+            performance_targets=list(item.get("performance_targets") or item.get("performanceTargets") or []),
             problem=dict(item.get("problem") or {}),
             solution=dict(item.get("solution") or {}),
             implementation=dict(item.get("implementation") or {}),
-            real_world_evidence=dict(item.get("real_world_evidence") or {}),
+            real_world_evidence=dict(item.get("real_world_evidence") or item.get("realWorldEvidence") or {}),
         )
         props = validated.model_dump()
         relations = [

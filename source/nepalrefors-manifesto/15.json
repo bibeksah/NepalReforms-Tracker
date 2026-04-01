@@ -1,0 +1,140 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "15",
+      "title": "Attract Quality Foreign Investment with Strong Safeguards",
+      "description": "Create clear investment rules that attract quality foreign investment while protecting national interests through transparent screening and community benefit requirements.",
+      "category": "Investment Policy",
+      "priority": "Medium",
+      "timeline": "3 years",
+      "problem": {
+        "short": "Nepal loses high-value investors due to fragmented rules, bureaucratic rigidity, and restrictive sectoral limitations. Regulatory bodies lack expertise for effective facilitation while weak safeguards fail to protect national interests from exploitative investment.",
+        "long": "Nepal's foreign investment regime suffers from multiple failures: fragmented and contradictory rules across FITTA (Foreign Investment and Technology Transfer Act), its regulations (FITTR), and sectoral laws creating uncertainty for legitimate investors; bureaucratic rigidity with approval delays averaging 6-12 months even for straightforward projects; restrictive sectoral limitations where negative lists block investment in potentially beneficial sectors without clear rationale; and weak profitability incentives where restricted profit repatriation and dividend transfer policies deter quality investors. Simultaneously, weak safeguards fail to protect national interests: no systematic screening for exploitative investment terms, environmental damage, community displacement, or strategic sector vulnerability. The regulatory architecture—Department of Industry for routine approvals, Investment Board for large projects—lacks specialized expertise in investment screening, sectoral analysis, technology evaluation, or community impact assessment. Result: Nepal attracts minimal quality FDI (less than 1% of GDP annually, among South Asia's lowest) while remaining vulnerable to exploitative resource extraction, land grabbing, and projects with minimal technology transfer or local benefit. The system fails both to attract quality investment AND to protect national interests."
+      },
+      "solution": {
+        "short": [
+          "Consolidated Investment Manual with single public webpage containing all rules, timelines, and procedures",
+          "Investment Screening & Safeguards Unit within Investment Board for systematic vetting",
+          "Mandatory Technology Transfer & Localisation Plans for strategic sectors with milestone compliance",
+          "Community Benefit Agreements required for resource extraction with revenue-sharing mandates",
+          "Reaffirm Land Act protections: no foreign land ownership, Nepal-registered entities only for leases"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Clear Investment Framework",
+              "title": "Consolidated Rules and Transparency",
+              "items": [
+                "Consolidated Investment Manual with single public webpage containing FITTA/FITTR/automatic rules, negative list, approval timelines",
+                "Department of Industry + Investment Board publication of streamlined procedures with regular updates",
+                "Investment Screening & Safeguards Unit (ISSU) embedded within Investment Board with delegated authority",
+                "National security screening for land/border sensitivity and systemic environmental/social risks"
+              ]
+            },
+            {
+              "phase": "Resource Protection and Community Benefits",
+              "title": "Safeguards and Local Participation",
+              "items": [
+                "Reaffirm Land Act limits: no foreign land ownership, Nepal-registered entity requirement for long-term leases",
+                "Strategic resource safeguards: hydropower/mining requires local processing priority",
+                "Community consent requirements with public interest screening and Community Benefit Agreements",
+                "Revenue-sharing mandates: local government participation in resource extraction benefits"
+              ]
+            },
+            {
+              "phase": "Technology Transfer and Strategic Partnerships",
+              "title": "Knowledge and Capacity Building",
+              "items": [
+                "Binding Technology Transfer & Localisation Plans (TTLP) mandatory for strategic sectors",
+                "Milestone-based compliance: local assembly percentages, Nepali technician training quotas",
+                "Performance-linked incentives: tax breaks tied to technology transfer milestone achievement",
+                "Sector priorities: technology development, sustainable agriculture, renewable energy, value-added manufacturing"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "37 countries including Singapore, Canada, Germany maintain robust FDI flows while protecting critical sectors",
+          "Singapore achieved world's highest per-capita FDI through clear, transparent screening processes",
+          "Canada's Investment Canada Act demonstrates conditional approvals protecting national interests",
+          "All demonstrate systematic screening mechanisms can attract quality investment while maintaining sovereignty"
+        ],
+        "long": [
+          {
+            "country": "Global Best Practice",
+            "details": "37 countries including Singapore, Canada, Germany maintain robust FDI flows while protecting critical sectors",
+            "impact": "Demonstrate how transparent, proportionate screening mechanisms can attract quality investment while maintaining economic sovereignty"
+          },
+          {
+            "country": "Singapore",
+            "details": "Investment framework combines open markets with strategic screening for quality investment attraction",
+            "impact": "Achieved among world's highest per-capita FDI while maintaining economic sovereignty through clear, transparent processes"
+          },
+          {
+            "country": "Canada",
+            "details": "Investment Canada Act demonstrates clear rules and conditional approvals for balancing investment attraction with national interests",
+            "impact": "Shows how transparent screening processes can attract quality investment while protecting strategic national interests"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-3: Establish Investment Screening Unit, publish Consolidated Investment Manual",
+          "Months 4-6: Develop community benefit agreement templates, technology transfer frameworks",
+          "Year 1: Full screening system operational, first conditional approvals issued",
+          "Years 2-3: 50% increase in quality FDI, 100% strategic investments with technology transfer"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-3",
+            "description": "System Establishment and Manual Publication",
+            "details": [
+              "Investment Screening & Safeguards Unit (ISSU) establishment within Investment Board",
+              "Consolidated Investment Manual publication with comprehensive rule compilation",
+              "Screening procedures development for standardized project vetting",
+              "Investor due diligence framework for ownership verification and performance assessment"
+            ]
+          },
+          {
+            "timeline": "Months 4-6",
+            "description": "Framework Development and Template Creation",
+            "details": [
+              "Community benefit agreement templates development for resource extraction projects",
+              "Technology transfer milestone frameworks for strategic sector investments",
+              "Conditional approval authority establishment with binding commitments",
+              "Performance-linked incentive structure design with clawback mechanisms"
+            ]
+          },
+          {
+            "timeline": "Year 1",
+            "description": "Full System Operation and Initial Approvals",
+            "details": [
+              "Full screening system operation with transparent project evaluation",
+              "First conditional approvals with binding technology transfer and community benefit commitments",
+              "Performance monitoring system for investment milestone compliance",
+              "System optimization based on early results and stakeholder feedback"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "FDI Quality: 50% increase in quality foreign investment within 3 years; average project size increases from $5M to $15M+ demonstrating higher-value investors",
+        "Technology Transfer: 100% of strategic sector investments include binding Technology Transfer & Localisation Plans with milestone compliance",
+        "Approval Efficiency: 75% improvement in approval timeline transparency; average approval time reduced from 6-12 months to 2-3 months for straightforward projects",
+        "Community Protection: Zero exploitative resource extraction projects approved without Community Benefit Agreements; 100% of affected communities receive revenue-sharing benefits",
+        "Screening Effectiveness: Investment Screening & Safeguards Unit operational within 3 months; 100% of large projects undergo systematic screening for environmental, social, and strategic impacts"
+      ],
+      "legalFoundation": "Foreign Investment and Technology Transfer Act (FITTA) 2019 and its regulations (FITTR) provide legal framework for investment rules, screening, and approval processes. Land Act 2021 prohibits foreign land ownership. Investment Board Act 2011 establishes authority for large project approvals. Constitution Article 51(j) mandates balanced economic development and protection of national interests. Reforms achievable through regulatory amendments and administrative directives; major changes may require FITTA amendment."
+    }
+  ]
+}

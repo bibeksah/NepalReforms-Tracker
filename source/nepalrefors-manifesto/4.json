@@ -1,0 +1,149 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "4",
+      "title": "Implement Mandatory Wealth Disclosure for All Politicians",
+      "description": "Force all politicians and candidates to publish their complete assets online so citizens can see how they become rich on government salaries.",
+      "category": "Transparency",
+      "priority": "High",
+      "timeline": "6 months",
+      "updatedOn": "7 Nov 2025",
+      "problem": {
+        "short": "Politicians become millionaires on government salaries. Where does the money come from? Politicians accumulate substantial wealth on modest government salaries without transparency about sources, enabling corruption and undermining public trust.",
+        "long": "Politicians become millionaires on government salaries. Where does the money come from? Politicians accumulate substantial wealth on modest government salaries without transparency about sources, enabling corruption and undermining public trust. Current asset declaration systems are confidential rather than public, preventing citizen oversight. Nepal's Prevention of Corruption Act 2002 (Section 3) requires public officials to file asset declarations with CIAA, but these remain confidential under CIAA Act Section 28, accessible only during investigations. Election Commission requires candidate declarations under Representation of People Act 2017 (Section 13), yet details are buried in PDF files, not searchable or analyzable. The result: Politicians' wealth grows exponentially with no public accountability, while citizens cannot verify if officials' lifestyles match their declared incomes."
+      },
+      "solution": {
+        "short": [
+          "Public digital portal publishing all politician asset declarations in searchable, downloadable format within 7 days",
+          "Candidate disclosure at nomination with supporting documentation (title deeds, bank statements, purchase invoices)",
+          "Automatic red-flag triggers for 50% annual wealth increase or large unexplained purchases",
+          "Multi-institutional verification by CIAA, Election Commission, and Auditor-General",
+          "Clear sanctions: failure to file = immediate disqualification; false declaration = criminal prosecution"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Digital Transparency",
+              "title": "Public Asset Declaration System",
+              "items": [
+                "Public digital portal with all politician asset declarations published online in searchable, downloadable format within 7 days of filing",
+                "Candidate disclosure at nomination with supporting documentation including title deeds, bank statements, purchase invoices for all major assets",
+                "Complete asset information covering property inside and outside Nepal, business interests, investments, vehicles, jewelry, cash holdings",
+                "Real-time updates for any significant asset changes or acquisitions during tenure (threshold: assets worth >NPR 1 million)",
+                "Family wealth disclosure including spouse, dependent children, and parents to prevent asset concealment through relatives",
+                "Historical comparison showing wealth trajectory over time with year-over-year changes highlighted"
+              ]
+            },
+            {
+              "phase": "Verification and Investigation",
+              "title": "Automated Oversight Mechanisms",
+              "items": [
+                "Automatic red-flag triggers for 50% annual wealth increase or large unexplained purchases initiating mandatory CIAA review",
+                "Multi-institutional verification across CIAA, Election Commission, and Auditor-General with coordinated data sharing",
+                "Cross-checking declarations against tax records, bank data, land registries, and public registries through integrated systems",
+                "Annual wealth audits by Auditor-General for Cabinet ministers, Chief Ministers, and other high-risk officials",
+                "Algorithm-based anomaly detection identifying statistical outliers in wealth accumulation patterns",
+                "Third-party verification for foreign assets through international cooperation agreements"
+              ]
+            },
+            {
+              "phase": "Accountability and Sanctions",
+              "title": "Enforcement Framework",
+              "items": [
+                "Clear sanctions ladder: failure to file = immediate disqualification from office; false declaration = criminal investigation and prosecution",
+                "Asset forfeiture for proven false declarations with criminal prosecution under Prevention of Corruption Act",
+                "CIAA investigation authority for all wealth increase red-flags with 90-day mandatory investigation timeline",
+                "Public complaint system for citizens to report suspected asset concealment with whistleblower protections",
+                "Automatic suspension from office pending investigation for serious wealth concealment allegations",
+                "Criminal penalties: 2-5 years imprisonment and forfeiture of illegally acquired assets upon conviction"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Ukraine's electronic system processes 1M+ declarations annually with 72% public approval, leading to 5,131 prosecutions",
+          "Global data shows 93% of countries require disclosure but only 43% make it public - transparency is key",
+          "Indonesia's LHKPN system demonstrates public access drives accountability in developing countries"
+        ],
+        "long": [
+          {
+            "country": "Ukraine",
+            "details": "Electronic asset declaration system (e-Declaration) launched 2016 processes over 1 million declarations annually. Public portal allows citizens to search and analyze all official wealth data. Automatic verification algorithms flag anomalies for investigation. 72% public approval rating for transparency initiative",
+            "impact": "Led to prosecution of 5,131 civil servants for corruption by 2020. Demonstrated that digital transparency with public access creates accountability where confidential systems fail. System survived political pressure due to strong public support"
+          },
+          {
+            "country": "Indonesia",
+            "details": "LHKPN (State Officials' Wealth Report) system requires all officials to file asset declarations with KPK (anti-corruption commission). Public access portal allows citizens to view declarations online. System covers 250,000+ officials from President to village heads",
+            "impact": "Public scrutiny led to numerous high-profile investigations. Demonstrates feasibility of comprehensive wealth disclosure in large developing country with federal system similar to Nepal"
+          },
+          {
+            "country": "Global Comparison",
+            "details": "World Bank governance research shows 93% of countries require cabinet members to disclose assets, but only 43% provide public access to these declarations. Countries with public access show significantly lower corruption perception scores",
+            "impact": "Disclosure without transparency is ineffective - public scrutiny creates accountability that confidential filing cannot achieve. Nepal has disclosure requirement but lacks public access, placing it in less effective category"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Days 1-60: All current politicians comply with full asset disclosure or face disqualification",
+          "Months 3-6: Digital platform operational with searchable, downloadable format",
+          "Months 6-12: Automatic red-flag system and audit cycles fully operational"
+        ],
+        "long": [
+          {
+            "timeline": "Days 1-60",
+            "description": "Immediate Compliance Requirement",
+            "details": [
+              "All current politicians (MPs, ministers, provincial assembly members, local government heads) have 60 days to comply with full asset disclosure or face immediate disqualification from office",
+              "Emergency amendment to Prevention of Corruption Act Section 28 replacing confidentiality provision with mandatory public disclosure requirement",
+              "Inter-agency coordination agreement between CIAA, Election Commission, and Auditor-General establishing unified verification system and data sharing protocols",
+              "Legal framework establishment for automatic investigation triggers when wealth increases exceed 50% annually or large assets acquired without documented income source",
+              "Standardized declaration format covering all asset categories with clear instructions and supporting documentation requirements"
+            ]
+          },
+          {
+            "timeline": "Months 3-6",
+            "description": "Digital Platform Development and Launch",
+            "details": [
+              "Central asset declaration portal development (politicians.assets.gov.np) with searchable database, downloadable CSV/Excel formats, API access for researchers",
+              "Integration with existing government databases (Land Revenue, Department of Transport, Inland Revenue, Nepal Rastra Bank) for automated cross-verification",
+              "Public portal operational with complete politician asset information including historical declarations, year-over-year comparisons, family wealth data",
+              "Mobile-friendly responsive interface with citizen search by name/constituency/party, filtering, comparison tools, watchlist functionality",
+              "Data visualization dashboards showing wealth distribution, growth patterns, statistical anomalies across political parties and regions"
+            ]
+          },
+          {
+            "timeline": "Months 6-12",
+            "description": "Full System Operation and Continuous Monitoring",
+            "details": [
+              "Automatic red-flag algorithm operational analyzing all declarations for suspicious patterns: unexplained wealth increases, asset values inconsistent with income, foreign asset accumulation, family wealth transfers",
+              "Regular audit cycles by Auditor-General targeting Cabinet ministers (annual), provincial ministers (biennial), local government heads (triennial), high-risk officials flagged by algorithms (immediate)",
+              "Public complaint system operational allowing citizens to report suspected asset concealment with whistleblower protections, anonymous reporting option, mandatory 30-day CIAA response timeline",
+              "Performance measurement tracking: declaration compliance rates, verification completion rates, investigation initiation rates, prosecution rates, public engagement metrics",
+              "System optimization based on first-year results including user feedback, verification efficiency improvements, algorithm refinement, inter-agency coordination enhancement"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "100% politician compliance with asset disclosure within 60 days or disqualification",
+        "Public portal operational with downloadable data in searchable format within 6 months",
+        "Investigate all suspicious wealth increases (>50% annual) automatically within 90 days",
+        "Criminal prosecution for all proven false declarations with 2-5 year imprisonment",
+        "90% public awareness of portal existence within 12 months through education campaign",
+        "100,000+ citizen portal visits in first year demonstrating public oversight engagement"
+      ],
+      "legalFoundation": "Prevention of Corruption Act 2002 Section 3 requires asset declarations but Section 28 mandates confidentiality - requires amendment for public disclosure. Representation of People Act 2017 Section 13 requires candidate declarations. Constitution Article 27 guarantees Right to Information enabling public access to official wealth data. Good Governance Act 2008 mandates transparency in public office."
+    }
+  ]
+}

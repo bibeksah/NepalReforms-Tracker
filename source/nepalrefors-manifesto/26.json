@@ -1,0 +1,143 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "26",
+      "title": "Overhaul Social Protection System",
+      "description": "Transform fragmented social protection into comprehensive life-cycle security covering health, education, employment, and caregiving with enhanced inclusion and sustainability.",
+      "category": "Social Protection",
+      "priority": "High",
+      "timeline": "5 years",
+      "problem": {
+        "short": "Social protection system remains fragmented, underfunded, and inadequate with uneven coverage. Children, working-age people, and informal workers largely underprotected creating substantial 'missing middle.' Benefits too small to meet basic needs.",
+        "long": "Social protection system remains fragmented, underfunded, and inadequate with uneven coverage. Children, working-age people, and informal workers are largely underprotected creating a substantial 'missing middle.' Benefits are too small to meet basic needs while spending is heavily skewed toward public pensions. Nepal's social protection landscape includes old-age pensions, child grants in select districts, disability allowances, widow support, and contributory social security schemes, but these programs operate in silos without coordination. Coverage gaps leave most working-age population and many children without support. Benefit levels inadequate—often less than 10% of minimum expenditure basket. Informal sector workers (majority of workforce) largely excluded from contributory schemes. No shock-responsive mechanisms for rapid scale-up during disasters despite Nepal's vulnerability to earthquakes, floods, landslides. Registry systems fragmented preventing efficient targeting and duplication control. Result: social protection fails to provide meaningful income security or protect against shocks."
+      },
+      "solution": {
+        "short": [
+          "Universalize child grants nationwide reaching all children under five with progressive extension",
+          "Raise benefit levels to at least 15% of Minimum Expenditure Basket by 2028",
+          "Integrate shock-responsive protocols enabling 90% disaster-affected households supported within 14 days",
+          "Create inter-agency Social Protection Council aligning policy, budgets, and crisis responses",
+          "Unified registry covering 80% eligible households linked to National ID system"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Expand Coverage and Improve Adequacy",
+              "title": "Universal Protection and Enhanced Benefits",
+              "items": [
+                "Universalize child grants nationwide reaching all children under five, progressively extending to all children",
+                "Extend support to school-aged children with contributory options for informal workers",
+                "Raise benefit levels to cover at least 15% of Minimum Expenditure Basket by 2028",
+                "Rebalance spending so 40% of social protection budget benefits children, women, and working-age people"
+              ]
+            },
+            {
+              "phase": "Integrate Shock-Responsive Systems",
+              "title": "Crisis-Adaptive Social Protection",
+              "items": [
+                "Make schemes adaptable to crises integrating SRSP guidelines into existing programmes",
+                "Preposition shock-scalable delivery protocols with pre-identified beneficiary lists and rapid payments",
+                "Operationalize scalable delivery so 90% of disaster-affected households receive support within 14 days",
+                "Integrate shock-responsive protocols into all major transfer programmes"
+              ]
+            },
+            {
+              "phase": "Strengthen Legal and Institutional Frameworks",
+              "title": "Comprehensive System Coordination",
+              "items": [
+                "Operationalize Integrated National Social Protection Framework with clear coordination structure",
+                "Guarantee universal programmes in law through Social Security Act implementation",
+                "Create inter-agency Social Protection Council to align policy, budgets, and responses",
+                "Establish unified social protection registry covering 80% of eligible households linked to NID system"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Brazil's Bolsa Família demonstrates large-scale child cash transfers with strong registry",
+          "Ethiopia's PSNP provides shock-responsive multi-year transfers for disaster resilience",
+          "Indonesia's BPJS extended social insurance to informal workers via subsidies and simplified enrollment",
+          "South Africa's Child Support Grant shows predictable child transfers have proven poverty-reduction impact"
+        ],
+        "long": [
+          {
+            "country": "Brazil",
+            "details": "Bolsa Família demonstrates large-scale child cash transfers with strong registry use",
+            "impact": "Lesson for Nepal: legalize and scale child grants, link to complementary services"
+          },
+          {
+            "country": "Ethiopia",
+            "details": "PSNP provides multi-year transfers with shock-responsive design for disasters",
+            "impact": "Lesson: scale existing programmes to deliver anticipatory disaster support"
+          },
+          {
+            "country": "Indonesia",
+            "details": "BPJS extended health/social insurance to informal workers via subsidies and pooled financing",
+            "impact": "Lesson: adopt subsidy tiers and simplified enrolment for informal/self-employed workers"
+          },
+          {
+            "country": "South Africa",
+            "details": "Child Support Grant provides predictable child transfers with proven poverty-reduction impact",
+            "impact": "Lesson: increase adequacy and prioritize child benefits for maximum development impact"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Years 1-2: Operationalize Integrated Framework, unified registry, Social Security Act implementation",
+          "Years 2-4: Expand child grants, introduce informal worker contributions, strengthen insurance schemes",
+          "Years 4-5: Achieve 50% population coverage, 2.5M active contributors, 10% budget allocation"
+        ],
+        "long": [
+          {
+            "timeline": "Years 1-2",
+            "description": "Framework Operationalization and System Integration",
+            "details": [
+              "Fully operationalize Integrated National Social Protection Framework with coordination structure",
+              "Upgrade to unified beneficiary registry linked with NID system excluding no vulnerable groups",
+              "Social Security Act full implementation with concrete rules for informal sector inclusion",
+              "Inter-agency Social Protection Council creation for policy, budget, and response alignment"
+            ]
+          },
+          {
+            "timeline": "Years 2-4",
+            "description": "Coverage Expansion and Benefit Enhancement",
+            "details": [
+              "Phase in expansion of child grants with school-age children inclusion",
+              "Contributory options introduction for informal workers with subsidy tiers",
+              "Maternity, disability, and unemployment insurance strengthening through Social Security Fund",
+              "Shock-responsive delivery systems operationalization with rapid response capabilities"
+            ]
+          },
+          {
+            "timeline": "Years 4-5",
+            "description": "Universal Coverage and System Optimization",
+            "details": [
+              "50% population coverage achievement by 2027 moving towards 60% by 2030",
+              "Universal Child Grant implementation nationwide with progressive extension",
+              "2,500,000 active contributors to Social Security Fund achievement by 2028/29",
+              "Sustainable financing secured equivalent to at least 10% of national budget"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "50% population coverage by 2027, moving towards 60% by 2030",
+        "Universalize Child Grant nationwide reaching all children under five",
+        "2,500,000 active contributors to Social Security Fund by 2028/29",
+        "40% of social protection budget benefits children, women, and working-age people"
+      ],
+      "legalFoundation": "Article 51 mandates social security. Social Security Act 2017 and Contribution-Based Social Security Act 2017"
+    }
+  ]
+}

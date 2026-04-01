@@ -1,0 +1,157 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "17",
+      "title": "End Permanent Government Jobs Without Performance",
+      "description": "Create accountability systems for government employees through performance management, citizen complaints, and consequences for poor service while maintaining fair process.",
+      "category": "Civil Service Reform",
+      "priority": "High",
+      "timeline": "3 years",
+      "problem": {
+        "short": "Government employees operate without fear of consequences, leading to complacency, poor service, and misuse of power. Current job security regardless of performance creates a culture where citizens suffer while officials remain comfortable.",
+        "long": "Nepal's civil service operates under de facto lifetime employment regardless of performance, competence, or conduct. The Civil Service Act 2049 (1993) and regulations provide strong job protections but weak accountability mechanisms, creating a system where: Poor performers face no consequences—absent officers collect salaries, corrupt officials receive transfers rather than termination, incompetent staff cannot be removed; Citizens have no recourse when facing negligence, delays, corruption, or abuse from government employees; Disciplinary processes exist on paper but rarely result in meaningful consequences due to union protection, political interference, and cumbersome procedures; Merit and effort are not rewarded—hardworking employees see lazy colleagues receive identical treatment, undermining motivation. Result: Government service delivery remains poor despite massive public expenditure on salaries (25%+ of budget). Citizens experience delays, demand for bribes, rudeness, and incompetence as normal. The current system protects government employees at the expense of citizens they are meant to serve."
+      },
+      "solution": {
+        "short": [
+          "National Citizen Complaint Portal with verified complaints, case tracking, and automatic escalation",
+          "Mandatory quarterly performance management with clear KPIs for all frontline roles",
+          "Civil liability framework allowing citizens to sue negligent officials personally through fast-track courts",
+          "Three-strikes disciplinary system: two criminal convictions = removal; three misconduct = lifetime ban",
+          "Whistleblower protection for employees reporting corruption and mismanagement"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1 (Immediate Administrative Actions)",
+              "title": "Performance Management and Complaint Systems",
+              "items": [
+                "National Citizen Complaint Portal: Centralized digital platform for citizens to file verified complaints against government employees with case tracking and resolution timelines; automatic escalation to supervisors, department heads, and Ministry if unresolved within 15/30/60 days; published quarterly reports showing complaint volume, resolution rates, repeat offenders by department and individual (anonymized for minor issues, named for serious misconduct); integration with service delivery dashboards",
+                "Mandatory Performance Management: Quarterly performance reviews with clear, measurable KPIs for all frontline government roles (service delivery timelines, citizen satisfaction scores, complaint rates, output metrics); annual performance ratings determining salary increments, promotions, and continued employment eligibility; bottom 10% performers placed on Performance Improvement Plans (PIP) with 6-month remediation period; continued failure results in termination or demotion",
+                "Modernized Recruitment: Replace pure MCQ-based exams with practical skills testing, case study analysis, situational judgment, and aptitude assessments measuring job-relevant competencies; mandatory digital literacy requirements for all new hires (within 6 months) and existing employees (within 12 months) with testing and certification; probationary periods rigorously enforced with objective evaluation before permanent confirmation",
+                "Whistleblower Protection Enhancement: Strengthen legal protections for government employees reporting corruption, waste, fraud, abuse through anonymous channels; protection from retaliation, transfer, demotion; investigation timelines published; rewards for verified reports leading to accountability"
+              ]
+            },
+            {
+              "phase": "Phase 2 (Accountability Mechanisms with Due Process)",
+              "title": "Civil Liability and Disciplinary Framework",
+              "items": [
+                "Civil Liability Framework: Citizens can file personal lawsuits against government employees for negligence, delays, or misconduct causing harm through fast-track small claims courts with simplified procedures; burden of proof: citizen must show employee violated published service standards or acted negligently; damages capped at reasonable amounts preventing vindictive suits; insurance schemes available for employees acting in good faith; serious cases involving corruption or intentional harm have higher liability limits",
+                "Three-Strikes Disciplinary System: First criminal conviction (corruption, embezzlement, abuse of authority): immediate suspension pending appeal; Second conviction: automatic removal from service; Third misconduct finding (administrative, not criminal): lifetime ban from government employment; Administrative misconduct: three findings of serious misconduct (bribery solicitation, documented negligence causing harm, repeated service failure) within 5 years = automatic removal",
+                "Administrative Fines: Civil Service Departmental Tribunal empowered to impose salary deductions (10-30% for 3-12 months) for documented misconduct not rising to criminal level; requires due process hearing and judicial confirmation; subsistence protections ensure minimum family support",
+                "Criminal Liability Enforcement: Strengthen CIAA and Attorney General's Office capacity to prosecute corruption, embezzlement, and abuse of authority; fast-track corruption courts with specialized judges; published prosecution guidelines preventing selective enforcement"
+              ]
+            },
+            {
+              "phase": "Phase 3 (Strong Protections Against Abuse)",
+              "title": "Due Process and Anti-Retaliation Safeguards",
+              "items": [
+                "Presumption of Innocence: All disciplinary proceedings presume employee innocence until proven otherwise through fair process; notice of charges, opportunity to be heard, legal representation, access to evidence, appeals process; burden of proof on government/complainant",
+                "Political Motivation Screening: Independent Administrative Tribunal reviews cases showing potential political motivation; employees cannot be removed for legitimate policy disagreements, whistleblowing, or refusing illegal orders; protection against malicious complaints with penalties for provably false accusations",
+                "Limited Summary Dismissals: Only for most serious offenses (caught accepting bribes, embezzling funds, serious violence) with strong evidence and expedited judicial review; vast majority of cases require full due process",
+                "Privacy and Family Protection: Salary deductions limited to amounts preserving subsistence for employee and dependents; public disclosure of misconduct findings only for serious cases affecting public trust; minor disciplinary matters handled internally"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "New Zealand's 1988 State Sector Act transformation ended jobs-for-life while implementing rigorous due process",
+          "Singapore's performance-based system with strict accountability ranks among world's most efficient governments",
+          "Georgia's post-2003 reforms increased public satisfaction from 5% to 70%+ within five years",
+          "UK Civil Service performance management balances accountability with fair process protections"
+        ],
+        "long": [
+          {
+            "country": "New Zealand",
+            "details": "1988 State Sector Act transformed civil service from permanent employment to performance-based contracts. Chief Executives hired on fixed terms with performance agreements; staff employed under normal labor law with performance management; fair dismissal procedures with statutory protections against arbitrary removal; independent review tribunals",
+            "impact": "Dramatically improved government efficiency and responsiveness; citizen satisfaction increased significantly; public service became more professional and customer-focused while maintaining fairness through robust due process"
+          },
+          {
+            "country": "Singapore",
+            "details": "Civil service combines competitive compensation (matching private sector for talent retention) with strict accountability and performance management. Annual performance reviews determine career progression; poor performers counseled out or terminated; merit-based promotions; strong anti-corruption enforcement with zero tolerance",
+            "impact": "Consistently ranks among world's most efficient governments with minimal corruption; high citizen satisfaction with government services; professional culture valuing excellence and public service"
+          },
+          {
+            "country": "Georgia",
+            "details": "Post-2003 Rose Revolution reforms fired corrupt officials, instituted merit-based hiring, implemented performance accountability, and simplified service delivery. Combined accountability with due process protections preventing political abuse",
+            "impact": "Public satisfaction with government services increased from 5% (2003) to over 70% (2008); corruption dramatically reduced; government efficiency improved measurably; demonstrated rapid transformation possible with political will"
+          },
+          {
+            "country": "United Kingdom",
+            "details": "Civil Service performance management system since 1980s-90s reforms combines clear performance objectives, annual reviews, capability procedures for underperformance, and fair dismissal processes. Employment tribunals provide independent review preventing arbitrary removal",
+            "impact": "Balances accountability with fairness; public sector efficiency improved while maintaining employee protections; demonstrates feasibility of performance management within democratic governance"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-3: Launch National Citizen Complaint Portal, rollout performance appraisal system",
+          "Months 4-6: Complete legal framework for civil liability and fast-track courts, enhance whistleblower systems",
+          "Year 1: Full accountability system operational, first performance-based actions taken",
+          "Years 2-3: System optimization, measurable improvements in citizen satisfaction and service delivery"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-3",
+            "description": "Immediate System Launch",
+            "details": [
+              "National Citizen Complaint Portal launched with mobile app, web interface, and phone hotline; citizen ID verification preventing spam while maintaining accessibility",
+              "Performance appraisal system rolled out to all ministries with quarterly KPI setting for frontline roles (service delivery, citizen satisfaction, complaint resolution)",
+              "Digital literacy testing program launched: all new hires must pass within 6 months; existing employees within 12 months; free training provided",
+              "Public performance scorecards published for all agencies showing service delivery metrics, complaint rates, resolution times"
+            ]
+          },
+          {
+            "timeline": "Months 4-6",
+            "description": "Legal Framework and Court System",
+            "details": [
+              "Legal framework enacted for civil liability against negligent officials with fast-track small claims court procedures",
+              "Whistleblower Protection Act strengthened with anonymous reporting channels, retaliation penalties, published investigation timelines",
+              "Civil Service Departmental Tribunal enhanced with authority to impose administrative fines and disciplinary measures; judicial review process established",
+              "Due process requirements codified: notice, hearing, legal representation, appeals for all disciplinary actions; protections against political motivation"
+            ]
+          },
+          {
+            "timeline": "Months 7-12",
+            "description": "Full System Operation and Initial Actions",
+            "details": [
+              "Full accountability system operational with citizen complaints, performance management, and disciplinary processes integrated",
+              "First performance-based actions: PIPs issued to bottom 10% performers; terminations for continued failure after remediation period; strong due process observed",
+              "Fast-track courts operational hearing civil liability cases with simplified procedures and quick resolution",
+              "Digital literacy standards met by 95% of government employees; non-compliant employees on remediation plans",
+              "First quarterly public reports published showing complaint volumes, resolution rates, performance metrics, disciplinary actions (anonymized appropriately)"
+            ]
+          },
+          {
+            "timeline": "Years 2-3",
+            "description": "System Optimization and Measurable Impact",
+            "details": [
+              "System evaluation and optimization based on citizen feedback, service delivery metrics, employee concerns",
+              "Measurable improvements: 80% improvement in citizen satisfaction surveys; 90% service requests completed within published timelines; 50% reduction in corruption complaints",
+              "Performance culture shift: merit and effort rewarded through promotions and salary increments; poor performance has consequences; citizen-focused service delivery becomes norm",
+              "Continuous improvement: refine KPIs, adjust timelines, enhance training, optimize complaint resolution based on data and experience"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Citizen Satisfaction: 80% improvement in satisfaction with government services within 3 years measured through independent surveys",
+        "Service Delivery: 90% of service requests completed within published timelines by Year 2; 95% by Year 3",
+        "Corruption Reduction: 50% reduction in corruption complaints within 3 years; faster resolution of verified cases",
+        "Digital Capability: 95% of government employees meet digital literacy standards by Year 1; 100% by Year 2",
+        "Complaint Resolution: 80% of citizen complaints resolved within 30 days; 95% within 60 days; published resolution rates by department",
+        "Performance Culture: Bottom 10% performers on PIPs annually; demonstrated improvement or termination; merit-based promotions replace seniority"
+      ],
+      "legalFoundation": "Civil Service Act 2049 (1993) provides framework for recruitment, promotion, and discipline. Good Governance (Management and Operation) Act 2064 (2008) establishes service delivery standards. Constitution Article 242 mandates Public Service Commission role. Reforms achievable through regulatory amendments and administrative directives under existing law; civil liability framework requires legislative enactment but no constitutional amendment. Due process protections under Constitution Article 20 (right to justice) must be maintained."
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "25",
+      "title": "Transform Healthcare System for Universal Coverage",
+      "description": "Revolutionize healthcare through strengthened rural infrastructure, qualified health workers, digital health systems, and universal insurance coverage for all Nepalis.",
+      "category": "Healthcare",
+      "priority": "High",
+      "timeline": "5 years",
+      "problem": {
+        "short": "Rural and marginalized communities face severe healthcare access gaps due to underfunded primary care, lack of qualified professionals, and poor infrastructure. Urban-rural disparities contribute to preventable deaths and untreated chronic illnesses.",
+        "long": "Rural and marginalized communities in Nepal face severe healthcare access gaps due to underfunded primary care, lack of qualified professionals, poor health infrastructure, and logistical challenges. Urban-rural disparities contribute to preventable deaths, untreated chronic illnesses, and broadening public health inequality. Mountains and remote areas lack basic health facilities; where facilities exist, they often lack medicines, equipment, and qualified staff. Maternal mortality, infant mortality, and communicable diseases remain unacceptably high in rural areas while urban centers concentrate resources. Out-of-pocket healthcare spending pushes families into poverty. Health insurance coverage remains limited with low enrollment among rural and informal sector workers. Mental health services virtually absent. Digital health infrastructure underdeveloped. Result: two-tier healthcare system where urban wealthy access quality care while rural poor suffer preventable illness and death."
+      },
+      "solution": {
+        "short": [
+          "Map underserved regions and construct/upgrade Primary Health Centers with essential medicines and equipment",
+          "Rural doctor/nurse quotas with service bonds, hardship allowances, housing incentives for retention",
+          "Electronic Health Record system and National Digital Health Platform for telemedicine",
+          "Expand government-subsidized health insurance to all low-income and rural households",
+          "Integrate mental health services into Primary Health Centers with tele-counseling"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Strengthen Rural Healthcare Infrastructure",
+              "title": "Primary Care Expansion and Accessibility",
+              "items": [
+                "Map underserved rural and mountainous regions for primary healthcare expansion with FREE care services",
+                "Construct and upgrade Primary Health Centers with essential medicines, labs, maternity care, telemedicine rooms",
+                "Provide door-to-door health services through community health workers bridging gaps between communities",
+                "Solar power and internet connectivity in remote posts with clean water, sanitation, emergency transport"
+              ]
+            },
+            {
+              "phase": "Human Resource for Health Strategy",
+              "title": "Qualified Health Worker Deployment",
+              "items": [
+                "Rural doctor and nurse quotas with service bonds, hardship allowances, housing incentives",
+                "Mid-level healthcare workers (ANMs, CMAs, public health nurses) trained and deployed locally",
+                "Partner with medical universities for rural health residency tracks and e-learning delivery",
+                "Transparent licensing exams with independent oversight and public reporting for fairness"
+              ]
+            },
+            {
+              "phase": "Digital Health and Universal Coverage",
+              "title": "Technology Integration and Insurance Expansion",
+              "items": [
+                "Electronic Health Record (EHR) system for accurate real-time data and continuity of care",
+                "National Digital Health Platform for telemedicine, e-prescriptions, referrals, inventory management",
+                "Expand government-subsidized health insurance to all low-income and rural households",
+                "Integrate mental health services into PHCs with tele-counseling and community mobilization"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Thailand's Universal Coverage Scheme reduced catastrophic health spending 30% through rural investment",
+          "Sri Lanka achieved strong maternal/child health outcomes despite low spending by focusing on equity",
+          "Rwanda reduced child mortality 60% in a decade through community health workers and digital health",
+          "Ethiopia's Health Extension Program improved immunization through 40,000 community health workers"
+        ],
+        "long": [
+          {
+            "country": "Thailand",
+            "details": "Universal Coverage Scheme expanded rural access and reduced catastrophic health spending by 30%",
+            "impact": "Achieved high citizen satisfaction through rural health investment and insurance expansion"
+          },
+          {
+            "country": "Sri Lanka",
+            "details": "Achieved strong maternal/child health outcomes despite low per-capita spending by focusing on equity",
+            "impact": "Demonstrates effectiveness of preventive care and rural health investment over expensive urban facilities"
+          },
+          {
+            "country": "Rwanda",
+            "details": "Integrated digital health and community health workers to expand access in post-conflict setting",
+            "impact": "Reduced child mortality by over 60% in a decade through community-based insurance and accountability"
+          },
+          {
+            "country": "Ethiopia",
+            "details": "Health Extension Program trained 40,000 female health workers for community-based service delivery",
+            "impact": "Improved immunization and maternal survival through scalable grassroots health delivery model"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Year 1: Map facilities, setup Independent Health Regulatory Authority, initiate Digital Health Platform",
+          "Years 2-3: Construct health posts, expand NCD/MCH services, rollout insurance, train health workers",
+          "Years 4-5: Universal coverage operational, 80% facilities using digital records, telemedicine expanded"
+        ],
+        "long": [
+          {
+            "timeline": "Year 1",
+            "description": "System Mapping and Foundation Building",
+            "details": [
+              "Comprehensive health facility mapping with health worker relicensing launch",
+              "Independent Health Regulatory Authority (IHRA) setup for quality assurance",
+              "National Digital Health Platform (NDHP) initiation with EHR system development",
+              "Community mobilization with youth-led health education campaigns"
+            ]
+          },
+          {
+            "timeline": "Years 2-3",
+            "description": "Infrastructure Development and Service Expansion",
+            "details": [
+              "Health post construction with model hospitals and disaster-resilient facilities",
+              "Non-Communicable Disease (NCD) and Maternal & Child Health (MCH) service expansion",
+              "Health insurance rollout with private hospital regulation enforcement",
+              "Supply chain strengthening with digital systems training for health workers"
+            ]
+          },
+          {
+            "timeline": "Years 4-5",
+            "description": "Full System Operation and Universal Coverage",
+            "details": [
+              "Full system operation with nationwide digital health record coverage",
+              "Universal rural coverage achievement with quality audits and performance monitoring",
+              "Telemedicine and WASH program expansion to all primary health facilities",
+              "System optimization based on health outcomes and citizen satisfaction metrics"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "95% population within 30 minutes of primary health facility within 5 years",
+        "50% reduction in catastrophic out-of-pocket health spending",
+        "90% health insurance enrollment among low-income households",
+        "80% of health facilities using digital health records"
+      ],
+      "legalFoundation": "Article 35 guarantees health rights. National Health Policy 2019 and Health Insurance Act 2017"
+    }
+  ]
+}

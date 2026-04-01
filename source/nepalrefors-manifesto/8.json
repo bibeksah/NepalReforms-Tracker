@@ -1,0 +1,136 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "8",
+      "title": "Create Transparent Public Contracting",
+      "description": "Reform government procurement to eliminate corruption by requiring independent verification, fair bidding processes, and real-time public tracking of all contracts.",
+      "category": "Procurement Reform",
+      "priority": "High",
+      "timeline": "2 years",
+      "problem": {
+        "short": "Government contracts often go to pre-selected companies through biased specifications and corrupt practices. The lowest bidder system often results in poor quality work.",
+        "long": "Public procurement in Nepal continues to face systemic challenges that undermine efficiency, fairness, and accountability. Unverified budgetary requirements, biased bid documentation, and flawed bid awarding systems pose major threats to fair and competitive participation."
+      },
+      "solution": {
+        "short": [
+          "Have independent auditors verify all bid documents to ensure fairness",
+          "Award contracts based on average bid price, not just lowest price",
+          "Require electronic bidding for all contracts above Rs. 500,000",
+          "Publish all contract details and payments online in real-time",
+          "Enforce strict penalties and automatic bans for companies that fail to deliver"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Verification and Documentation",
+              "title": "Independent Bid Document Verification",
+              "items": [
+                "Independent bid document verification through third-party audits across all procurement categories",
+                "Mandatory pre-procurement assessment for necessity, scale, and feasibility of proposed projects",
+                "Independent review panels ensuring technical specifications are neutral and promote fair participation",
+                "Random sampling audits of procurement notices to deter malpractice in specification design"
+              ]
+            },
+            {
+              "phase": "Bidding and Award Reform",
+              "title": "Mean-Based Awarding System",
+              "items": [
+                "Replace lowest-bidder approach with mean-based awarding where winning bid selected based on proximity to average",
+                "Enhanced transparency with detailed tender criteria published 30 days before bidding",
+                "Live-streamed bid opening for contracts above Rs. 50 lakh with public access",
+                "Mandatory disclosure of beneficial ownership for all bidding companies"
+              ]
+            },
+            {
+              "phase": "Digital Platform and Accountability",
+              "title": "Electronic Procurement and Monitoring",
+              "items": [
+                "Mandatory electronic procurement platform for all contracts above Rs. 500,000 with PPMO system upgrade",
+                "Real-time publication of all procurement processes, payments, and project progress",
+                "Contractor performance database with historical records accessible to government and public",
+                "Strict accountability with performance bonds and automatic debarment system for failures"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Rwanda's digital system increased bidders per tender from 2.1 to 4.2 participants",
+          "Estonia achieved 96% electronic procurement with 40% time reduction",
+          "Georgia's reforms reduced infrastructure costs by 30-50% while eliminating cartels"
+        ],
+        "long": [
+          {
+            "country": "Rwanda",
+            "details": "UMUCYO system processes 100% of contracts above $20,000 with full transparency",
+            "impact": "Average of 4.2 bidders per tender vs. 2.1 before digitization, and 15% average cost savings through increased competition"
+          },
+          {
+            "country": "Estonia",
+            "details": "Achieved 96% electronic procurement with centralized monitoring and digital systems",
+            "impact": "3.6 tenderers per electronic procedure vs. 1.9 for paper-based, with 40% time reduction and increased competition"
+          },
+          {
+            "country": "Georgia",
+            "details": "Procurement reforms (2004-2012) combined electronic systems with strict penalties",
+            "impact": "Reduced infrastructure costs by 30-50% while eliminating bid-rigging cartels through systematic reform"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-6: Upgrade procurement systems and change laws",
+          "Months 7-12: Roll out starting with central ministries",
+          "Year 2: Full implementation including local governments with monitoring"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "System Upgrade and Legal Framework",
+            "details": [
+              "PPMO e-GP system upgrade for interoperability with national digital infrastructure",
+              "Legal amendments to Public Procurement Act for mean-based awarding and transparency requirements",
+              "Third-party audit system establishment for bid document verification",
+              "Staff training for procurement officials on new procedures and accountability measures"
+            ]
+          },
+          {
+            "timeline": "Months 7-12",
+            "description": "Phased Implementation and Capacity Building",
+            "details": [
+              "Phased rollout starting with central ministries for system testing and refinement",
+              "Electronic procurement platform deployment for all contracts above Rs. 500,000",
+              "Real-time publication system for tender notices, evaluation criteria, and contract awards",
+              "Contractor performance database development with historical tracking capabilities"
+            ]
+          },
+          {
+            "timeline": "Year 2",
+            "description": "Full Implementation and Performance Monitoring",
+            "details": [
+              "Full implementation including provincial and local governments with integrated monitoring",
+              "Independent procurement audits by Auditor General with public hearings for violations",
+              "Citizen complaint portal operational with 30-day mandatory response timeline",
+              "Performance measurement system tracking bidder participation, cost savings, and completion rates"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Average 3+ bidders per contract for all government projects",
+        "15% cost savings compared to previous years",
+        "80% of projects completed on time as contracted",
+        "90% of citizen complaints resolved within 30 days"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "28",
+      "title": "Reform Foreign Relations and Diplomacy for Strategic Sovereignty",
+      "description": "Transform Nepal's reactive foreign policy into strategic sovereignty through codified policy framework, diaspora engagement as national asset, merit-based diplomacy, and trade diversification reducing single-country dependency.",
+      "category": "Foreign Policy",
+      "priority": "High",
+      "timeline": "5 years (phased)",
+      "problem": {
+        "short": "Nepal's foreign relations remain reactive, dependent on India for transit, and vulnerable to external pressure. Foreign policy shifts with each ruling party, leaving Nepal unpredictable and weak internationally. The diaspora—responsible for nearly 27% of GDP in remittances—has no strong legal or financial framework for meaningful engagement.",
+        "long": "Nepal's foreign relations remain reactive, dependent on India for transit, and vulnerable to external pressure. Foreign policy shifts with each ruling party, leaving Nepal unpredictable and weak internationally. Nepal is historically caught 'between two boulders'—India and China. The unequal 1950 Indo-Nepal Treaty contains provisions widely criticized as infringing sovereignty. Economic blockades in 1989-90 and 2015-16 demonstrated fragility: the 2015 blockade caused near-zero growth (0.2%) just months after devastating earthquakes. Meanwhile, millions of Nepalis working abroad—3.5 million formal migrants plus uncounted millions in India—represent an under-leveraged strategic asset. In 2023, remittances reached $11 billion (26.6% of GDP), exceeding combined ODA and FDI. Unlike Israel, Ireland, or the Philippines, Nepal lacks legal frameworks for diaspora citizenship, investment protection, or systematic engagement as economic and diplomatic advocates."
+      },
+      "solution": {
+        "short": [
+          "Codified Foreign Policy Act binding all parties regardless of ruling coalition",
+          "Diaspora Citizenship/ID Act granting property rights, investment guarantees, profit repatriation",
+          "Double taxation prevention through agreements with major destination countries",
+          "Merit-based diplomatic appointments through competitive examinations",
+          "Alternative transit routes (Kerung-Rasuwagadhi, Bangladesh) reducing Indian dependency to below 50%",
+          "1950 Treaty renegotiation establishing equal sovereignty framework"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1 (Immediate Statutory Reforms)",
+              "title": "Codified Policy, Diaspora Framework, and Diplomatic Continuity",
+              "items": [
+                "Foreign Policy Act/White Paper: Parliament passes comprehensive foreign policy legislation binding on all parties; reaffirm constitutional commitment to sovereignty, territorial integrity, non-alignment; establish 'Nepal First' doctrine; codify balanced relations with India and China while diversifying partnerships; require Parliamentary approval for major foreign policy shifts; mandate annual Foreign Relations Report to Parliament",
+                "1950 Treaty Review: Establish Joint Parliamentary Committee to formally request treaty renegotiation with India; identify articles requiring revision (particularly Articles 2, 5, 6, 7 creating asymmetric obligations); develop alternative treaty language respecting equal sovereignty; engage regional/international legal experts; build domestic political consensus across parties",
+                "Bipartisan Foreign Delegation Protocol: Government delegations abroad must meet both ruling party and major opposition leaders in host countries; brief Parliamentary Foreign Affairs Committee before/after major visits; include opposition representatives in economic/trade delegations; maintain relationships across political spectrum; document commitments in writing",
+                "Permanent Diplomatic Consultation Forum: Establish inter-party body meeting quarterly with all major parties represented; Foreign Minister briefs on strategic developments; parties provide input on treaty negotiations and major agreements; create institutional memory transcending electoral cycles",
+                "Nepali Diaspora Citizenship/ID Act: Grant legal Non-Resident Nepali (NRN) status with official ID cards; right to own property in Nepal (residential and commercial); right to invest with guaranteed profit repatriation; facilitated visa processes and consular services; eligibility to participate in select local government decision-making affecting diaspora (no voting rights in national elections avoiding dual citizenship constitutional issues)",
+                "Double Taxation Prevention: Sign DTAAs with major destination countries (India, UAE, Saudi Arabia, Qatar, Malaysia, US, UK, Australia); enact domestic tax legislation preventing diaspora income being taxed by both Nepal and residence country; create tax credit systems; establish clear rules preventing retroactive taxation; publish simple accessible guidance in major languages",
+                "Diaspora Investment Protection: Amend FITTA creating special NRN investment category; guarantee profit and capital repatriation through NRB standing facility; establish transparent corruption-free banking channels; create One-Stop Diaspora Investment Service Center under Investment Board; provide dedicated ombudsman for diaspora investor complaints; offer diaspora bonds with competitive returns backed by sovereign guarantee",
+                "Ministry-Level Diaspora Department: Establish under Ministry of Foreign Affairs coordinating consular services, diaspora welfare, economic engagement; maintain comprehensive diaspora database (skills, professions, locations, willingness to contribute); organize annual Global Nepali Conventions; facilitate diaspora mentorship for Nepal-based entrepreneurs/students; manage Diaspora Scholarship Fund",
+                "Global Nepali Knowledge Network: Digital platform connecting Nepali professionals abroad with government projects; diaspora investors with vetted business opportunities; diaspora technical experts willing to consult pro-bono; academic diaspora with Nepal universities for research; create transparent matchmaking preventing corruption",
+                "Merit-Based Diplomatic Appointments: Amend Foreign Service Act; Public Service Commission administers competitive examinations testing foreign policy knowledge, diplomatic history, negotiation skills, language proficiency; shortlist based on transparent scoring; mandatory career track with minimum 5 years diplomatic service before ambassadorial consideration; fixed 3-year terms with single renewal option; performance scorecards measuring economic outcomes, diaspora engagement, bilateral trade growth, consular service quality; no appointment without passing examination",
+                "Trade Diversification and Transit Security: Kerung-Rasuwagadhi (Tibet-Nepal) route completion within 18 months; Bangladesh transit agreement operationalization (Mongla and Chattogram ports); multi-country transit treaties through Bangladesh, Myanmar, Southeast Asia; prioritize infrastructure connecting Nepal to non-Indian transit points; active economic diplomacy with ASEAN, EU, US, Middle East, East Asia"
+              ]
+            },
+            {
+              "phase": "Phase 2 (Long-term Constitutional and Strategic Goals)",
+              "title": "Treaty Renegotiation, Regional Leadership, and Strategic Hedging",
+              "items": [
+                "Comprehensive Treaty Renegotiation: Replace 1950 Treaty with modern Treaty of Friendship, Partnership, and Cooperation; eliminate asymmetric provisions requiring Nepal to seek Indian consultation on defense procurement or foreign policy; maintain open border for people movement but regulate for security/trafficking prevention/census; codify water resource cooperation on equitable benefit-sharing; formalize dispute resolution mechanisms ensuring equal standing before neutral third-party arbitration",
+                "Regional Leadership Positioning: SAARC revitalization championing functional cooperation (health, education, trade facilitation); BIMSTEC leadership on connectivity, counter-terrorism, cultural preservation; UN peacekeeping expansion leveraging international goodwill; climate diplomacy positioning Nepal as Himalayan ecosystem spokesperson; Non-Aligned Movement revival for contemporary challenges",
+                "Strategic Hedging Framework (Multi-Alignment Strategy): Develop separate bilateral frameworks with India, China, US, EU avoiding zero-sum choices; economic engagement with China (BRI projects, trade, investment) balanced with security consciousness; democratic values partnership with US, EU, Japan without becoming geopolitical tool against China; maintain India relationship primacy while demonstrating Nepal is not anyone's 'sphere of influence'; proactive transparency informing all major partners about engagements with others"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Israel mobilized global Jewish diaspora contributing 40%+ of total FDI",
+          "Ireland's diaspora strategy with 70 million abroad vs 5 million home transformed economy",
+          "Philippines' comprehensive framework with 10 million overseas remitting $34B annually (9% GDP)",
+          "Switzerland and Singapore achieved prosperity through deliberate trade diversification"
+        ],
+        "long": [
+          {
+            "country": "Israel",
+            "details": "Since 1950, mobilized global Jewish diaspora as economic investors, political advocates, and knowledge contributors through clear legal framework (Law of Return), investment protection, systematic engagement",
+            "impact": "Diaspora-origin FDI comprises 40%+ of Israel's total foreign investment; political support in key countries far exceeding Israel's size; access to global talent and expertise"
+          },
+          {
+            "country": "Ireland",
+            "details": "Global Irish Economic Forum (since 2009) brings diaspora business leaders to advise government and invest. Irish abroad estimated 70 million versus 5 million home population",
+            "impact": "Diaspora contributed significantly to Ireland's economic transformation; foreign investment from diaspora-connected firms; political advocacy in US, EU, Australia. Key: formal diaspora recognition, investment facilitation, government engagement treating diaspora as national asset"
+          },
+          {
+            "country": "Philippines",
+            "details": "Comprehensive legal framework including Dual Citizenship Act (2003), overseas voting rights, dedicated Commission on Filipinos Overseas",
+            "impact": "10 million overseas Filipinos remit $34 billion annually (9% of GDP); diaspora political influence shapes foreign policy; systematic engagement through Overseas Workers Welfare Administration"
+          },
+          {
+            "country": "Switzerland and Singapore",
+            "details": "Both small nations achieved prosperity through deliberate trade and diplomatic diversification. Switzerland maintains balanced relations with all major powers; multiple free trade agreements; political neutrality enabling economic engagement across geopolitical divides. Singapore leveraged ASEAN, Commonwealth, bilateral treaties to avoid dependence on any single partner",
+            "impact": "Systematic diversification is achievable for small nations through proactive diplomacy"
+          },
+          {
+            "country": "Costa Rica",
+            "details": "Constitutional prohibition on standing military (since 1949); codified foreign policy emphasizing peace, environmental leadership, human rights",
+            "impact": "Consistent international positioning transcending electoral cycles; strong reputation enabling influence disproportionate to size; economic benefits from stability and predictability"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-6: Draft Foreign Policy Act, establish Diaspora Department, form 1950 Treaty Review Committee",
+          "Year 1: Pass Foreign Policy Act and Diaspora Citizenship/ID Act, implement double-taxation prevention",
+          "Years 2-3: Operationalize alternative transit routes, issue 50,000+ diaspora IDs, all new ambassadors through merit system",
+          "Years 3-5: Treaty renegotiation progress, 40% trade through non-Indian routes, diaspora investment reaches $500M+"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "Legal and Institutional Foundation",
+            "details": [
+              "Draft Foreign Policy White Paper through multi-party consultation",
+              "Establish Diaspora Department and begin database development",
+              "Form Parliamentary Committee on 1950 Treaty Review",
+              "Draft Diaspora Citizenship/ID legislation",
+              "Establish taxation reform working group with revenue ministry",
+              "Begin diplomatic discussions with India on treaty modernization"
+            ]
+          },
+          {
+            "timeline": "Year 1",
+            "description": "Implementation of Core Frameworks",
+            "details": [
+              "Parliament passes Foreign Policy Act and Diaspora Citizenship/ID Act",
+              "Implement double-taxation prevention legislation",
+              "Issue first NRN IDs and establish investment protection mechanisms",
+              "Operationalize one alternative transit route (Kerung-Rasuwagadhi or Bangladesh)",
+              "Amend Foreign Service Act for merit-based ambassadorial appointments",
+              "Launch Global Nepali Knowledge Network platform",
+              "Complete comprehensive diaspora mapping and skills inventory"
+            ]
+          },
+          {
+            "timeline": "Years 2-3",
+            "description": "Expansion and Demonstrated Impact",
+            "details": [
+              "Operationalize two additional transit routes reducing Indian-route dependency below 60%",
+              "Issue 50,000+ diaspora IDs with demonstrated investment protection",
+              "Launch diaspora bond raising $100+ million for infrastructure",
+              "All new ambassadorial appointments through merit-based competitive process",
+              "Annual Foreign Relations Report presented to Parliament with public access",
+              "Sign 5+ double-taxation avoidance agreements with major destination countries",
+              "Host inaugural Global Nepali Convention with 500+ diaspora leaders",
+              "Treaty renegotiation dialogue with India shows measurable progress"
+            ]
+          },
+          {
+            "timeline": "Years 3-5",
+            "description": "Strategic Transformation and Treaty Renegotiation",
+            "details": [
+              "Achieve 40% trade through non-Indian routes demonstrating reduced vulnerability",
+              "Diaspora investment reaches $500+ million with zero repatriation disputes",
+              "100% ambassadorial positions filled through merit system; first performance-based renewals/non-renewals",
+              "Successfully renegotiate or substantially modernize 1950 Treaty provisions",
+              "Nepal recognized as proactive regional diplomatic player rather than reactive participant",
+              "Systematic diaspora engagement yields measurable economic and diplomatic dividends"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Policy Continuity: Foreign partner satisfaction surveys show 80%+ confidence that Nepal honors commitments across government changes",
+        "Trade Diversification: Indian transit routes reduced from 90% to below 50% within 5 years; eliminate single-country dependency vulnerability",
+        "Diaspora Empowerment: 100,000+ diaspora IDs issued; zero legal barriers to property ownership and investment; double-taxation eliminated for 90%+ diaspora in major destinations",
+        "Investment Security: Diaspora-origin FDI increases from negligible to $500+ million annually with 100% transparent repatriation",
+        "Professional Diplomacy: 100% ambassadors appointed through merit examination; measurable performance improvements in economic and consular diplomacy",
+        "Strategic Autonomy: Nepal maintains friendly relations with India, China, US, EU simultaneously without choosing sides; international recognition as genuinely non-aligned"
+      ],
+      "legalFoundation": "Article 51(b) mandates conduct of foreign policy based on UN Charter principles, non-alignment, Panchsheel, international law, and mutual respect. The Foreign Service Act 2016 and Ministry of Foreign Affairs Act provide institutional framework. Existing constitutional provisions enable strategic foreign policy reform without amendments."
+    }
+  ]
+}

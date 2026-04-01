@@ -1,0 +1,149 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "5",
+      "title": "Set Strict Qualifications for Government Ministers and Members of Parliament",
+      "description": "Require government ministers to have education and experience relevant to their jobs instead of choosing them based only on political loyalty.",
+      "category": "Governance",
+      "priority": "High",
+      "timeline": "1 year",
+      "updatedOn": "7 Nov 2025",
+      "problem": {
+        "short": "Ministers and MPs are often chosen through political bargaining rather than expertise, leading to a mismatch that undermines governance, wastes resources, and prevents the Constitution's promise of accountable, effective leadership from being realized.",
+        "long": "Ministers and MPs are often chosen through political bargaining rather than expertise, leading to a mismatch that undermines governance, wastes resources, and prevents the Constitution's promise of accountable, effective leadership from being realized. Nepal's Constitution (Article 76) allows the Prime Minister to appoint ministers without requiring relevant qualifications, expertise, or demonstrated competence—only that they be members of federal parliament or, in limited cases, distinguished individuals who become MPs within six months. The result: ministries are treated as political rewards rather than positions of responsibility. Finance ministers without economics backgrounds make fiscal policy. Health ministers with no medical or public health experience manage pandemics. Education ministers unfamiliar with pedagogy reform school systems. This revolving door of unqualified leadership undermines long-term planning, wastes public resources, and prevents competent governance."
+      },
+      "solution": {
+        "short": [
+          "Parliament passes Ministerial Qualifications Act requiring sectoral expertise for specific portfolios",
+          "Education OR Experience standard: Bachelor's degree + 3 years proven experience OR 10+ years sector experience",
+          "Parliamentary justification requirement: PM must justify all ministerial appointments in writing",
+          "Public verification system for claimed qualifications with Parliamentary oversight committee",
+          "Long-term constitutional amendment for permanent protection against reversal"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Legislative Framework",
+              "title": "Ministerial Qualifications Act",
+              "items": [
+                "Parliament passes Ministerial Qualifications Act requiring sectoral expertise for specific portfolios through simple majority (does not require constitutional amendment initially)",
+                "Education OR Experience standard: Bachelor's degree + 3 years proven experience in relevant sector OR 10+ years demonstrated sector experience without degree requirement",
+                "Specific portfolio requirements: Health Minister needs medical/public health background or health administration experience; Finance Minister requires economics/finance education or banking/treasury experience; Education Minister needs pedagogy background or education administration experience; Infrastructure Minister requires engineering/planning background or construction management experience",
+                "Parliamentary justification requirement: Prime Minister must justify all ministerial appointments to Parliament in writing within 7 days, explaining how appointee meets qualification standards",
+                "Minimum 5 years leadership experience requirement (managing teams, organizations, or projects) for all ministerial positions to ensure executive capacity",
+                "Exemption clause for 'distinguished individuals' under Article 76(9) limited to exceptional cases with supermajority Parliamentary approval (two-thirds vote)"
+              ]
+            },
+            {
+              "phase": "Implementation and Enforcement",
+              "title": "Application and Monitoring",
+              "items": [
+                "Immediate implementation for all new appointments starting with next government formation, with published justification requirements accessible to media and public",
+                "Fair baseline compensation aligned with senior civil service Secretary-level salaries (currently ~NPR 80,000-100,000/month) to attract qualified candidates without creating excessive inequality",
+                "Public verification system where Election Commission and relevant professional bodies (Nepal Medical Council, Nepal Bar Council, etc.) verify claimed qualifications and experience within 30 days of appointment",
+                "Parliamentary State Affairs Committee designated as oversight body to review and approve ministerial qualifications before oath-taking ceremony",
+                "Disqualification mechanism: ministers who fail verification lose position automatically, with replacement appointment following same qualification standards",
+                "Annual performance review linking ministerial effectiveness to qualification relevance, informing future refinements to standards"
+              ]
+            },
+            {
+              "phase": "Constitutional Protection",
+              "title": "Long-term Institutional Security",
+              "items": [
+                "Long-term goal (3-5 years) of constitutional amendment adding qualification requirements to Article 76, preventing future governments from easily reversing standards through ordinary legislation",
+                "Build political consensus across parties for constitutional entrenchment by demonstrating improved governance outcomes under qualification system",
+                "Prevent future reversal by embedding competency standards in Constitution alongside existing ministerial appointment procedures",
+                "Establish precedent of merit-based appointments in executive branch, creating public expectation that unqualified appointments are illegitimate",
+                "Extend qualification framework to provincial Chief Ministers and ministers through provincial legislation, creating nationwide culture of competency-based governance"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "UK cabinet: 91% university-educated despite no formal requirements - political incentives drive qualifications when public demands competence",
+          "France: ENA graduates dominate government ensuring technical expertise in administration",
+          "Singapore: Ministerial salaries pegged to private sector attract top talent with proven track records"
+        ],
+        "long": [
+          {
+            "country": "United Kingdom",
+            "details": "UK cabinet shows 91% university-educated members with relevant sectoral backgrounds despite no formal constitutional requirements for ministerial qualifications. Political conventions and public expectations create de facto standards",
+            "impact": "Demonstrates how political incentives naturally drive qualification levels when public and media scrutiny demands competence in governance. However, reliance on conventions rather than codified standards allows occasional unqualified appointments during political crises"
+          },
+          {
+            "country": "France",
+            "details": "École Nationale d'Administration (ENA) graduates historically dominate French government positions. While not constitutionally mandated, meritocratic civil service culture creates pathway from elite education to ministerial positions. Technical ministries (Finance, Infrastructure) almost exclusively staffed by graduates with relevant expertise",
+            "impact": "Ensures baseline technical competence across government. However, has faced criticism for creating insular elite. Nepal can learn importance of qualification standards while avoiding closed elite system through flexible education OR experience pathway"
+          },
+          {
+            "country": "Singapore",
+            "details": "Ministerial salaries explicitly pegged to private sector benchmarks (60% of top earners in six professions) to attract top talent. Ministers typically have proven track records as senior civil servants, military leaders, or corporate executives before appointment",
+            "impact": "Competitive compensation combined with qualification expectations attracts highly qualified individuals to public service. Singapore's government effectiveness ranking (top 10 globally) demonstrates value of competence-based selection"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-6: Draft and pass Ministerial Qualifications Act with specific sectoral requirements",
+          "Months 7-12: Immediate implementation for all new appointments with verification system",
+          "Years 2-5: Build consensus for constitutional amendment providing permanent protection"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "Legislative Process and Legal Framework",
+            "details": [
+              "Draft Ministerial Qualifications Act with input from legal experts, civil society, professional bodies, defining specific qualification standards for each of 25+ ministerial portfolios",
+              "Build cross-party parliamentary coalition for passage through simple majority (138+ votes in House of Representatives) rather than waiting for constitutional amendment requiring two-thirds majority",
+              "Define clear qualification standards with flexibility: each portfolio has minimum education OR experience threshold, allowing multiple pathways to qualification (degree + experience, extensive experience alone, or distinguished achievement in field)",
+              "Establish verification mechanisms coordinating Election Commission, professional regulatory bodies (Medical Council, Bar Council, Engineering Council), and Parliamentary oversight committee",
+              "Public consultation period allowing citizens, experts, media to provide input on proposed standards before final passage"
+            ]
+          },
+          {
+            "timeline": "Months 7-12",
+            "description": "Implementation and Application",
+            "details": [
+              "Immediate implementation for all new ministerial appointments starting with next government formation (post-March 2026 elections), with published qualification verification accessible via government portal",
+              "Parliamentary justification system operational: PM submits written explanation to State Affairs Committee within 7 days of each appointment, detailing how appointee meets qualification standards",
+              "Fair compensation system aligned with Secretary-level civil service salaries (~NPR 80,000-100,000/month) plus performance bonuses, attracting qualified candidates without excessive inequality",
+              "Public database launched showing all ministerial qualifications, experience, justifications, verification status - searchable by portfolio, appointee name, political party",
+              "First annual performance review evaluating correlation between ministerial qualifications and policy outcomes in each sector"
+            ]
+          },
+          {
+            "timeline": "Years 2-5",
+            "description": "Institutional Strengthening and Constitutional Protection",
+            "details": [
+              "Build political consensus for constitutional amendment to Article 76 by demonstrating improved governance outcomes: better policy coherence, fewer administrative failures, increased public confidence in government competence",
+              "Monitor effectiveness through annual assessments tracking: policy success rates by ministry, public satisfaction surveys, expert evaluations of ministerial performance, correlation between qualifications and outcomes",
+              "Expand qualification requirements to provincial Chief Ministers and ministers through provincial legislation, creating consistent nationwide standards for executive competence",
+              "Constitutional amendment process initiated once cross-party support secured, embedding qualification requirements permanently to prevent future governments from reversing standards through ordinary legislation",
+              "International recognition of Nepal's competency-based governance model as regional best practice"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "100% of ministers meet qualification requirements within 1 year of Act passage",
+        "Parliamentary justification published for all appointments within 7 days with 100% transparency",
+        "Competitive compensation aligned with senior civil service to attract qualified candidates",
+        "Zero appointments based only on party loyalty without meeting qualification standards",
+        "90% public awareness of qualification requirements within 12 months",
+        "Measurable improvement in ministry performance metrics within 2 years",
+        "Constitutional amendment achieved within 5 years with cross-party support"
+      ],
+      "legalFoundation": "Constitution Article 76 governs ministerial appointments but does not specify qualification requirements - allows implementation through ordinary legislation without constitutional amendment initially. Article 76(9) allows 'distinguished individuals' as ministers - proposed reform limits this through supermajority requirement. Long-term constitutional amendment to Article 76 would provide permanent protection against reversal."
+    }
+  ]
+}

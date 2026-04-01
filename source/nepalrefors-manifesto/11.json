@@ -1,0 +1,141 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "11",
+      "title": "Transform Education for All Nepalis",
+      "description": "Transform education through expanded government schools, qualified teachers, practical skills training, and digital learning to ensure every child gets quality education.",
+      "category": "Education",
+      "priority": "High",
+      "timeline": "5 years",
+      "problem": {
+        "short": "Rural areas lack access to quality education while private institutions exploit families and government schools suffer from unqualified teachers, poor facilities, and outdated curricula.",
+        "long": "Rural areas lack access to quality education due to cost and poor infrastructure. Private educational institutions exploit families while government educational institutions suffer from unqualified teachers, poor facilities, and outdated curricula."
+      },
+      "solution": {
+        "short": [
+          "Expand government school network in underserved areas with modern facilities and internet connectivity",
+          "5-year teacher requalification cycle with mandatory training and STEM teacher recruitment",
+          "TVET expansion with mandatory work-oriented subjects: coding, agriculture, carpentry, hospitality",
+          "National Education Digital Platform for e-books, recorded lessons, and teaching resources",
+          "Independent Education Regulatory Authority for annual audits and private school accountability"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Infrastructure and Access Expansion",
+              "title": "Government School Network Development",
+              "items": [
+                "School mapping surveys to identify underserved areas using Local Government Operation Act budget authority",
+                "Model school construction with safe classrooms, gender-separated toilets, clean water, internet connectivity",
+                "Align with School Sector Development Plan (SSDP) equity and access provisions",
+                "Priority rural investment through provincial and local government coordination"
+              ]
+            },
+            {
+              "phase": "Faculty Development and Curriculum Reform",
+              "title": "Teacher Quality and Skills-Oriented Education",
+              "items": [
+                "5-year teacher requalification cycle through Teacher Service Commission with mandatory training",
+                "University partnerships for in-service training delivery and STEM teacher recruitment",
+                "Technical and Vocational Education (TVET) expansion at secondary level",
+                "Mandatory work-oriented subjects grades 6-10: coding, sustainable agriculture, carpentry, hospitality"
+              ]
+            },
+            {
+              "phase": "Digital Infrastructure and Quality Assurance",
+              "title": "Technology Integration and Accountability",
+              "items": [
+                "National Education Digital Platform (NEDP) for e-books, recorded lessons, teaching resources",
+                "Independent Education Regulatory Authority (IERA) for annual comprehensive audits",
+                "Private school accountability with fee transparency and cross-subsidy enforcement",
+                "Higher education curriculum modernization with rapid development and revision mechanisms"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Kenya's 2003 fee elimination doubled primary enrollment to 99% by 2016",
+          "Finland transformed to world-leading education through teacher training and practical skills emphasis",
+          "Rwanda achieved 167% increase in young women's university enrollment through systematic transformation"
+        ],
+        "long": [
+          {
+            "country": "Kenya",
+            "details": "2003 fee elimination doubled primary enrollment achieving 99% net enrollment by 2016",
+            "impact": "Targeted support for marginalized communities with comprehensive basic education access improvements"
+          },
+          {
+            "country": "Finland",
+            "details": "Transformed from average to world-leading education through teacher training focus and practical skills emphasis",
+            "impact": "99% comprehensive school enrollment with consistent high outcomes by eliminating private school advantages"
+          },
+          {
+            "country": "Brazil",
+            "details": "FUNDEB system increased per-student spending 40% while reducing inequality between rich/poor municipalities",
+            "impact": "Targeted funding formulas created more equitable education system with improved learning outcomes"
+          },
+          {
+            "country": "Rwanda",
+            "details": "Comprehensive basic education implementation with practical skills components",
+            "impact": "167% increase in young women's university enrollment through systematic education system transformation"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Year 1: School mapping, teacher requalification launch, IERA establishment, and digital platform development",
+          "Years 2-3: Model school construction, curriculum reform rollout, and digital infrastructure deployment",
+          "Years 4-5: Full system operation with quality measurement and higher education curriculum modernization"
+        ],
+        "long": [
+          {
+            "timeline": "Year 1",
+            "description": "System Mapping and Institutional Setup",
+            "details": [
+              "Comprehensive school mapping to identify underserved areas with provincial coordination",
+              "Teacher requalification program launch through Teacher Service Commission",
+              "Independent Education Regulatory Authority (IERA) establishment with audit capabilities",
+              "National Education Digital Platform development initiation and pilot testing"
+            ]
+          },
+          {
+            "timeline": "Years 2-3",
+            "description": "Infrastructure Development and Curriculum Implementation",
+            "details": [
+              "Model school construction with modern facilities and technology integration",
+              "Curriculum reform rollout with TVET expansion and work-oriented subjects",
+              "Private school regulation enforcement with fee transparency requirements",
+              "Digital learning infrastructure deployment with offline-compatible content"
+            ]
+          },
+          {
+            "timeline": "Years 4-5",
+            "description": "Full System Operation and Quality Measurement",
+            "details": [
+              "Full education system operation with quality assurance mechanisms",
+              "Higher education curriculum modernization with international benchmark alignment",
+              "Performance measurement through standardized testing and learning outcome assessment",
+              "System optimization based on quality audits and student performance data"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "95% primary enrollment in underserved areas within 5 years",
+        "All teachers certified under new standards by year 5",
+        "50% reduction in private school fee complaints",
+        "25% improvement in standardized test scores"
+      ]
+    }
+  ]
+}

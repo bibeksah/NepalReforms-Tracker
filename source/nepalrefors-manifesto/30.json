@@ -1,0 +1,137 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "30",
+      "title": "Implement One-Door Policy for Tourism Permits and Services",
+      "description": "Create unified digital platform eliminating fragmented permit system where tourists currently visit 3-5 different offices in Kathmandu, reducing 3-7 day manual process to 24-48 hours digital approval with 90% permits processed digitally by Month 30.",
+      "category": "Tourism Services",
+      "priority": "High",
+      "timeline": "3 years",
+      "updatedOn": "24 Nov 2025",
+      "problem": {
+        "short": "Tourism-related permits and services in Nepal are currently managed across multiple uncoordinated agencies causing procedural inefficiencies, delays, corruption risks, and competitive disadvantage in the global tourism market.",
+        "long": "Tourism-related permits and services in Nepal are currently managed across multiple uncoordinated agencies causing procedural inefficiencies, delays, corruption risks, and competitive disadvantage. Current fragmented system: Department of Tourism issues trekking permits and TIMS cards; Department of Immigration manages restricted-area permits and visa extensions; Department of National Parks issues conservation area permits for ACAP, MCAP, Sagarmatha; Nepal Tourism Board coordinates promotion; local governments issue municipal permits like Khumbu Pasang Lhamu permits at NPR 3,000; tourism businesses require separate licenses from multiple offices. Documented problems: Manual permit applications take 3-7 days across multiple offices with tourists physically visiting 3-5 different locations in Kathmandu; cash-based payments without digital tracking enable informal fee collection and corruption; tour operators report spending 20-30% of administrative time on permit coordination; each agency uses different application forms, documentation requirements, processing timelines; remote area tourists cannot obtain permits and must travel to Kathmandu or Pokhara offices. World Economic Forum Travel & Tourism Development Index 2024 ranks Nepal 106th globally, with visa requirements and permit complexity cited as key barriers."
+      },
+      "solution": {
+        "short": [
+          "Cabinet Tourism Services Coordination Directive mandating all agencies integrate into unified digital platform",
+          "Build National Tourism Services Portal (nepal.gov.np/visitnepal) with single online form replacing separate applications",
+          "Payment gateway integration with Connect IPS, eSewa, Khalti, IME Pay, and international cards",
+          "Pilot implementation in 3 phases: First Department of Tourism permits, then conservation permits, finally restricted-area permits",
+          "Offline backup system with mobile data collection units at remote checkpoints",
+          "Nationwide rollout to all 7 provinces and 77 districts by Month 30 targeting 90% digital permit processing"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1 (Years 1-2)",
+              "title": "Platform Development and Pilot Implementation",
+              "items": [
+                "Establish Legal and Institutional Foundation: Cabinet Tourism Services Coordination Directive (Months 1-3) where Prime Minister/interim government issues executive order mandating all tourism-related services integrate into unified digital platform; establishes Tourism Services Coordination Committee at Cabinet level chaired by Minister of MoCTCA with members including Home Minister (Immigration), Forest Minister (Parks), Finance Minister (payments); Technical Secretariat comprises Department of Tourism, Nepal Tourism Board, NTB IT team; clear mandate requires all tourism permits, licenses, approvals accessible through single digital portal within 36 months; Revenue Sharing Formula ensures digitally collected fees automatically distributed to originating agency accounts through Nepal Rastra Bank Treasury Single Account system; Inter-Agency Technical Working Group (Months 1-6) with representatives from all permit-issuing bodies plus Nepal Clearing House holding mandatory monthly coordination meetings establishing unified service standards, developing data sharing protocols/API specifications, creating dispute resolution mechanism",
+                "Digital Platform Development: Build National Tourism Services Portal (Months 4-12) as single web portal and mobile application branded Nepal Tourism Services/Visit Nepal Portal using open-source technology with cloud hosting for scalability and mobile-first responsive design; Payment Gateway Integration connecting to Connect IPS (NRB-regulated), eSewa, Khalti, IME Pay, international cards (Visa/Mastercard); Backend Integration using APIs connecting to Department of Tourism, Immigration, Parks, NTB databases; Security including SSL encryption, two-factor authentication, Nepal Rastra Bank compliance; Language Support covering Nepali, English, Chinese, Hindi",
+                "Platform Features: Unified Application with single online form replacing separate applications for each permit type; Document Upload enabling digital submission of passport copies, photos, insurance, itineraries; Real-Time Processing routing applications automatically to appropriate agency; Case Tracking providing unique reference number and SMS/email updates; Digital Certificates delivering PDF permits with QR codes via email, printable or stored in mobile app; Payment Confirmation generating instant digital receipts with transparent fee breakdown; Validity Tracking linking permits to passport numbers with automatic expiration warnings",
+                "Pilot Implementation: Phase 1a (Months 7-12) starting with Department of Tourism permits only (trekking permits, TIMS cards) deployed in Kathmandu and Pokhara NTB offices targeting 60% of trekking permits processed digitally within 6 months while maintaining parallel manual system as backup; Phase 1b (Months 10-15) adding ACAP and Sagarmatha National Park permits with Department of National Parks integration deployed at entry checkpoints (Jomsom, Lukla) with mobile devices for field staff; Phase 1c (Months 13-18) integrating Department of Immigration restricted-area permits (Upper Mustang, Manaslu, Dolpo) using agency-mediated system where tour operators apply on behalf of tourists with verified documents",
+                "Offline Backup System: Mobile Data Collection Units providing tablet devices at remote checkpoints with offline capability where data syncs when internet available and permits issued via printed QR code certificates; Field Offices maintaining district tourism offices with manual backup permit books; Emergency Protocols ensuring if national system down, local offices issue temporary permits validated retroactively",
+                "Stakeholder Training: Government Staff Training (Months 6-12) for 500+ staff across Department of Tourism, Immigration, Parks through two-week intensive training covering system navigation, troubleshooting, customer support; dedicated helpdesk team of 20 staff assists field offices; performance incentives tied to digital adoption rates; Tourism Industry Engagement (Months 8-15) training 2,000+ trekking agencies, hotels, tour operators through TAAN with industry workshops in Kathmandu, Pokhara, major trekking hubs; agency portal access allows bulk-processing permits for groups; Business Benefits include faster permit turnaround from 7 days to 24-48 hours reducing operational costs; Tourist Education Campaign (Months 10-18) through multi-language video tutorials on NTB website/YouTube, printed guides at Tribhuvan International Airport, social media campaign, partnership with travel bloggers/influencers"
+              ]
+            },
+            {
+              "phase": "Phase 2 (Years 2-3)",
+              "title": "Nationwide Rollout and Service Expansion",
+              "items": [
+                "Full Geographic Deployment: Nationwide Coverage (Months 19-30) expanding to all 7 provinces and 77 districts with 150 additional field offices equipped with hardware; all major trekking entry points (25 locations) have digital permit capability; target 90% of all tourism permits processed digitally by Month 30; Border Integration (Months 24-36) with Tribhuvan International Airport visa-on-arrival counters linked to tourism permit system, land border crossings with India/Tibet integrating permit verification; Cross-Border Innovation exploring Nepal-India-Bhutan regional tourism pass similar to GCC unified visa model",
+                "Service Expansion Beyond Permits: Tourism Business Licensing (Months 20-30) including hotel/restaurant licenses with star ratings/health certifications, tour operator/trekking agency registrations, guide/porter certifications through NATHM; One-Stop Business Registration enabling new tourism businesses to complete all licensing through single portal; Tourist Services Integration (Months 25-36) with Accommodation Booking partnering with Nepal Hotel Association for availability search, Transportation including bus tickets/domestic flights/tourist vehicle permits, Cultural Sites covering monument entry passes for Kathmandu Durbar Square/Lumbini/others, Emergency Services providing SOS button connecting to Tourist Police with GPS location sharing",
+                "Data Analytics and Reporting (Months 24-36): Real-time dashboards for MoCTCA, NTB, provincial governments; tourist flow analysis tracking peak seasons, popular routes, revenue trends; predictive analytics forecasting permit demand for resource planning; public transparency portal providing monthly reports on permit volumes, processing times, revenue",
+                "Sustainability and Long-Term Operations: Ongoing Maintenance and Support with dedicated IT team of 25 staff including developers, system administrators, cybersecurity specialists; 24/7 helpline providing phone, email, WhatsApp support in multiple languages; annual platform upgrades adding new features based on user feedback; quarterly security audits using external firms; Financial Sustainability through Service Fee Model charging small convenience fee of NPR 100-200 (USD 0.75-1.50) per digital transaction covering platform maintenance with estimated NPR 40-50 million annual revenue from 400,000+ annual permits; Offset Model demonstrating digital efficiency reduces administrative overhead with savings funding system maintenance; Performance Monitoring through annual independent evaluation, user satisfaction surveys, system uptime analysis, quarterly published KPIs, citizen feedback mechanism with 48-hour response guarantee"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Rwanda's Irembo Platform: 247 services from 38 agencies with 95% cashless transactions",
+          "GCC Unified Tourist Visa: 6 countries single platform launching 2026",
+          "India's National Single Window: 75,000+ approvals reducing approval time from 30+ days to 7-10 days",
+          "Kenya's ETA and Digital Nomad Permits demonstrate feasibility with initial challenges"
+        ],
+        "long": [
+          {
+            "country": "Rwanda (Irembo Platform 2015-present)",
+            "details": "Started with 22 local government services, now provides 247 services from 38 agencies. Timeline took 8 years to reach full maturity. Results include 8.4 million applications processed in 2023 (42% increase from 2022), 95% of transactions cashless, birth certificate processing improved from 63% within 1 hour (2020) to over 90% within 1 hour (2024), 100 million working hours saved for citizens since 2015",
+            "impact": "Key Success Factors: strong political will from President Kagame, phased rollout focusing on high-volume services first, Digital Ambassador program training 5 million citizens, mobile money integration. Lessons: Start simple, prove value, then expand. Success came from political commitment and extensive user training"
+          },
+          {
+            "country": "GCC Unified Tourist Visa (2025-2026 launch)",
+            "details": "Single digital platform for 6 countries (UAE, Saudi Arabia, Oman, Qatar, Kuwait, Bahrain). Timeline approved 2023, pilot Q4 2025, full launch 2026 (3-year implementation). Features unified online portal with two permit types: single-country NPR 330-380 and multi-country NPR 400-480 for 30-90 day validity",
+            "impact": "Challenges: deep coordination between national security agencies requiring years of technical preparation. Lesson: Even oil-rich GCC nations with advanced IT infrastructure need 3+ years for inter-agency digital integration"
+          },
+          {
+            "country": "India's National Single Window System (NSWS 2021-present)",
+            "details": "Single platform for investment approvals across 32 ministries/departments. 75,000+ approvals processed within 2 years of launch. Reduced approval time from 30+ days to 7-10 days",
+            "impact": "Challenge: Still struggles with full ministry integration as some agencies maintain parallel systems. Lesson: Legal mandate is insufficient without political pressure. Regular Cabinet-level review meetings essential"
+          },
+          {
+            "country": "Kenya's Electronic Travel Authorization (ETA) 2024",
+            "details": "Introduced Transit ETA allowing stopover passengers to explore Nairobi. Digital Nomad work permit attracts remote workers",
+            "impact": "Initial Problems: UK High Commission experiencing delays due to new electronic system implementation challenges. Lesson: Even seemingly simple digital systems face teething problems. Pilot testing and parallel manual systems are essential safeguards"
+          },
+          {
+            "country": "Turkmenistan's Trade Single Window (December 2023)",
+            "details": "5,000 users registered with 20,000 applications processed in first 8 months. 200 participants trained across 30+ government agencies before launch. Scored 100% on UN global survey for Supporting pre-arrival processing",
+            "impact": "Lesson: Extensive pre-launch training (200+ participants across agencies) was key success factor. Nepal should replicate this training intensity"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Year 1 (Months 1-12): Legal foundation, platform development, Department of Tourism pilot launch",
+          "Year 2 (Months 13-24): Conservation/restricted permits integrated, nationwide rollout begins",
+          "Year 3 (Months 25-36): Full service integration, sustainability model confirmed, 90% digital processing achieved"
+        ],
+        "long": [
+          {
+            "timeline": "Year 1 (Months 1-12)",
+            "description": "Foundation and Pilot Launch",
+            "details": [
+              "Months 1-3: Cabinet issues Tourism Services Coordination Directive; Tourism Services Coordination Committee established; revenue sharing formula finalized",
+              "Months 4-6: Technical specifications finalized; competitive bidding for platform development; payment gateway agreements signed",
+              "Months 7-12: Platform development and testing; Department of Tourism permits go live in Kathmandu/Pokhara; 100 government staff trained; 500 tour operators onboarded; first 10,000 digital permits issued"
+            ]
+          },
+          {
+            "timeline": "Year 2 (Months 13-24)",
+            "description": "Expansion and Integration",
+            "details": [
+              "Months 13-18: Conservation area permits integrated (ACAP, Sagarmatha NP); restricted area permits added with Immigration coordination",
+              "Months 19-24: Expand to 5 provinces; field office hardware deployment to 50 locations; tourism industry training scales to 1,500 operators; nationwide rollout begins; 80% digital permit processing achieved"
+            ]
+          },
+          {
+            "timeline": "Year 3 (Months 25-36)",
+            "description": "Full Integration and Sustainability",
+            "details": [
+              "Months 25-30: All 7 provinces operational; business licensing module launches; accommodation/transportation booking added",
+              "Months 31-36: Cultural site passes integrated; emergency services connected; 90% digital permit processing; system optimization based on 2 years data; long-term maintenance contracts signed; financial sustainability model confirmed; final evaluation and future roadmap"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Year 1: 30% of Department of Tourism permits processed digitally; platform uptime 95%; average processing time reduced from 5 days to 3 days",
+        "Year 2: 70% of all tourism permits processed digitally; platform uptime 98%; average processing time 48 hours; all conservation/restricted permits integrated",
+        "Year 3: 90% of all tourism permits processed digitally; platform uptime 99%; average processing time 24 hours; 100% of permit types available online; tourist satisfaction 80% rate service as good or excellent; system financially self-sustaining through convenience fees",
+        "Long-term (5 years): 95% digital processing; revenue leakage reduced by 50%; administrative costs reduced by 40%; tourist complaints about permits reduced by 70%; Nepal Tourism competitiveness ranking improves in WEF TTDI"
+      ],
+      "legalFoundation": "Tourism Act 2035 (1978) governs tourism operations and grants MoCTCA authority over tourism sector coordination. Nepal Tourism Board Act 2053 (1996) establishes NTB as promotional body with coordinating role. Electronic Transactions Act 2063 (2008) provides framework for digital signatures and online payments. Right to Information Act 2064 (2007) mandates proactive disclosure of service standards. Good Governance Act 2064 (2008) requires transparent, efficient service delivery. Implementation requires Cabinet Directive (fastest route during interim government) or Tourism Services Coordination Act (more durable but requires Parliament)."
+    }
+  ]
+}

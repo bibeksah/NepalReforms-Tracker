@@ -1,0 +1,144 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-31",
+  "effective_from": "2025-11-11",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:f3d5f8f905ee6fe1",
+  "agenda_version_id": "agenda_version:14e04e0e350ccc77",
+  "items": [
+    {
+      "id": "19",
+      "title": "Make Courts Truly Independent",
+      "description": "Ensure judicial independence through merit-based judge appointments, transparent accountability, and constitutional protections from political interference.",
+      "category": "Judicial Reform",
+      "priority": "High",
+      "timeline": "5 years",
+      "updatedOn": "19 Nov 2025",
+      "problem": {
+        "short": "Judges appointed through political connections compromise court independence while lack of transparency in judicial conduct and appointments undermines rule of law and public trust.",
+        "long": "Judges appointed through political connections compromise court independence while lack of transparency in judicial conduct and appointments undermines rule of law and public trust. Article 126 guarantees judicial independence and Articles 128-138 establish Supreme Court authority, but implementation mechanisms are weak. Nepal's Constitution provides for a Judicial Council (Article 153) to recommend judicial appointments, but the Council is politically influenced: chaired by Chief Justice, includes Minister for Law, and two senior Supreme Court justices appointed by the same political process. Parliamentary Hearing Committee (Article 292) reviews judicial nominations but operates based on political party quotas rather than merit evaluation. Result: judicial appointments are negotiated between political parties, with candidates' party affiliations and political connections often more important than legal competence or integrity. Public has no visibility into appointment process, judicial performance, or asset declarations. Courts lack operational independence with budget controlled by Ministry of Law, limiting their ability to operate free from executive pressure."
+      },
+      "solution": {
+        "short": [
+          "Independent Judicial Appointment Commission with retired judges, legal scholars, civil society - no politicians",
+          "Merit-based selection: written examination, case analysis, public interview for all judicial appointments",
+          "Annual asset declarations published online for all judges with source documentation",
+          "Financial independence: judicial budget allocated directly by Parliament, not Ministry of Law",
+          "Misconduct tribunal with power to investigate complaints and recommend removal for proven violations"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Independent Appointment Process",
+              "title": "Merit-Based Judicial Selection",
+              "items": [
+                "Independent Judicial Appointment Commission (IJAC) replacing current Judicial Council: composition of 3 senior retired Supreme Court judges (minimum 15 years judicial experience), 2 non-partisan legal scholars from law faculties, 2 civil society representatives from bar associations/human rights organizations - zero politicians or serving government officials",
+                "Merit-based selection process: written examination testing legal knowledge, constitutional law, judicial ethics (40% weightage); case analysis evaluating legal reasoning, judgment drafting, application of precedents (30% weightage); public interview assessing temperament, integrity, impartiality (30% weightage) - all scored transparently with published rubrics",
+                "No political ties: lifetime prohibition on judges holding party membership, contributing to campaigns, or engaging in political activism before, during, or after judicial service - violation results in automatic disqualification or removal",
+                "Conflict of interest prohibitions: no financial investments in companies involved in litigation, no business partnerships, no acceptance of gifts >NPR 5,000, mandatory recusal when family/financial interests implicated - violations subject to misconduct proceedings",
+                "Public transparency: all candidate scores, interview transcripts, IJAC deliberations (except specific candidate evaluations) published within 30 days of appointment decision"
+              ]
+            },
+            {
+              "phase": "Judicial Accountability Framework",
+              "title": "Transparency and Performance Standards",
+              "items": [
+                "Annual asset declarations: all judges (Supreme Court, High Courts, District Courts) publish audited wealth statements online covering property, investments, income sources, gifts received, liabilities - with supporting documentation including title deeds, bank statements, tax returns",
+                "Performance transparency: Supreme Court publishes annual report for each judge showing cases heard, judgments delivered, average case resolution time, reversal rate on appeal, attendance record, continuing legal education completion - enabling peer and public evaluation",
+                "Misconduct investigation: independent Judicial Conduct Tribunal (5 retired judges appointed by IJAC for 5-year non-renewable terms) with power to investigate complaints of bias, corruption, incompetence, ethical violations - mandatory investigation within 90 days, public hearings, power to recommend censure, suspension, or removal",
+                "Public complaint system: citizens, lawyers, litigants can file complaints online against judges for misconduct with supporting evidence - Tribunal must acknowledge within 7 days, complete preliminary review within 30 days, publish investigation outcomes with detailed findings",
+                "Performance standards: judges who fail to deliver judgments within 90 days of final hearing, or accumulate backlog >50 cases, face mandatory performance review and remedial training - repeated failures grounds for removal"
+              ]
+            },
+            {
+              "phase": "Constitutional Protections",
+              "title": "Independence and Enforcement Mechanisms",
+              "items": [
+                "Fixed tenure security: judges cannot be removed except through Judicial Conduct Tribunal findings of serious misconduct followed by two-thirds Parliamentary vote (impeachment-level process) - protecting against arbitrary executive or legislative pressure",
+                "Financial independence: judicial budget (currently ~NPR 5 billion annually) allocated directly by Parliament through separate budget line, not routed through Ministry of Law which controls current funding - ensuring courts can operate, hire staff, procure resources without executive approval",
+                "Administrative autonomy: Supreme Court Chief Justice has sole authority to manage court administration, assign cases, transfer judges, set procedural rules, hire court staff - executive branch cannot interfere with internal judicial operations",
+                "Decision enforcement mechanisms: establish Judicial Compliance Unit (50-person team including lawyers, investigators) with power to monitor court order implementation, investigate non-compliance by government agencies, initiate contempt proceedings, recommend sanctions - ending current situation where government ignores unfavorable court rulings",
+                "Constitutional amendment (long-term): entrench IJAC, financial independence, fixed tenure in Constitution (currently only statutory) to prevent future governments from reversing reforms through ordinary legislation"
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Chile: 1990s judicial reforms enabled prosecution of military officials through merit-based appointments",
+          "South Africa: Post-apartheid independent courts prosecuted corruption across all political parties",
+          "Botswana: Independent judiciary since 1966 ranks among world's most trusted institutions"
+        ],
+        "long": [
+          {
+            "country": "Chile",
+            "details": "1990s judicial reforms created independent Judicial Council (Consejo de la Magistratura) with retired judges, law professors, and bar representatives - no politicians. Merit-based appointments through competitive examinations and public interviews replaced political patronage. Courts prosecuted former dictator Pinochet and military officials despite political pressure",
+            "impact": "Established rule of law after dictatorship through merit-based appointments and institutional independence. Public confidence in judiciary increased from 30% (1990) to 65% (2010). Demonstrates how independent appointment process enables courts to hold powerful actors accountable"
+          },
+          {
+            "country": "South Africa",
+            "details": "Post-apartheid Constitution (1996) established Judicial Service Commission with judges, lawyers, law professors, civil society members appointing all judges through public interviews. Constitutional Court has fixed tenure, financial independence allocated directly by Parliament. Courts prosecuted Jacob Zuma (former President) and high-ranking ANC officials for corruption despite ruling party's political dominance",
+            "impact": "Maintained democratic accountability through independent courts with constitutional protection. Judicial independence rating improved from 6.2/10 (2000) to 7.8/10 (2020) per World Justice Project. Shows how constitutional entrenchment protects courts from political interference"
+          },
+          {
+            "country": "Botswana",
+            "details": "Independent judiciary since 1966 with Judicial Service Commission appointing all judges. Commission includes Chief Justice, Attorney General, senior judges, Law Society president - minimal political representation. Courts have blocked government legislation, ruled against executive actions, enforced property rights. Budget allocated directly by Parliament without ministerial control",
+            "impact": "Judiciary consistently ranks among world's most trusted institutions with 75%+ public confidence (Afrobarometer). Contributed to Botswana being rated best governance in Africa for 20+ consecutive years. Demonstrates long-term benefits of sustained judicial independence for democratic stability and economic development"
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Months 1-6: IJAC established through legislation, merit-based selection criteria finalized",
+          "Months 6-18: New appointment process for all vacancies, financial independence implemented",
+          "Years 2-5: Full merit system operational, constitutional protections strengthened, enforcement mechanisms functional"
+        ],
+        "long": [
+          {
+            "timeline": "Months 1-6",
+            "description": "IJAC Establishment and Legal Framework",
+            "details": [
+              "Independent Judicial Appointment Commission establishment through Parliamentary legislation amending Judicial Council Act 2073 (2016): new Commission replaces current Judicial Council with 7 non-political members (3 retired judges, 2 legal scholars, 2 civil society), clear selection process for Commission members, transparent operating procedures",
+              "Merit-based selection criteria finalized: examination syllabus covering constitutional law, civil/criminal procedure, judicial ethics, evidence law; case analysis rubrics evaluating legal reasoning quality; interview assessment guidelines for temperament and integrity; public consultation on draft criteria before finalization",
+              "Asset declaration framework: online portal development for judge wealth disclosure, integration with land registry/tax databases for verification, audit protocols for annual review, public access interface with search/download capabilities",
+              "Judicial Conduct Tribunal establishment: legislation creating 5-member tribunal of retired judges, complaint filing portal, investigation procedures, disciplinary guidelines, appeal mechanisms to Supreme Court"
+            ]
+          },
+          {
+            "timeline": "Months 6-18",
+            "description": "Gradual Transition and Implementation",
+            "details": [
+              "New appointment process implementation: all future judicial vacancies filled through IJAC merit process, public advertisement of openings, transparent examination/interview schedule, published selection results with scores, initial batch of 10-15 judges appointed under new system demonstrating reform credibility",
+              "Existing judge asset disclosure: all current judges (300+ across Supreme/High/District Courts) file initial wealth declarations within 90 days, audit of random 20% sample for verification, public education campaign explaining citizen rights to access declarations",
+              "Financial independence establishment: Parliament amends budget procedures to allocate judicial budget directly through separate appropriation bill (not Ministry of Law budget), Supreme Court gains authority to manage funds, hire staff, procure resources independently",
+              "Public education campaigns: media outreach explaining judicial independence importance, citizen rights when interacting with courts, complaint mechanisms for misconduct, transparency around judicial operations"
+            ]
+          },
+          {
+            "timeline": "Years 2-5",
+            "description": "Full System Operation and Constitutional Protection",
+            "details": [
+              "Complete merit-based system operation: 80%+ of judiciary appointed through new IJAC process, public tracking of appointment transparency metrics, regular evaluation of selection process effectiveness, refinements based on experience",
+              "Constitutional amendments (requires two-thirds Parliamentary vote): entrench IJAC in Constitution replacing Article 153 Judicial Council, guarantee judicial budget independence in Constitution, strengthen fixed tenure protections against political removal",
+              "Judicial Compliance Unit operational: 50-person team monitors government compliance with 10,000+ annual court orders, investigates delays/non-compliance, publishes quarterly reports, recommends contempt proceedings where warranted",
+              "Performance measurement: annual public confidence surveys (target 70%+ trust in judiciary by Year 5), case backlog tracking (target 30% reduction), judgment quality peer reviews, international rule of law index improvements"
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "90% public confidence in judicial independence within 5 years (baseline 40-50%)",
+        "100% asset declaration compliance by all judges published online within 18 months",
+        "50% reduction in case processing times through performance standards and accountability",
+        "Zero tolerance for political interference: 100% of appointments through IJAC merit process by Year 3",
+        "80%+ government compliance with court orders within mandated timelines",
+        "Judicial independence rating improvement from current 5.5/10 to 7.5/10 (World Justice Project)",
+        "Constitutional entrenchment of reforms achieved within 5 years"
+      ],
+      "legalFoundation": "Constitution Article 126 guarantees judicial independence. Articles 128-138 establish Supreme Court authority and jurisdiction. Article 153 creates Judicial Council (current political composition - requires legislative amendment to replace with IJAC). Article 292 governs Parliamentary Hearing for judicial appointments. Judicial Council Act 2073 (2016) implements appointment process - can be amended through ordinary legislation. Constitutional amendments (two-thirds Parliamentary majority) needed for permanent entrenchment of IJAC, budget independence, fixed tenure protections."
+    }
+  ]
+}
