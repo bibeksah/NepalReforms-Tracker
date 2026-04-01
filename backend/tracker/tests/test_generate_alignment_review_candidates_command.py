@@ -29,6 +29,12 @@ def test_generate_alignment_review_candidates_dry_run(monkeypatch):
                 "category": "Governance",
                 "timeline": "100 Days",
                 "responsible_entity": "Prime Minister Office",
+                "problem": None,
+                "solution": {"summary": "Publish tenders and awards in one place."},
+                "implementation": {"steps": ["open tender portal"]},
+                "performance_targets": ["All awards published"],
+                "legal_foundation": "Public transparency act",
+                "real_world_evidence": {"example": "Open contracting"},
             }]], None
         if "MATCH (p:PoliticalPromise)" in query:
             return [[{
@@ -73,6 +79,12 @@ def test_generate_alignment_review_candidates_creates_review_queue_items(monkeyp
                 "category": "Governance",
                 "timeline": "100 Days",
                 "responsible_entity": "Prime Minister Office",
+                "problem": None,
+                "solution": {"summary": "Publish tenders and awards in one place."},
+                "implementation": {"steps": ["open tender portal"]},
+                "performance_targets": ["All awards published"],
+                "legal_foundation": "Public transparency act",
+                "real_world_evidence": {"example": "Open contracting"},
             }]], None
         if "MATCH (p:PoliticalPromise)" in query:
             return [[{
@@ -100,7 +112,7 @@ def test_generate_alignment_review_candidates_creates_review_queue_items(monkeyp
     assert item.entity_type == "AlignmentAssessment"
     assert item.proposed_payload["source_subtype"] == "agenda_promise_alignment_review"
     assert item.proposed_payload["graph_relations"][0]["require_existing_target"] is True
-    assert item.provenance["candidate_generation_method"] == "deterministic_rules_v1"
+    assert item.provenance["candidate_generation_method"] == "deterministic_rules_v3"
 
 
 @pytest.mark.django_db
@@ -131,6 +143,12 @@ def test_generate_alignment_review_candidates_skips_existing_open_item(monkeypat
                 "category": "Governance",
                 "timeline": "100 Days",
                 "responsible_entity": "Prime Minister Office",
+                "problem": None,
+                "solution": {"summary": "Publish tenders and awards in one place."},
+                "implementation": {"steps": ["open tender portal"]},
+                "performance_targets": ["All awards published"],
+                "legal_foundation": "Public transparency act",
+                "real_world_evidence": {"example": "Open contracting"},
             }]], None
         if "MATCH (p:PoliticalPromise)" in query:
             return [[{

@@ -236,10 +236,29 @@ def _publish_generic_record(record: dict[str, Any]) -> dict[str, Any]:
     relation_results = []
     for rel in relations:
         rel = _require_mapping(rel, "graph_relations[]")
+        source_entity_type = (rel.get("source_entity_type") or entity_type).strip() if isinstance(rel.get("source_entity_type") or entity_type, str) else entity_type
+        source_key = _require_non_empty_str(rel.get("source_key") or node_key, "graph_relations[].source_key")
+        source_value = _require_non_empty_str(rel.get("source_id") or node_value, "graph_relations[].source_id")
         target_entity_type = _require_non_empty_str(rel.get("target_entity_type"), "graph_relations[].target_entity_type")
         target_key = _require_non_empty_str(rel.get("target_key"), "graph_relations[].target_key")
         relation_type = _require_non_empty_str(rel.get("relation_type"), "graph_relations[].relation_type")
-        target_id = _require_non_empty_str(rel.get("target_id"), "graph_relations[].target_id")
+        target_lookup = rel.get("target_lookup") or {}
+        if target_lookup and not isinstance(target_lookup, dict):
+            raise ValueError("graph_relations[].target_lookup must be a dict")
+        target_id = rel.get("target_id")
+        if target_lookup and not target_id:
+            lookup_query = _require_non_empty_str(target_lookup.get("cypher"), "graph_relations[].target_lookup.cypher")
+            lookup_params = target_lookup.get("params") or {}
+            if not isinstance(lookup_params, dict):
+                raise ValueError("graph_relations[].target_lookup.params must be a dict")
+            lookup_rows, _ = db.cypher_query(lookup_query, lookup_params)
+            if lookup_rows:
+                first = lookup_rows[0]
+                if isinstance(first, dict):
+                    target_id = first.get("target_id")
+                elif isinstance(first, (list, tuple)) and first:
+                    target_id = first[0]
+        target_id = _require_non_empty_str(target_id, "graph_relations[].target_id")
         target_properties = rel.get("target_properties") or {}
         relationship_properties = rel.get("relationship_properties") or {}
         require_existing_target = bool(rel.get("require_existing_target", False))
@@ -257,8 +276,8 @@ def _publish_generic_record(record: dict[str, Any]) -> dict[str, Any]:
             SET r.updatedAt = datetime(), r += $rel_properties
             RETURN $target_value as target_id
             """ % (
-                entity_type,
-                node_key,
+                source_entity_type,
+                source_key,
                 target_entity_type,
                 target_key,
                 relation_type,
@@ -266,7 +285,7 @@ def _publish_generic_record(record: dict[str, Any]) -> dict[str, Any]:
             rows, _ = db.cypher_query(
                 rel_query,
                 {
-                    "source_value": node_value,
+                    "source_value": source_value,
                     "target_value": target_id,
                     "rel_properties": relationship_properties,
                 },
@@ -283,8 +302,8 @@ def _publish_generic_record(record: dict[str, Any]) -> dict[str, Any]:
             SET r.updatedAt = datetime(), r += $rel_properties
             RETURN $target_value as target_id
             """ % (
-                entity_type,
-                node_key,
+                source_entity_type,
+                source_key,
                 target_entity_type,
                 target_key,
                 relation_type,
@@ -292,7 +311,7 @@ def _publish_generic_record(record: dict[str, Any]) -> dict[str, Any]:
             db.cypher_query(
                 rel_query,
                 {
-                    "source_value": node_value,
+                    "source_value": source_value,
                     "target_value": target_id,
                     "target_properties": target_properties,
                     "rel_properties": relationship_properties,

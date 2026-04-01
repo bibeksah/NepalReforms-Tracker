@@ -46,7 +46,7 @@ def _make_candidate_item():
         proposed_payload=payload,
         provenance={
             "source_subtype": "agenda_promise_alignment_review",
-            "candidate_generation_method": "deterministic_rules_v1",
+            "candidate_generation_method": "deterministic_rules_v3",
             "score_breakdown": candidate.score_breakdown,
             "shared_tokens": candidate.shared_tokens,
             "review_context": payload["review_context"],
@@ -78,7 +78,7 @@ def test_alignment_review_dashboard_renders_candidate_details():
     assert item.record_key in body
     assert "Publish all procurement contracts online" in body
     assert "Publish procurement contracts and tender awards online" in body
-    assert "deterministic_rules_v1" in body
+    assert "deterministic_rules_v3" in body
 
 
 @pytest.mark.django_db

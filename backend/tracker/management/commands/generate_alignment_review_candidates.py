@@ -13,6 +13,20 @@ _FETCH_AGENDA_ITEMS_QUERY = """
 MATCH (a:AgendaItem)
 OPTIONAL MATCH (a)-[:IN_CATEGORY]->(pc:PolicyCategory)
 WITH a, [name IN collect(DISTINCT pc.name) WHERE name IS NOT NULL AND trim(name) <> ""] AS categories
+OPTIONAL MATCH (a)-[:HAS_PROBLEM_STATEMENT]->(problem:ProblemStatement)
+OPTIONAL MATCH (a)-[:HAS_SOLUTION_PLAN]->(solution:SolutionPlan)
+OPTIONAL MATCH (a)-[:HAS_IMPLEMENTATION_PLAN]->(implementation:ImplementationPlan)
+OPTIONAL MATCH (a)-[:HAS_PERFORMANCE_TARGET]->(performance:PerformanceTarget)
+OPTIONAL MATCH (a)-[:HAS_LEGAL_FOUNDATION]->(legal:LegalFoundation)
+OPTIONAL MATCH (a)-[:HAS_REAL_WORLD_EVIDENCE_SUMMARY]->(evidence:RealWorldEvidenceSummary)
+WITH a,
+     categories,
+     head([value IN collect(DISTINCT problem.payload) WHERE value IS NOT NULL]) AS problem_payload,
+     head([value IN collect(DISTINCT solution.payload) WHERE value IS NOT NULL]) AS solution_payload,
+     head([value IN collect(DISTINCT implementation.payload) WHERE value IS NOT NULL]) AS implementation_payload,
+     [value IN collect(DISTINCT performance.text) WHERE value IS NOT NULL AND trim(value) <> ""] AS performance_targets,
+     head([value IN collect(DISTINCT legal.text) WHERE value IS NOT NULL AND trim(value) <> ""]) AS legal_foundation,
+     head([value IN collect(DISTINCT evidence.payload) WHERE value IS NOT NULL]) AS real_world_evidence
 RETURN {
   agenda_item_id: a.agendaItemId,
   title: coalesce(a.title, ""),
@@ -20,7 +34,13 @@ RETURN {
   summary: coalesce(a.summary, ""),
   category: coalesce(a.category, head(categories), ""),
   timeline: coalesce(a.timeline, ""),
-  responsible_entity: coalesce(a.responsibleEntity, "")
+  responsible_entity: coalesce(a.responsibleEntity, ""),
+  problem: problem_payload,
+  solution: solution_payload,
+  implementation: implementation_payload,
+  performance_targets: performance_targets,
+  legal_foundation: coalesce(legal_foundation, ""),
+  real_world_evidence: real_world_evidence
 } AS row
 """
 
@@ -141,7 +161,7 @@ class Command(BaseCommand):
                 proposed_payload=payload,
                 provenance={
                     "source_subtype": "agenda_promise_alignment_review",
-                    "candidate_generation_method": "deterministic_rules_v2",
+                    "candidate_generation_method": "deterministic_rules_v3",
                     "score_breakdown": candidate.score_breakdown,
                     "shared_tokens": candidate.shared_tokens,
                     "agenda_item_id": candidate.agenda_item_id,

@@ -87,6 +87,73 @@ def _reviewed_alignment_assessment_is_publishable(payload: dict) -> bool:
     )
 
 
+def _alignment_provenance_properties(payload: dict) -> dict:
+    raw_payload = payload.get("raw_payload") or {}
+    graph_properties = (payload.get("graph_payload") or {}).get("properties") or {}
+    return {
+        "alignmentAssessmentId": str(graph_properties.get("alignmentAssessmentId") or graph_properties.get("alignment_assessment_id") or payload.get("record_identity") or "").strip(),
+        "alignment_assessment_id": str(graph_properties.get("alignment_assessment_id") or graph_properties.get("alignmentAssessmentId") or payload.get("record_identity") or "").strip(),
+        "relationType": str(raw_payload.get("relation_type") or graph_properties.get("relationType") or graph_properties.get("relation_type") or "PARTIALLY_ALIGNS").strip(),
+        "relation_type": str(raw_payload.get("relation_type") or graph_properties.get("relationType") or graph_properties.get("relation_type") or "PARTIALLY_ALIGNS").strip(),
+        "confidence": float(raw_payload.get("confidence") or graph_properties.get("confidence") or 0.0),
+        "approvalState": str(raw_payload.get("approval_state") or graph_properties.get("approvalState") or graph_properties.get("approval_state") or "approved").strip(),
+        "approval_state": str(raw_payload.get("approval_state") or graph_properties.get("approvalState") or graph_properties.get("approval_state") or "approved").strip(),
+    }
+
+
+def _build_direct_alignment_relations(payload: dict) -> list[dict]:
+    raw_payload = payload.get("raw_payload") or {}
+    agenda_item_id = str(raw_payload.get("agenda_item_id") or "").strip()
+    political_promise_id = str(raw_payload.get("political_promise_id") or "").strip()
+    if not agenda_item_id or not political_promise_id:
+        return []
+    rel_props = _alignment_provenance_properties(payload)
+    return [
+        {
+            "relation_type": "ALIGNS_WITH_AGENDA_ITEM",
+            "target_entity_type": "AgendaItem",
+            "target_key": "agendaItemId",
+            "target_id": agenda_item_id,
+            "target_properties": {"agendaItemId": agenda_item_id},
+            "relationship_properties": rel_props,
+            "require_existing_target": True,
+            "source_entity_type": "PoliticalPromise",
+            "source_key": "politicalPromiseId",
+            "source_id": political_promise_id,
+        },
+        {
+            "relation_type": "ALIGNS_WITH_SOLUTION_PLAN",
+            "target_entity_type": "SolutionPlan",
+            "target_key": "solutionPlanId",
+            "target_lookup": {
+                "cypher": "MATCH (a:AgendaItem {agendaItemId: $agenda_item_id})-[:HAS_SOLUTION_PLAN]->(s:SolutionPlan) RETURN s.solutionPlanId AS target_id LIMIT 1",
+                "params": {"agenda_item_id": agenda_item_id},
+            },
+            "target_properties": {},
+            "relationship_properties": rel_props,
+            "require_existing_target": True,
+            "source_entity_type": "PoliticalPromise",
+            "source_key": "politicalPromiseId",
+            "source_id": political_promise_id,
+        },
+        {
+            "relation_type": "ALIGNS_WITH_IMPLEMENTATION_PLAN",
+            "target_entity_type": "ImplementationPlan",
+            "target_key": "implementationPlanId",
+            "target_lookup": {
+                "cypher": "MATCH (a:AgendaItem {agendaItemId: $agenda_item_id})-[:HAS_IMPLEMENTATION_PLAN]->(i:ImplementationPlan) RETURN i.implementationPlanId AS target_id LIMIT 1",
+                "params": {"agenda_item_id": agenda_item_id},
+            },
+            "target_properties": {},
+            "relationship_properties": rel_props,
+            "require_existing_target": True,
+            "source_entity_type": "PoliticalPromise",
+            "source_key": "politicalPromiseId",
+            "source_id": political_promise_id,
+        },
+    ]
+
+
 class Command(BaseCommand):
     help = "Publish approved review-queue items to Neo4j and resolve them."
 
@@ -155,8 +222,12 @@ class Command(BaseCommand):
                     "error": "agenda_promise_alignment_review payload is missing required approved alignment fields or confidence.",
                 })
                 continue
+            publish_payload = payload
+            if _is_reviewed_alignment_assessment(payload):
+                publish_payload = dict(payload)
+                publish_payload["graph_relations"] = list(payload.get("graph_relations") or []) + _build_direct_alignment_relations(payload)
             try:
-                result = publish_record(payload)
+                result = publish_record(publish_payload)
             except Exception as exc:
                 failed += 1
                 failures.append({"item_id": str(item.id), "reason": "neo4j_publish_failed", "error": f"{type(exc).__name__}: {exc}"})

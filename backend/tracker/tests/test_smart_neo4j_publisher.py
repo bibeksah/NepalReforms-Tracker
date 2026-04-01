@@ -162,3 +162,45 @@ def test_publish_record_fails_when_required_existing_target_missing(monkeypatch)
         assert "target_id not found" in str(exc)
     else:
         raise AssertionError("Expected ValueError for missing required existing target")
+
+
+
+def test_publish_record_supports_explicit_source_node_and_target_lookup(monkeypatch):
+    calls = []
+
+    def fake_cypher_query(query, params):
+        calls.append((query, params))
+        if "RETURN s.solutionPlanId AS target_id" in query:
+            return [["solution:123"]], None
+        return [[params.get("node_value") or params.get("target_value")]], None
+
+    monkeypatch.setattr(publisher.db, "cypher_query", fake_cypher_query)
+
+    result = publisher.publish_record({
+        "entity_type": "AlignmentAssessment",
+        "graph_payload": {
+            "id": "alignment:1",
+            "key": "alignmentAssessmentId",
+            "properties": {"alignmentAssessmentId": "alignment:1"},
+        },
+        "graph_relations": [{
+            "source_entity_type": "PoliticalPromise",
+            "source_key": "politicalPromiseId",
+            "source_id": "promise:1",
+            "target_entity_type": "SolutionPlan",
+            "target_key": "solutionPlanId",
+            "relation_type": "ALIGNS_WITH_SOLUTION_PLAN",
+            "target_lookup": {
+                "cypher": "MATCH (a:AgendaItem {agendaItemId: $agenda_item_id})-[:HAS_SOLUTION_PLAN]->(s:SolutionPlan) RETURN s.solutionPlanId AS target_id LIMIT 1",
+                "params": {"agenda_item_id": "agenda:1"},
+            },
+            "target_properties": {},
+            "relationship_properties": {"alignmentAssessmentId": "alignment:1"},
+            "require_existing_target": True,
+        }],
+    })
+
+    assert result["ok"] is True
+    assert any("RETURN s.solutionPlanId AS target_id" in query for query, _ in calls)
+    merge_call = [query for query, _ in calls if "ALIGNS_WITH_SOLUTION_PLAN" in query][-1]
+    assert "MATCH (s:`PoliticalPromise` {politicalPromiseId: $source_value})" in merge_call

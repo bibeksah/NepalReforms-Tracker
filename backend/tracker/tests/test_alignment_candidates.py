@@ -98,3 +98,29 @@ def test_build_alignment_candidates_orders_by_confidence():
 
     assert len(candidates) >= 2
     assert candidates[0].confidence >= candidates[1].confidence
+
+
+
+def test_score_alignment_candidate_uses_agenda_decomposition_text():
+    candidate = score_alignment_candidate(
+        {
+            "agenda_item_id": "agenda:decomp",
+            "title": "Transform public education delivery",
+            "description": "Broader education reform agenda.",
+            "category": "Education",
+            "solution": {"summary": "Introduce teacher licensing and classroom mentoring for quality improvement."},
+            "implementation": {"steps": ["teacher licensing exam", "teacher mentoring support"]},
+            "performance_targets": ["teacher licensing rollout in all provinces"],
+        },
+        {
+            "political_promise_id": "promise:decomp",
+            "title": "Launch teacher licensing exam and mentoring support",
+            "summary": "Improve teacher quality nationwide.",
+            "category": "Education",
+        },
+    )
+
+    assert candidate is not None
+    assert candidate.score_breakdown["decomposition_overlap"] > 0
+    assert "teacher" in candidate.shared_tokens
+    assert candidate.to_review_queue_payload()["review_context"]["workflow"]["candidate_generation_method"] == "deterministic_rules_v3"

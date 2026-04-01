@@ -492,3 +492,93 @@ def test_publish_review_command_blocks_incomplete_reviewed_alignment_assessment(
     assert item.status == "approved"
     assert doc.published_count == 0
     assert doc.held_count == 1
+
+
+
+@pytest.mark.django_db
+def test_publish_review_command_adds_direct_promise_alignment_links(monkeypatch):
+    from tracker.management.commands import ingestion_publish_review as command_module
+
+    job = IngestionJob.objects.create(name="alignment-direct-links-job", status="review_hold")
+    doc = IngestionDocument.objects.create(
+        job=job,
+        source_path="C:/tmp/nepalreforms_agenda.json",
+        source_document="nepalreforms_agenda.json",
+        source_type="manifesto",
+        status="review_hold",
+        held_count=1,
+        payload_schema="nepalreforms_agenda_v1",
+    )
+    item = ReviewQueueItem.objects.create(
+        job=job,
+        document=doc,
+        status="approved",
+        reason="manual_ok",
+        entity_type="AlignmentAssessment",
+        fingerprint="alignment:reviewed:direct-links",
+        proposed_payload={
+            "entity_type": "AlignmentAssessment",
+            "record_identity": "alignment:reviewed:direct-links",
+            "source_subtype": "agenda_promise_alignment_review",
+            "raw_payload": {
+                "agenda_item_id": "agenda_item:abc",
+                "political_promise_id": "political_promise:def",
+                "relation_type": "PARTIALLY_ALIGNS",
+                "confidence": 0.61,
+                "approval_state": "approved",
+                "notes": "Human approved.",
+                "reviewer_status": "approved",
+                "placeholder": False,
+                "extraction_mode": "reviewed_alignment_assessments",
+            },
+            "review_context": {
+                "workflow": {
+                    "workflow_kind": "agenda_promise_alignment_review",
+                    "reviewed_alignment_status": "reviewed_approved",
+                }
+            },
+            "graph_payload": {
+                "id": "alignment:reviewed:direct-links",
+                "key": "alignmentAssessmentId",
+                "properties": {
+                    "alignmentAssessmentId": "alignment:reviewed:direct-links",
+                    "alignment_assessment_id": "alignment:reviewed:direct-links",
+                    "agendaItemId": "agenda_item:abc",
+                    "agenda_item_id": "agenda_item:abc",
+                    "politicalPromiseId": "political_promise:def",
+                    "political_promise_id": "political_promise:def",
+                    "relationType": "PARTIALLY_ALIGNS",
+                    "relation_type": "PARTIALLY_ALIGNS",
+                    "confidence": 0.61,
+                    "approvalState": "approved",
+                    "approval_state": "approved",
+                },
+            },
+            "graph_relations": [],
+        },
+    )
+
+    captured = {}
+
+    def fake_publish_record(payload):
+        captured["payload"] = payload
+        return {"ok": True, "node_id": payload["record_identity"]}
+
+    monkeypatch.setattr(command_module, "ensure_smart_constraints", lambda: None)
+    monkeypatch.setattr(command_module, "publish_record", fake_publish_record)
+
+    out = io.StringIO()
+    call_command("ingestion_publish_review", stdout=out)
+    payload = json.loads(out.getvalue())
+
+    assert payload["published"] == 1
+    relations = captured["payload"]["graph_relations"]
+    relation_types = [rel["relation_type"] for rel in relations]
+    assert "ALIGNS_WITH_AGENDA_ITEM" in relation_types
+    assert "ALIGNS_WITH_SOLUTION_PLAN" in relation_types
+    assert "ALIGNS_WITH_IMPLEMENTATION_PLAN" in relation_types
+    direct_agenda = next(rel for rel in relations if rel["relation_type"] == "ALIGNS_WITH_AGENDA_ITEM")
+    assert direct_agenda["source_entity_type"] == "PoliticalPromise"
+    assert direct_agenda["source_id"] == "political_promise:def"
+    assert direct_agenda["relationship_properties"]["alignmentAssessmentId"] == "alignment:reviewed:direct-links"
+    assert direct_agenda["relationship_properties"]["approvalState"] == "approved"
