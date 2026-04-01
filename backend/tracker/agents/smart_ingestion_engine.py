@@ -23,6 +23,7 @@ from tracker.models import FailedIngestionItem, IngestionDocument, IngestionJob,
 from .ingestion import _ingest_lal_kitab, clean_and_validate, get_lal_kitab_page_count
 from .language_preprocessor import ensure_english_text
 from .normalizer import normalize_translate
+from .policy_categories import classify_policy_category
 from .router import router
 from .schemas import (
     AgendaItemRecord,
@@ -484,6 +485,12 @@ def _extract_nepalreforms_agenda_json(document: IngestionDocument | Any) -> list
     for idx, item in enumerate(items, start=1):
         source_item_id = str(item.get("source_item_id") or item.get("id") or idx)
         title = item.get("title") or item.get("name") or f"Agenda Item {idx}"
+        category_classification = classify_policy_category(
+            raw_category=str(item.get("category") or ""),
+            title=title,
+            summary=str(item.get("summary") or ""),
+            description=str(item.get("description") or ""),
+        )
         agenda_item_id = stable_id("agenda_item", agenda_version_id, source_item_id, title)
         validated = AgendaItemRecord(
             agenda_item_id=agenda_item_id,
@@ -493,7 +500,7 @@ def _extract_nepalreforms_agenda_json(document: IngestionDocument | Any) -> list
             language=item.get("language") or language,
             active=bool(item.get("active", True)),
             source_reference=document.source_path,
-            category=item.get("category") or "",
+            category=category_classification.display_name,
             priority=item.get("priority") or "",
             timeline=item.get("timeline") or "",
             legal_foundation=item.get("legal_foundation") or "",
@@ -560,7 +567,12 @@ def _extract_rsp_manifesto_csv(document: IngestionDocument | Any) -> list[dict[s
             title = (row.get("Specific_Promise") or "").strip()
             if not title:
                 continue
-            category = (row.get("Category") or "").strip()
+            category_classification = classify_policy_category(
+                raw_category=(row.get("Category") or "").strip(),
+                title=title,
+                summary=title,
+            )
+            category = category_classification.display_name
             timeline = (row.get("Target_Deadline") or "").strip()
             responsible_entity = (row.get("Responsible_Entity") or "").strip()
             promise_id = stable_id("political_promise", manifesto_record["record_identity"], idx, title)
@@ -659,6 +671,12 @@ def _extract_reviewed_rsp_bacha_patra_structured_promises(document: IngestionDoc
             item.source_page,
             item.title,
         )
+        category_classification = classify_policy_category(
+            raw_category=item.category.strip(),
+            title=item.title,
+            summary=item.summary.strip(),
+            description=item.source_excerpt.strip(),
+        )
         promise = PoliticalPromiseRecord(
             political_promise_id=promise_id,
             title=item.title,
@@ -666,7 +684,7 @@ def _extract_reviewed_rsp_bacha_patra_structured_promises(document: IngestionDoc
             language=item.language.strip() or "ne",
             promise_scope="national",
             source_reference=validated_bundle.source_reference,
-            category=item.category.strip(),
+            category=category_classification.display_name,
             timeline=item.timeline.strip(),
             responsible_entity=item.responsible_entity.strip(),
         )
@@ -959,6 +977,11 @@ def _extract_manifesto_pdf(document: IngestionDocument | Any) -> list[dict[str, 
             validated = ManifestoCommitment(**item)
         except Exception:
             continue
+        category_classification = classify_policy_category(
+            raw_category=validated.category.strip(),
+            title=validated.promise_text,
+            summary=validated.promise_text,
+        )
         promise_id = stable_id("political_promise", manifesto_record["record_identity"], idx, validated.promise_text)
         promise = PoliticalPromiseRecord(
             political_promise_id=promise_id,
@@ -967,11 +990,29 @@ def _extract_manifesto_pdf(document: IngestionDocument | Any) -> list[dict[str, 
             language="en",
             promise_scope="national",
             source_reference=document.source_path,
-            category=validated.category.strip(),
+            category=category_classification.display_name,
             timeline=validated.timeline.strip(),
             responsible_entity=validated.actor.strip(),
         )
         risk_flags = [] if validated.confidence >= 0.7 else ["low_confidence"]
+        relations = [
+            _make_related_node(
+                relation_type="PROMISED_IN",
+                target_entity_type="ManifestoDocument",
+                target_key="manifestoDocumentId",
+                target_id=manifesto_record["record_identity"],
+                target_properties=manifesto_record["graph_payload"]["properties"],
+            )
+        ]
+        if promise.category:
+            category_id = stable_id("policy_category", promise.category)
+            relations.append(_make_related_node(
+                relation_type="IN_CATEGORY",
+                target_entity_type="PolicyCategory",
+                target_key="policyCategoryId",
+                target_id=category_id,
+                target_properties={"policyCategoryId": category_id, "name": promise.category},
+            ))
         records.append(
             {
                 "entity_type": "PoliticalPromise",
@@ -979,15 +1020,7 @@ def _extract_manifesto_pdf(document: IngestionDocument | Any) -> list[dict[str, 
                 "confidence": max(0.05, min(0.99, float(validated.confidence))),
                 "risk_flags": risk_flags,
                 "graph_payload": {"id": promise.political_promise_id, "key": "politicalPromiseId", "properties": promise.model_dump()},
-                "graph_relations": [
-                    _make_related_node(
-                        relation_type="PROMISED_IN",
-                        target_entity_type="ManifestoDocument",
-                        target_key="manifestoDocumentId",
-                        target_id=manifesto_record["record_identity"],
-                        target_properties=manifesto_record["graph_payload"]["properties"],
-                    )
-                ],
+                "graph_relations": relations,
                 "raw_payload": item,
                 "source_type": "manifesto",
                 "source_subtype": "manifesto_pdf",
