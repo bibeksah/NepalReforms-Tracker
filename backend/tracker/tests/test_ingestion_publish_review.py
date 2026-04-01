@@ -345,6 +345,82 @@ def test_publish_review_command_publishes_reviewed_alignment_assessment(monkeypa
 
 
 @pytest.mark.django_db
+def test_publish_review_command_publishes_human_approved_low_confidence_alignment_assessment(monkeypatch):
+    from tracker.management.commands import ingestion_publish_review as command_module
+
+    job = IngestionJob.objects.create(name="alignment-review-low-score-job", status="review_hold")
+    doc = IngestionDocument.objects.create(
+        job=job,
+        source_path="C:/tmp/nepalreforms_agenda.json",
+        source_document="nepalreforms_agenda.json",
+        source_type="manifesto",
+        status="review_hold",
+        held_count=1,
+        payload_schema="nepalreforms_agenda_v1",
+    )
+    item = ReviewQueueItem.objects.create(
+        job=job,
+        document=doc,
+        status="approved",
+        reason="manual_ok",
+        entity_type="AlignmentAssessment",
+        fingerprint="alignment:reviewed:human-low-score",
+        proposed_payload={
+            "entity_type": "AlignmentAssessment",
+            "record_identity": "alignment:reviewed:human-low-score",
+            "source_subtype": "agenda_promise_alignment_review",
+            "raw_payload": {
+                "agenda_item_id": "agenda_item:abc",
+                "political_promise_id": "political_promise:def",
+                "relation_type": "PARTIALLY_ALIGNS",
+                "confidence": 0.41,
+                "approval_state": "approved",
+                "notes": "Human approved after dashboard review.",
+                "reviewer_status": "approved",
+                "placeholder": False,
+                "extraction_mode": "reviewed_alignment_assessments",
+            },
+            "review_context": {
+                "workflow": {
+                    "workflow_kind": "agenda_promise_alignment_review",
+                    "reviewed_alignment_status": "reviewed_approved",
+                }
+            },
+            "graph_payload": {
+                "id": "alignment:reviewed:human-low-score",
+                "key": "alignmentAssessmentId",
+                "properties": {
+                    "alignment_assessment_id": "alignment:reviewed:human-low-score",
+                    "agenda_item_id": "agenda_item:abc",
+                    "political_promise_id": "political_promise:def",
+                    "relation_type": "PARTIALLY_ALIGNS",
+                    "confidence": 0.41,
+                    "approval_state": "approved",
+                },
+            },
+            "graph_relations": [],
+        },
+    )
+
+    monkeypatch.setattr(command_module, "ensure_smart_constraints", lambda: None)
+    monkeypatch.setattr(command_module, "publish_record", lambda payload: {"ok": True, "node_id": payload["record_identity"]})
+
+    out = io.StringIO()
+    call_command("ingestion_publish_review", stdout=out)
+    payload = json.loads(out.getvalue())
+
+    item.refresh_from_db()
+    doc.refresh_from_db()
+    job.refresh_from_db()
+    assert payload["published"] == 1
+    assert payload["failed"] == 0
+    assert item.status == "resolved"
+    assert doc.published_count == 1
+    assert doc.held_count == 0
+    assert job.published_count == 1
+
+
+@pytest.mark.django_db
 def test_publish_review_command_blocks_incomplete_reviewed_alignment_assessment(monkeypatch):
     from tracker.management.commands import ingestion_publish_review as command_module
 

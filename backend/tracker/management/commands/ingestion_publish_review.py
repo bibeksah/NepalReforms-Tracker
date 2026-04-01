@@ -78,12 +78,10 @@ def _reviewed_alignment_assessment_is_publishable(payload: dict) -> bool:
     agenda_item_id = str(raw_payload.get("agenda_item_id") or graph_properties.get("agenda_item_id") or "").strip()
     political_promise_id = str(raw_payload.get("political_promise_id") or graph_properties.get("political_promise_id") or "").strip()
     approval_state = str(raw_payload.get("approval_state") or graph_properties.get("approval_state") or "").strip()
-    confidence = float(raw_payload.get("confidence", graph_properties.get("confidence", 0.0)) or 0.0)
     return (
         bool(agenda_item_id)
         and bool(political_promise_id)
         and approval_state == "approved"
-        and confidence >= 0.70
         and raw_payload.get("reviewer_status") == "approved"
         and not bool(raw_payload.get("placeholder", False))
     )
