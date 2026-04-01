@@ -131,6 +131,95 @@ def test_extract_rsp_bacha_patra_pdf_sets_explicit_ocr_review_workflow():
         assert record["review_context"]["workflow"]["publishable_record_kind"] == "document_provenance_only"
 
 
+
+def test_extract_reviewed_rsp_bacha_patra_structured_promises_requires_reviewed_bundle():
+    doc = SimpleNamespace(
+        source_path="C:/x/bacha-patra.pdf",
+        source_document="bacha-patra.pdf",
+        source_hash="hash-bacha",
+        source_type="manifesto",
+        extra_metadata={},
+    )
+
+    assert engine._extract_reviewed_rsp_bacha_patra_structured_promises(doc) == []
+
+
+def test_extract_reviewed_rsp_bacha_patra_structured_promises_builds_safe_political_promise_records():
+    doc = SimpleNamespace(
+        source_path="C:/x/bacha-patra.pdf",
+        source_document="bacha-patra.pdf",
+        source_hash="hash-bacha",
+        source_type="manifesto",
+        extra_metadata={
+            "reviewed_structured_promise_bundle": {
+                "manifesto_document_id": "manifesto_document:abc",
+                "source_reference": "C:/x/bacha-patra.pdf",
+                "source_subtype": "rsp_bacha_patra_pdf",
+                "extraction_mode": "reviewed_structured_promises",
+                "ocr_artifact_reference": "artifact://bacha-ocr-v1.json",
+                "ocr_text_review_status": "approved",
+                "structured_promises_status": "reviewed_approved",
+                "reviewed_structured_promises": [
+                    {
+                        "title": "Publish local spending reports every quarter",
+                        "summary": "Quarterly public reporting on local spending.",
+                        "category": "Governance",
+                        "timeline": "Quarterly",
+                        "responsible_entity": "Local Governments",
+                        "language": "ne",
+                        "source_page": 3,
+                        "source_excerpt": "??????? ???? ????? ???? ????????? ????????? ?????",
+                        "extraction_confidence": 0.91,
+                        "reviewer_status": "approved",
+                        "placeholder": False,
+                    },
+                    {
+                        "title": "Placeholder should never publish",
+                        "summary": "",
+                        "category": "",
+                        "timeline": "",
+                        "responsible_entity": "",
+                        "language": "ne",
+                        "source_page": 4,
+                        "source_excerpt": "placeholder excerpt",
+                        "extraction_confidence": 0.99,
+                        "reviewer_status": "approved",
+                        "placeholder": True,
+                    },
+                    {
+                        "title": "Low confidence should stay out of publish path",
+                        "summary": "",
+                        "category": "",
+                        "timeline": "",
+                        "responsible_entity": "",
+                        "language": "ne",
+                        "source_page": 5,
+                        "source_excerpt": "low confidence excerpt",
+                        "extraction_confidence": 0.55,
+                        "reviewer_status": "approved",
+                        "placeholder": False,
+                    },
+                ],
+            }
+        },
+    )
+
+    records = engine._extract_reviewed_rsp_bacha_patra_structured_promises(doc)
+
+    assert len(records) == 1
+    record = records[0]
+    assert record["entity_type"] == "PoliticalPromise"
+    assert record["source_subtype"] == "rsp_bacha_patra_pdf"
+    assert record["confidence"] == pytest.approx(0.91)
+    assert record["raw_payload"]["manifesto_document_id"] == "manifesto_document:abc"
+    assert record["raw_payload"]["extraction_mode"] == "reviewed_structured_promises"
+    assert record["graph_payload"]["properties"]["derived_from_document_id"] == "manifesto_document:abc"
+    assert any(rel["relation_type"] == "PROMISED_IN" and rel["target_entity_type"] == "ManifestoDocument" for rel in record["graph_relations"])
+    assert any(rel["target_entity_type"] == "PolicyCategory" for rel in record["graph_relations"])
+    assert any(rel["target_entity_type"] == "TimelineTarget" for rel in record["graph_relations"])
+    assert any(rel["target_entity_type"] == "ResponsibleEntity" for rel in record["graph_relations"])
+
+
 def test_run_with_retry_retries_transient(monkeypatch):
     attempts = {"n": 0}
     monkeypatch.setattr(engine.time, "sleep", lambda _delay: None)
@@ -288,3 +377,68 @@ def test_run_job_holds_rsp_bacha_patra_for_review(monkeypatch):
         assert review_items[0].provenance["source_subtype"] == "rsp_bacha_patra_pdf"
         assert review_items[0].provenance["review_context"]["workflow"]["workflow_kind"] == "rsp_bacha_patra_ocr_review"
         assert document.extra_metadata["ocr_workflow"]["structured_promises_status"] == "not_extracted"
+
+
+@pytest.mark.django_db(transaction=True)
+def test_run_job_publishes_reviewed_rsp_bacha_patra_structured_promises(monkeypatch):
+    from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
+
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        pdf_path = Path(tmp_dir) / "bacha patra.pdf"
+        pdf_path.write_bytes(b"%PDF-1.4\n%stub\n")
+        job = IngestionJob.objects.create(name="bacha-reviewed-job", status="queued")
+        document = IngestionDocument.objects.create(
+            job=job,
+            source_path=str(pdf_path),
+            source_document=pdf_path.name,
+            source_hash="hash-bacha-reviewed",
+            source_type="manifesto",
+            status="queued",
+            extra_metadata={
+                "reviewed_structured_promise_bundle": {
+                    "manifesto_document_id": "manifesto_document:abc",
+                    "source_reference": str(pdf_path),
+                    "source_subtype": "rsp_bacha_patra_pdf",
+                    "extraction_mode": "reviewed_structured_promises",
+                    "ocr_artifact_reference": "artifact://bacha-ocr-v1.json",
+                    "ocr_text_review_status": "approved",
+                    "structured_promises_status": "reviewed_approved",
+                    "reviewed_structured_promises": [
+                        {
+                            "title": "Publish local spending reports every quarter",
+                            "summary": "Quarterly public reporting on local spending.",
+                            "category": "Governance",
+                            "timeline": "Quarterly",
+                            "responsible_entity": "Local Governments",
+                            "language": "ne",
+                            "source_page": 3,
+                            "source_excerpt": "??????? ???? ????? ???? ????????? ????????? ?????",
+                            "extraction_confidence": 0.91,
+                            "reviewer_status": "approved",
+                            "placeholder": False,
+                        }
+                    ],
+                }
+            },
+        )
+
+        published = []
+        monkeypatch.setattr(engine, "ensure_smart_constraints", lambda: None)
+        monkeypatch.setattr(engine, "publish_record", lambda record: published.append(record) or {"ok": True, "node_id": record["record_identity"]})
+        monkeypatch.setattr(engine, "publish_records_batch", lambda records, batch_size=200: {"ok_count": 0, "published_ids": [], "failed_ids": [], "errors": []})
+
+        result = engine.run_job(job, max_workers=1, adaptive=False, publish_threshold=0.75)
+
+        document.refresh_from_db()
+        job.refresh_from_db()
+        assert result["status"] == "completed"
+        assert result["published_count"] == 1
+        assert result["held_count"] == 0
+        assert len(published) == 1
+        assert published[0]["entity_type"] == "PoliticalPromise"
+        assert published[0]["source_subtype"] == "rsp_bacha_patra_pdf"
+        assert document.status == "published"
+        assert document.extra_metadata["ocr_workflow"]["structured_promises_status"] == "reviewed_approved"
+        assert document.extra_metadata["ocr_workflow"]["ocr_status"] == "reviewed_artifact_supplied"
+        assert ReviewQueueItem.objects.count() == 0
+

@@ -120,3 +120,148 @@ def test_publish_review_command_blocks_unreviewed_rsp_bacha_patra_ocr_placeholde
     assert item.status == "approved"
     assert doc.published_count == 0
     assert doc.held_count == 1
+
+
+@pytest.mark.django_db
+def test_publish_review_command_publishes_reviewed_rsp_bacha_patra_structured_promise(monkeypatch):
+    from tracker.management.commands import ingestion_publish_review as command_module
+
+    job = IngestionJob.objects.create(name="bacha-reviewed-publish-job", status="review_hold")
+    doc = IngestionDocument.objects.create(
+        job=job,
+        source_path="C:/tmp/bacha-patra.pdf",
+        source_document="bacha-patra.pdf",
+        source_type="manifesto",
+        status="review_hold",
+        held_count=1,
+        payload_schema="rsp_bacha_patra_v1",
+    )
+    item = ReviewQueueItem.objects.create(
+        job=job,
+        document=doc,
+        status="approved",
+        reason="manual_ok",
+        entity_type="PoliticalPromise",
+        fingerprint="promise:reviewed:1",
+        proposed_payload={
+            "entity_type": "PoliticalPromise",
+            "record_identity": "promise:reviewed:1",
+            "source_subtype": "rsp_bacha_patra_pdf",
+            "raw_payload": {
+                "title": "Publish local spending reports every quarter",
+                "source_excerpt": "??????? ???? ????? ???? ????????? ????????? ?????",
+                "source_page": 3,
+                "placeholder": False,
+                "extraction_confidence": 0.91,
+                "reviewer_status": "approved",
+                "manifesto_document_id": "manifesto_document:abc",
+                "extraction_mode": "reviewed_structured_promises",
+            },
+            "review_context": {
+                "workflow": {
+                    "workflow_kind": "rsp_bacha_patra_ocr_review",
+                    "structured_promises_status": "reviewed_approved",
+                    "ocr_text_review_status": "approved",
+                }
+            },
+            "graph_payload": {
+                "id": "promise:reviewed:1",
+                "key": "politicalPromiseId",
+                "properties": {
+                    "political_promise_id": "promise:reviewed:1",
+                    "title": "Publish local spending reports every quarter",
+                    "source_reference": "bacha-patra.pdf",
+                },
+            },
+            "graph_relations": [],
+        },
+    )
+
+    monkeypatch.setattr(command_module, "ensure_smart_constraints", lambda: None)
+    monkeypatch.setattr(command_module, "publish_record", lambda payload: {"ok": True, "node_id": payload["record_identity"]})
+
+    out = io.StringIO()
+    call_command("ingestion_publish_review", stdout=out)
+    payload = json.loads(out.getvalue())
+
+    item.refresh_from_db()
+    doc.refresh_from_db()
+    job.refresh_from_db()
+    assert payload["published"] == 1
+    assert payload["failed"] == 0
+    assert item.status == "resolved"
+    assert doc.published_count == 1
+    assert doc.held_count == 0
+    assert job.published_count == 1
+
+
+@pytest.mark.django_db
+def test_publish_review_command_blocks_incomplete_reviewed_rsp_bacha_patra_structured_promise(monkeypatch):
+    from tracker.management.commands import ingestion_publish_review as command_module
+
+    job = IngestionJob.objects.create(name="bacha-reviewed-block-job", status="review_hold")
+    doc = IngestionDocument.objects.create(
+        job=job,
+        source_path="C:/tmp/bacha-patra.pdf",
+        source_document="bacha-patra.pdf",
+        source_type="manifesto",
+        status="review_hold",
+        held_count=1,
+        payload_schema="rsp_bacha_patra_v1",
+    )
+    item = ReviewQueueItem.objects.create(
+        job=job,
+        document=doc,
+        status="approved",
+        reason="manual_ok",
+        entity_type="PoliticalPromise",
+        fingerprint="promise:reviewed:2",
+        proposed_payload={
+            "entity_type": "PoliticalPromise",
+            "record_identity": "promise:reviewed:2",
+            "source_subtype": "rsp_bacha_patra_pdf",
+            "raw_payload": {
+                "title": "Too weak confidence promise",
+                "source_excerpt": "valid excerpt",
+                "source_page": 3,
+                "placeholder": False,
+                "extraction_confidence": 0.45,
+                "reviewer_status": "approved",
+                "manifesto_document_id": "manifesto_document:abc",
+                "extraction_mode": "reviewed_structured_promises",
+            },
+            "review_context": {
+                "workflow": {
+                    "workflow_kind": "rsp_bacha_patra_ocr_review",
+                    "structured_promises_status": "reviewed_approved",
+                    "ocr_text_review_status": "approved",
+                }
+            },
+            "graph_payload": {
+                "id": "promise:reviewed:2",
+                "key": "politicalPromiseId",
+                "properties": {
+                    "political_promise_id": "promise:reviewed:2",
+                    "title": "Too weak confidence promise",
+                    "source_reference": "bacha-patra.pdf",
+                },
+            },
+            "graph_relations": [],
+        },
+    )
+
+    monkeypatch.setattr(command_module, "ensure_smart_constraints", lambda: None)
+    monkeypatch.setattr(command_module, "publish_record", lambda payload: {"ok": True, "node_id": payload["record_identity"]})
+
+    out = io.StringIO()
+    call_command("ingestion_publish_review", stdout=out)
+    payload = json.loads(out.getvalue())
+
+    item.refresh_from_db()
+    doc.refresh_from_db()
+    assert payload["published"] == 0
+    assert payload["failed"] == 1
+    assert payload["failures"][0]["reason"] == "reviewed_ocr_payload_incomplete"
+    assert item.status == "approved"
+    assert doc.published_count == 0
+    assert doc.held_count == 1

@@ -30,6 +30,7 @@ from .schemas import (
     ManifestoCommitment,
     ManifestoDocumentRecord,
     PoliticalPromiseRecord,
+    ReviewedOCRPromiseBundle,
     stable_id,
 )
 from .smart_neo4j_publisher import (
@@ -602,6 +603,132 @@ def _extract_rsp_manifesto_csv(document: IngestionDocument | Any) -> list[dict[s
             )
     return records
 
+def _extract_reviewed_rsp_bacha_patra_structured_promises(document: IngestionDocument | Any) -> list[dict[str, Any]]:
+    metadata = getattr(document, "extra_metadata", None) or {}
+    reviewed_bundle = metadata.get("reviewed_structured_promise_bundle")
+    if not isinstance(reviewed_bundle, dict):
+        return []
+
+    validated_bundle = ReviewedOCRPromiseBundle(**reviewed_bundle)
+    if validated_bundle.source_subtype != "rsp_bacha_patra_pdf":
+        return []
+    if validated_bundle.structured_promises_status != "reviewed_approved":
+        return []
+    if validated_bundle.ocr_text_review_status != "approved":
+        return []
+
+    records: list[dict[str, Any]] = []
+    for idx, item in enumerate(validated_bundle.reviewed_structured_promises, start=1):
+        if item.reviewer_status != "approved":
+            continue
+        if item.placeholder:
+            continue
+        if item.extraction_confidence < 0.70:
+            continue
+
+        promise_id = stable_id(
+            "political_promise",
+            validated_bundle.manifesto_document_id,
+            item.source_page,
+            item.title,
+        )
+        promise = PoliticalPromiseRecord(
+            political_promise_id=promise_id,
+            title=item.title,
+            summary=item.summary.strip() or item.title,
+            language=item.language.strip() or "ne",
+            promise_scope="national",
+            source_reference=validated_bundle.source_reference,
+            category=item.category.strip(),
+            timeline=item.timeline.strip(),
+            responsible_entity=item.responsible_entity.strip(),
+        )
+        props = promise.model_dump()
+        props.update({
+            "source_subtype": "rsp_bacha_patra_pdf",
+            "source_page": item.source_page,
+            "source_excerpt": item.source_excerpt.strip(),
+            "ocr_artifact_reference": validated_bundle.ocr_artifact_reference,
+            "derived_from_document_id": validated_bundle.manifesto_document_id,
+            "extraction_mode": validated_bundle.extraction_mode,
+        })
+
+        relations = [
+            _make_related_node(
+                relation_type="PROMISED_IN",
+                target_entity_type="ManifestoDocument",
+                target_key="manifestoDocumentId",
+                target_id=validated_bundle.manifesto_document_id,
+                target_properties={"manifestoDocumentId": validated_bundle.manifesto_document_id},
+                relationship_properties={
+                    "source_page": item.source_page,
+                    "source_excerpt": item.source_excerpt.strip(),
+                    "ocr_artifact_reference": validated_bundle.ocr_artifact_reference,
+                    "derivation_method": "reviewed_ocr_structured_extraction",
+                },
+            )
+        ]
+        if promise.category:
+            category_id = stable_id("policy_category", promise.category)
+            relations.append(_make_related_node(
+                relation_type="IN_CATEGORY",
+                target_entity_type="PolicyCategory",
+                target_key="policyCategoryId",
+                target_id=category_id,
+                target_properties={"policyCategoryId": category_id, "name": promise.category},
+            ))
+        if promise.timeline:
+            timeline_id = stable_id("timeline_target", promise.timeline)
+            relations.append(_make_related_node(
+                relation_type="HAS_TIMELINE_TARGET",
+                target_entity_type="TimelineTarget",
+                target_key="timelineTargetId",
+                target_id=timeline_id,
+                target_properties={"timelineTargetId": timeline_id, "name": promise.timeline},
+            ))
+        if promise.responsible_entity:
+            entity_id = stable_id("responsible_entity", promise.responsible_entity)
+            relations.append(_make_related_node(
+                relation_type="ASSIGNED_TO",
+                target_entity_type="ResponsibleEntity",
+                target_key="responsibleEntityId",
+                target_id=entity_id,
+                target_properties={"responsibleEntityId": entity_id, "name": promise.responsible_entity},
+            ))
+
+        raw_payload = item.model_dump()
+        raw_payload.update({
+            "source_subtype": "rsp_bacha_patra_pdf",
+            "manifesto_document_id": validated_bundle.manifesto_document_id,
+            "ocr_artifact_reference": validated_bundle.ocr_artifact_reference,
+            "extraction_mode": validated_bundle.extraction_mode,
+        })
+        records.append({
+            "entity_type": "PoliticalPromise",
+            "record_identity": promise.political_promise_id,
+            "confidence": float(item.extraction_confidence),
+            "risk_flags": [],
+            "graph_payload": {"id": promise.political_promise_id, "key": "politicalPromiseId", "properties": props},
+            "graph_relations": relations,
+            "raw_payload": raw_payload,
+            "review_context": {
+                "workflow": {
+                    "workflow_kind": "rsp_bacha_patra_ocr_review",
+                    "review_status": "structured_promises_reviewed",
+                    "ocr_text_review_status": validated_bundle.ocr_text_review_status,
+                    "structured_promises_status": validated_bundle.structured_promises_status,
+                    "manifesto_document_id": validated_bundle.manifesto_document_id,
+                },
+            },
+            "source_type": "manifesto",
+            "source_subtype": "rsp_bacha_patra_pdf",
+            "source_document": document.source_document,
+            "source_path": document.source_path,
+            "source_hash": document.source_hash,
+        })
+    return records
+
+
 def _extract_rsp_bacha_patra_pdf(document: IngestionDocument | Any) -> list[dict[str, Any]]:
     page_count = 0
     source_path = Path(document.source_path)
@@ -754,6 +881,9 @@ def extract_records(document: IngestionDocument, plan: dict[str, Any]) -> list[d
     if subtype == "rsp_manifesto_csv":
         return _extract_rsp_manifesto_csv(document)
     if subtype == "rsp_bacha_patra_pdf":
+        reviewed_records = _extract_reviewed_rsp_bacha_patra_structured_promises(document)
+        if reviewed_records:
+            return reviewed_records
         return _extract_rsp_bacha_patra_pdf(document)
     if subtype == "manifesto_pdf":
         return _extract_manifesto_pdf(document)
@@ -927,12 +1057,14 @@ def _process_document(document_id: str, publish_threshold: float) -> dict[str, A
             },
         }
         if subtype == "rsp_bacha_patra_pdf":
+            reviewed_bundle = (document.extra_metadata or {}).get("reviewed_structured_promise_bundle") or {}
+            has_reviewed_bundle = isinstance(reviewed_bundle, dict) and bool(reviewed_bundle.get("reviewed_structured_promises"))
             metadata_patch["ocr_workflow"] = {
                 "workflow_kind": "rsp_bacha_patra_ocr_review",
-                "review_status": "ocr_pending_review" if held > 0 else "provenance_published",
-                "ocr_status": "not_run",
-                "structured_promises_status": "not_extracted",
-                "document_record_published": published > 0,
+                "review_status": "structured_promises_reviewed" if has_reviewed_bundle and held == 0 and published > 0 else ("ocr_pending_review" if held > 0 else "provenance_published"),
+                "ocr_status": "reviewed_artifact_supplied" if has_reviewed_bundle else "not_run",
+                "structured_promises_status": "reviewed_approved" if has_reviewed_bundle and held == 0 and published > 0 else "not_extracted",
+                "document_record_published": published > 0 and not has_reviewed_bundle,
                 "review_queue_count": held,
             }
         _merge_document_extra_metadata(document, metadata_patch)

@@ -1,17 +1,17 @@
-"""Pydantic schemas for smart-ingestion pipeline boundaries."""
+"""Phase 1 source-native ingestion contracts and lightweight validation schemas."""
+
+from __future__ import annotations
 
 import hashlib
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
-# Budget safety bounds.
 MAX_BUDGET_NPR = 500_000_000_000
 MIN_TITLE_LENGTH = 5
 
 
 class RawProject(BaseModel):
-    """Validated output from PDF parser: raw extracted row."""
-
     title_ne: str
     budget: str
     page_num: int = 0
@@ -26,8 +26,6 @@ class RawProject(BaseModel):
 
 
 class CleanedProject(BaseModel):
-    """Validated output after cleaning and budget normalization."""
-
     title_ne: str = Field(min_length=MIN_TITLE_LENGTH)
     budget: int = Field(ge=1, le=MAX_BUDGET_NPR)
     page_num: int = 0
@@ -41,28 +39,101 @@ class CleanedProject(BaseModel):
             raise ValueError(f"Title is numeric only (likely page number): {value}")
         return value
 
-    @field_validator("budget")
-    @classmethod
-    def budget_sanity(cls, value: int) -> int:
-        if value > MAX_BUDGET_NPR:
-            raise ValueError(
-                f"Budget {value:,} exceeds max sanity bound of {MAX_BUDGET_NPR:,} NPR"
-            )
-        return value
-
 
 class TranslatedProject(CleanedProject):
-    """Validated output after translation."""
-
     title_en: str = Field(min_length=3)
     translation_confidence: float = Field(default=1.0, ge=0.0, le=1.0)
     back_translated_ne: str = Field(default="")
     translation_flag: str = Field(default="ok")
 
 
-class ManifestoCommitment(BaseModel):
-    """Validated non-budget commitment extraction payload."""
+class ManifestoDocumentRecord(BaseModel):
+    manifesto_document_id: str
+    owner_type: str
+    owner_name: str
+    name: str
+    language: str = "en"
+    source_reference: str
+    published_at: str = ""
 
+
+class AgendaVersionRecord(BaseModel):
+    agenda_version_id: str
+    name: str
+    baseline_count: int
+    effective_from: str
+    status: str = "baseline"
+    source_reference: str
+
+
+class AgendaItemRecord(BaseModel):
+    agenda_item_id: str
+    source_item_id: str
+    title: str = Field(min_length=3)
+    description: str = ""
+    language: str = "en"
+    active: bool = True
+    source_reference: str
+    category: str = ""
+    priority: str = ""
+    timeline: str = ""
+    legal_foundation: str = ""
+    performance_targets: list[str] = Field(default_factory=list)
+    problem: dict[str, Any] = Field(default_factory=dict)
+    solution: dict[str, Any] = Field(default_factory=dict)
+    implementation: dict[str, Any] = Field(default_factory=dict)
+    real_world_evidence: dict[str, Any] = Field(default_factory=dict)
+
+
+class PoliticalPromiseRecord(BaseModel):
+    political_promise_id: str
+    title: str = Field(min_length=10)
+    summary: str = ""
+    language: str = "en"
+    promise_scope: str = "national"
+    source_reference: str
+    category: str = ""
+    timeline: str = ""
+    responsible_entity: str = ""
+
+
+class ReviewedOCRPoliticalPromiseInput(BaseModel):
+    title: str = Field(min_length=10)
+    summary: str = ""
+    category: str = ""
+    timeline: str = ""
+    responsible_entity: str = ""
+    language: str = "ne"
+    source_page: int = Field(ge=1)
+    source_excerpt: str = Field(min_length=5)
+    extraction_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    reviewer_status: str = "approved"
+    placeholder: bool = False
+
+
+class ReviewedOCRPromiseBundle(BaseModel):
+    manifesto_document_id: str = Field(min_length=3)
+    source_reference: str = Field(min_length=3)
+    source_subtype: str = "rsp_bacha_patra_pdf"
+    extraction_mode: str = "reviewed_structured_promises"
+    ocr_artifact_reference: str = ""
+    ocr_text_review_status: str = "approved"
+    structured_promises_status: str = "reviewed_approved"
+    review_required_for_structured_promises: bool = True
+    reviewed_structured_promises: list[ReviewedOCRPoliticalPromiseInput] = Field(default_factory=list)
+
+
+class AlignmentAssessmentRecord(BaseModel):
+    alignment_assessment_id: str
+    relation_type: str = "NO_DIRECT_MATCH"
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    approval_state: str = "pending_review"
+    notes: str = ""
+    agenda_item_id: str = ""
+    political_promise_id: str = ""
+
+
+class ManifestoCommitment(BaseModel):
     promise_text: str = Field(min_length=10)
     category: str = Field(default="")
     actor: str = Field(default="")
@@ -70,8 +141,12 @@ class ManifestoCommitment(BaseModel):
     confidence: float = Field(default=0.55, ge=0.0, le=1.0)
 
 
-def compute_budget_hash(raw_budget_str: str, page_num: int) -> str:
-    """SHA-256 hash of raw budget cell plus page context."""
+def stable_id(prefix: str, *parts: Any) -> str:
+    payload = "|".join(str(part or "").strip().lower() for part in parts)
+    digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+    return f"{prefix}:{digest}"
 
+
+def compute_budget_hash(raw_budget_str: str, page_num: int) -> str:
     payload = f"{raw_budget_str.strip()}|page:{page_num}"
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()

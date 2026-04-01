@@ -19,6 +19,41 @@ def _is_rsp_bacha_patra_provenance_only(payload: dict) -> bool:
     return raw_payload.get("extraction_mode") == "document_provenance_only" and workflow.get("structured_promises_status") == "not_extracted"
 
 
+def _is_rsp_bacha_patra_reviewed_structured_promise(payload: dict) -> bool:
+    if not isinstance(payload, dict):
+        return False
+    if payload.get("entity_type") != "PoliticalPromise":
+        return False
+    if payload.get("source_subtype") != "rsp_bacha_patra_pdf":
+        return False
+    raw_payload = payload.get("raw_payload") or {}
+    review_context = payload.get("review_context") or {}
+    workflow = (review_context.get("workflow") or {})
+    return (
+        raw_payload.get("extraction_mode") == "reviewed_structured_promises"
+        and workflow.get("structured_promises_status") == "reviewed_approved"
+        and workflow.get("ocr_text_review_status") == "approved"
+    )
+
+
+def _reviewed_rsp_bacha_patra_promise_is_publishable(payload: dict) -> bool:
+    if not _is_rsp_bacha_patra_reviewed_structured_promise(payload):
+        return False
+    raw_payload = payload.get("raw_payload") or {}
+    title = ((raw_payload.get("title") or payload.get("graph_payload", {}).get("properties", {}).get("title") or "").strip())
+    excerpt = (raw_payload.get("source_excerpt") or "").strip()
+    return (
+        bool(title)
+        and len(title) >= 10
+        and bool(excerpt)
+        and len(excerpt) >= 5
+        and not bool(raw_payload.get("placeholder", False))
+        and float(raw_payload.get("extraction_confidence", 0.0) or 0.0) >= 0.70
+        and raw_payload.get("reviewer_status") == "approved"
+        and bool(raw_payload.get("manifesto_document_id"))
+    )
+
+
 class Command(BaseCommand):
     help = "Publish approved review-queue items to Neo4j and resolve them."
 
@@ -69,6 +104,14 @@ class Command(BaseCommand):
                     "item_id": str(item.id),
                     "reason": "ocr_review_incomplete",
                     "error": "rsp_bacha_patra_pdf provenance record cannot be published from approved review until OCR-derived structured records are separately reviewed.",
+                })
+                continue
+            if _is_rsp_bacha_patra_reviewed_structured_promise(payload) and not _reviewed_rsp_bacha_patra_promise_is_publishable(payload):
+                failed += 1
+                failures.append({
+                    "item_id": str(item.id),
+                    "reason": "reviewed_ocr_payload_incomplete",
+                    "error": "rsp_bacha_patra_pdf reviewed structured promise is missing required approved OCR review fields or confidence.",
                 })
                 continue
             try:
