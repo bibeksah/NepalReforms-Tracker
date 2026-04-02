@@ -1,4 +1,4 @@
-"""Phase 1 source-native ingestion contracts and lightweight validation schemas."""
+﻿"""Phase 1 source-native ingestion contracts and lightweight validation schemas."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
-MAX_BUDGET_NPR = 500_000_000_000
+MAX_BUDGET_NPR = 5_000_000_000_000
 MIN_TITLE_LENGTH = 5
 
 
@@ -70,19 +70,19 @@ class AgendaItemRecord(BaseModel):
     agenda_item_id: str
     source_item_id: str
     title: str = Field(min_length=3)
-    description: str = ""
+    description: str | None = None
     language: str = "en"
-    active: bool = True
+    active: bool | None = None
     source_reference: str
-    category: str = ""
-    priority: str = ""
-    timeline: str = ""
-    legal_foundation: str = ""
-    performance_targets: list[str] = Field(default_factory=list)
-    problem: dict[str, Any] = Field(default_factory=dict)
-    solution: dict[str, Any] = Field(default_factory=dict)
-    implementation: dict[str, Any] = Field(default_factory=dict)
-    real_world_evidence: dict[str, Any] = Field(default_factory=dict)
+    category: str | None = None
+    priority: str | None = None
+    timeline: str | None = None
+    legal_foundation: str | None = None
+    performance_targets: list[str] | None = None
+    problem: dict[str, Any] | None = None
+    solution: dict[str, Any] | None = None
+    implementation: dict[str, Any] | None = None
+    real_world_evidence: dict[str, Any] | None = None
 
 
 class PoliticalPromiseRecord(BaseModel):
@@ -178,6 +178,12 @@ def stable_id(prefix: str, *parts: Any) -> str:
     return f"{prefix}:{digest}"
 
 
+def canonical_fiscal_year_id(label: str) -> str:
+    normalized = " ".join((label or "").strip().split()) or "unknown"
+    return stable_id("fiscal_year", normalized)
+
+
 def compute_budget_hash(raw_budget_str: str, page_num: int) -> str:
     payload = f"{raw_budget_str.strip()}|page:{page_num}"
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+

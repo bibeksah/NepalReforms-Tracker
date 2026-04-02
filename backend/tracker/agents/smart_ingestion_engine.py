@@ -1,4 +1,4 @@
-"""Centralized smart ingestion engine with source-native deterministic flows."""
+﻿"""Centralized smart ingestion engine with source-native deterministic flows."""
 
 from __future__ import annotations
 
@@ -193,8 +193,8 @@ def _source_subtype(document: IngestionDocument | Any) -> str:
         return "rsp_manifesto_csv"
     if suffix == ".pdf" and source_type == "manifesto":
         if any(marker in lower for marker in [
-            "????",
-            "???? ????",
+            "बाचा",
+            "बाचा पत्र",
             "bacha patra",
             "bacha_patra",
             "vacha patra",
@@ -534,25 +534,44 @@ def _extract_nepalreforms_agenda_json(document: IngestionDocument | Any) -> list
             description=str(item.get("description") or ""),
         )
         agenda_item_id = stable_id("agenda_item", agenda_version_id, source_item_id, title)
+        raw_description = item.get("description")
+        if raw_description is None:
+            raw_description = item.get("summary")
+        raw_active = item.get("active") if "active" in item else None
+        raw_priority = item.get("priority") if "priority" in item else None
+        raw_timeline = item.get("timeline") if "timeline" in item else None
+        raw_legal_foundation = item.get("legal_foundation")
+        if raw_legal_foundation is None:
+            raw_legal_foundation = item.get("legalFoundation")
+        raw_performance_targets = item.get("performance_targets")
+        if raw_performance_targets is None:
+            raw_performance_targets = item.get("performanceTargets")
+        raw_problem = item.get("problem") if "problem" in item else None
+        raw_solution = item.get("solution") if "solution" in item else None
+        raw_implementation = item.get("implementation") if "implementation" in item else None
+        raw_real_world_evidence = item.get("real_world_evidence")
+        if raw_real_world_evidence is None:
+            raw_real_world_evidence = item.get("realWorldEvidence")
+        category_display_name = category_classification.display_name if (item.get("category") or "").strip() else None
         validated = AgendaItemRecord(
             agenda_item_id=agenda_item_id,
             source_item_id=source_item_id,
             title=title,
-            description=item.get("description") or item.get("summary") or "",
+            description=raw_description,
             language=item.get("language") or language,
-            active=bool(item.get("active", True)),
+            active=raw_active,
             source_reference=source_reference,
-            category=category_classification.display_name,
-            priority=item.get("priority") or "",
-            timeline=item.get("timeline") or "",
-            legal_foundation=item.get("legal_foundation") or item.get("legalFoundation") or "",
-            performance_targets=list(item.get("performance_targets") or item.get("performanceTargets") or []),
-            problem=dict(item.get("problem") or {}),
-            solution=dict(item.get("solution") or {}),
-            implementation=dict(item.get("implementation") or {}),
-            real_world_evidence=dict(item.get("real_world_evidence") or item.get("realWorldEvidence") or {}),
+            category=category_display_name,
+            priority=raw_priority,
+            timeline=raw_timeline,
+            legal_foundation=raw_legal_foundation,
+            performance_targets=list(raw_performance_targets) if raw_performance_targets is not None else None,
+            problem=dict(raw_problem) if raw_problem is not None else None,
+            solution=dict(raw_solution) if raw_solution is not None else None,
+            implementation=dict(raw_implementation) if raw_implementation is not None else None,
+            real_world_evidence=dict(raw_real_world_evidence) if raw_real_world_evidence is not None else None,
         )
-        props = validated.model_dump()
+        props = validated.model_dump(exclude_none=True)
         relations = [
             _make_related_node(
                 relation_type="PART_OF_VERSION",
@@ -595,7 +614,7 @@ def _extract_nepalreforms_agenda_json(document: IngestionDocument | Any) -> list
                     "sourceReference": validated.source_reference,
                 },
             ))
-        for performance_target in validated.performance_targets:
+        for performance_target in (validated.performance_targets or []):
             if not str(performance_target).strip():
                 continue
             performance_target_id = stable_id("performance_target", agenda_version_id, source_item_id, performance_target)
@@ -1208,7 +1227,7 @@ def extract_records(document: IngestionDocument, plan: dict[str, Any]) -> list[d
 
 
 def _hold_for_review(*, job: IngestionJob, document: IngestionDocument, record: dict[str, Any], reason: str) -> None:
-    ReviewQueueItem.objects.create(**_review_item_kwargs(job=job, document=document, record=record, reason=reason))
+    _hold_many_for_review(job=job, document=document, review_records=[(record, reason)])
 
 
 def _review_item_kwargs(*, job: IngestionJob, document: IngestionDocument, record: dict[str, Any], reason: str) -> dict[str, Any]:
@@ -1235,12 +1254,32 @@ def _review_item_kwargs(*, job: IngestionJob, document: IngestionDocument, recor
     }
 
 
+def _find_existing_review_item(review_kwargs: dict[str, Any]) -> ReviewQueueItem | None:
+    lookup = ReviewQueueItem.objects.filter(entity_type=review_kwargs["entity_type"])
+    if review_kwargs.get("fingerprint"):
+        lookup = lookup.filter(fingerprint=review_kwargs["fingerprint"])
+    else:
+        lookup = lookup.filter(record_key=review_kwargs["record_key"])
+    return lookup.order_by("-updated_at", "-created_at").first()
+
+
 def _hold_many_for_review(*, job: IngestionJob, document: IngestionDocument, review_records: list[tuple[dict[str, Any], str]]) -> int:
     if not review_records:
         return 0
-    rows = [ReviewQueueItem(**_review_item_kwargs(job=job, document=document, record=record, reason=reason)) for record, reason in review_records]
-    ReviewQueueItem.objects.bulk_create(rows, batch_size=500)
-    return len(rows)
+    rows: list[ReviewQueueItem] = []
+    held_count = 0
+    for record, reason in review_records:
+        review_kwargs = _review_item_kwargs(job=job, document=document, record=record, reason=reason)
+        existing = _find_existing_review_item(review_kwargs)
+        if existing is not None:
+            if existing.status in {"pending_review", "approved"}:
+                held_count += 1
+            continue
+        rows.append(ReviewQueueItem(**review_kwargs))
+        held_count += 1
+    if rows:
+        ReviewQueueItem.objects.bulk_create(rows, batch_size=500)
+    return held_count
 
 
 def _record_failure(document: IngestionDocument, reason: str, detail: str, stage: str = "smart_ingestion") -> None:
@@ -1475,3 +1514,4 @@ def run_job(job: IngestionJob, *, max_workers: int = 4, adaptive: bool = True, p
                 results.append({"published": 0, "held": 0, "failed": True})
     job = refresh_job_rollup(job)
     return {"job_id": str(job.id), "status": job.status, "workers_used": workers, "processed": len(results), "published_count": job.published_count, "held_count": job.held_count, "failed_count": job.failed_count}
+

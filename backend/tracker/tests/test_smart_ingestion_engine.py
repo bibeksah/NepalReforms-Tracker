@@ -1,4 +1,4 @@
-import os
+﻿import os
 from pathlib import Path
 from types import SimpleNamespace
 import tempfile
@@ -17,7 +17,7 @@ def test_detect_source_type():
     assert engine.detect_source_type("C:/x/LalKitab/Federal/Redbook_2081_82.pdf") == "lal_kitab"
     assert engine.detect_source_type("C:/x/RSP_manifesto_2027.pdf") == "manifesto"
     assert engine.detect_source_type("C:/x/RSPdocs/rsp_commitments.csv") == "manifesto"
-    assert engine.detect_source_type("C:/x/RSPdocs/वाचा पत्र .pdf") == "manifesto"
+    assert engine.detect_source_type("C:/x/RSPdocs/bacha_patra.pdf") == "manifesto"
     assert engine.detect_source_type("C:/x/citizen_report.json") == "citizen"
     assert engine.detect_source_type("C:/x/random.txt") == "other"
 
@@ -25,7 +25,7 @@ def test_detect_source_type():
 def test_source_subtype_detection():
     assert engine._source_subtype(SimpleNamespace(source_path="C:/x/nepalreforms_agenda.json", source_document="nepalreforms_agenda.json", source_type="manifesto")) == "nepalreforms_agenda_json"
     assert engine._source_subtype(SimpleNamespace(source_path="C:/x/RSPdocs/rsp_commitments.csv", source_document="rsp_commitments.csv", source_type="manifesto")) == "rsp_manifesto_csv"
-    assert engine._source_subtype(SimpleNamespace(source_path="C:/x/RSPdocs/???? ???? .pdf", source_document="???? ???? .pdf", source_type="manifesto")) == "rsp_bacha_patra_pdf"
+    assert engine._source_subtype(SimpleNamespace(source_path="C:/x/RSPdocs/बाचा बाचा .pdf", source_document="बाचा बाचा .pdf", source_type="manifesto")) == "rsp_bacha_patra_pdf"
     assert engine._source_subtype(SimpleNamespace(source_path="C:/x/RSP_manifesto_2027.pdf", source_document="RSP_manifesto_2027.pdf", source_type="manifesto")) == "manifesto_pdf"
 
 
@@ -174,7 +174,7 @@ def test_extract_reviewed_rsp_bacha_patra_structured_promises_builds_safe_politi
                         "responsible_entity": "Local Governments",
                         "language": "ne",
                         "source_page": 3,
-                        "source_excerpt": "??????? ???? ????? ???? ????????? ????????? ?????",
+                        "source_excerpt": "बाचा??? बाचा बाचा? बाचा बाचाबाचा? बाचाबाचा? बाचा?",
                         "extraction_confidence": 0.91,
                         "reviewer_status": "approved",
                         "placeholder": False,
@@ -418,7 +418,7 @@ def test_run_job_publishes_reviewed_rsp_bacha_patra_structured_promises(monkeypa
                             "responsible_entity": "Local Governments",
                             "language": "ne",
                             "source_page": 3,
-                            "source_excerpt": "??????? ???? ????? ???? ????????? ????????? ?????",
+                            "source_excerpt": "बाचा??? बाचा बाचा? बाचा बाचाबाचा? बाचाबाचा? बाचा?",
                             "extraction_confidence": 0.91,
                             "reviewer_status": "approved",
                             "placeholder": False,
@@ -568,3 +568,145 @@ def test_run_job_publishes_reviewed_alignment_assessments(monkeypatch):
         assert document.extra_metadata["alignment_workflow"]["reviewed_alignment_status"] == "reviewed_approved"
         assert document.extra_metadata["alignment_workflow"]["alignment_records_extracted"] == 1
         assert ReviewQueueItem.objects.count() == 0
+
+def test_extract_nepalreforms_agenda_json_does_not_emit_destructive_defaults_for_missing_optional_fields():
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        agenda_path = Path(tmp_dir) / "nepalreforms_agenda.json"
+        agenda_path.write_text('{"organization":"NepalReforms","version":"2026 Baseline","effective_from":"2026-01-01","items":[{"id":"A-2","title":"Keep manually curated agenda state safe"}]}', encoding="utf-8")
+        doc = SimpleNamespace(source_path=str(agenda_path), source_document=agenda_path.name, source_hash="hash-agenda-partial", source_type="manifesto")
+
+        records = engine._extract_nepalreforms_agenda_json(doc)
+        agenda_item = records[2]
+        props = agenda_item["graph_payload"]["properties"]
+
+        assert props["title"] == "Keep manually curated agenda state safe"
+        assert "description" not in props
+        assert "active" not in props
+        assert "priority" not in props
+        assert "timeline" not in props
+        assert "category" not in props
+        assert "performance_targets" not in props
+        assert "problem" not in props
+        assert "solution" not in props
+        assert "implementation" not in props
+        assert "real_world_evidence" not in props
+
+@pytest.mark.django_db(transaction=True)
+def test_hold_many_for_review_does_not_reopen_resolved_or_rejected_items():
+    from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
+
+    job = IngestionJob.objects.create(name="review-dedupe-job", status="queued")
+    document = IngestionDocument.objects.create(
+        job=job,
+        source_path="C:/x/sample.json",
+        source_document="sample.json",
+        source_hash="hash-review-dedupe",
+        source_type="manifesto",
+        status="queued",
+    )
+    record = {
+        "entity_type": "AlignmentAssessment",
+        "record_identity": "alignment:dedupe:1",
+        "confidence": 0.63,
+        "risk_flags": ["human_review_required"],
+    }
+
+    rejected = ReviewQueueItem.objects.create(
+        job=job,
+        document=document,
+        status="rejected",
+        reason="alignment_candidate_generated",
+        risk_level="medium",
+        confidence=0.63,
+        entity_type="AlignmentAssessment",
+        record_key="alignment:dedupe:1",
+        fingerprint="alignment:dedupe:1",
+        proposed_payload={"old": True},
+        provenance={"source_path": document.source_path},
+    )
+    held = engine._hold_many_for_review(job=job, document=document, review_records=[(record, "alignment_candidate_generated")])
+    assert held == 0
+    assert ReviewQueueItem.objects.filter(fingerprint="alignment:dedupe:1").count() == 1
+    rejected.refresh_from_db()
+    assert rejected.status == "rejected"
+
+    rejected.delete()
+    resolved = ReviewQueueItem.objects.create(
+        job=job,
+        document=document,
+        status="resolved",
+        reason="alignment_candidate_generated",
+        risk_level="medium",
+        confidence=0.63,
+        entity_type="AlignmentAssessment",
+        record_key="alignment:dedupe:1",
+        fingerprint="alignment:dedupe:1",
+        proposed_payload={"old": True},
+        provenance={"source_path": document.source_path},
+    )
+    held = engine._hold_many_for_review(job=job, document=document, review_records=[(record, "alignment_candidate_generated")])
+    assert held == 0
+    assert ReviewQueueItem.objects.filter(fingerprint="alignment:dedupe:1").count() == 1
+    resolved.refresh_from_db()
+    assert resolved.status == "resolved"
+
+
+@pytest.mark.django_db(transaction=True)
+def test_hold_many_for_review_reuses_existing_pending_or_approved_item_without_duplicate():
+    from tracker.models import IngestionDocument, IngestionJob, ReviewQueueItem
+
+    job = IngestionJob.objects.create(name="review-active-dedupe-job", status="queued")
+    document = IngestionDocument.objects.create(
+        job=job,
+        source_path="C:/x/sample.json",
+        source_document="sample.json",
+        source_hash="hash-review-active-dedupe",
+        source_type="manifesto",
+        status="queued",
+    )
+    record = {
+        "entity_type": "AlignmentAssessment",
+        "record_identity": "alignment:dedupe:2",
+        "confidence": 0.63,
+        "risk_flags": ["human_review_required"],
+    }
+
+    pending = ReviewQueueItem.objects.create(
+        job=job,
+        document=document,
+        status="pending_review",
+        reason="alignment_candidate_generated",
+        risk_level="medium",
+        confidence=0.63,
+        entity_type="AlignmentAssessment",
+        record_key="alignment:dedupe:2",
+        fingerprint="alignment:dedupe:2",
+        proposed_payload={"old": True},
+        provenance={"source_path": document.source_path},
+    )
+    held = engine._hold_many_for_review(job=job, document=document, review_records=[(record, "alignment_candidate_generated")])
+    assert held == 1
+    assert ReviewQueueItem.objects.filter(fingerprint="alignment:dedupe:2").count() == 1
+    pending.refresh_from_db()
+    assert pending.status == "pending_review"
+
+    pending.delete()
+    approved = ReviewQueueItem.objects.create(
+        job=job,
+        document=document,
+        status="approved",
+        reason="alignment_candidate_generated",
+        risk_level="medium",
+        confidence=0.63,
+        entity_type="AlignmentAssessment",
+        record_key="alignment:dedupe:2",
+        fingerprint="alignment:dedupe:2",
+        proposed_payload={"old": True},
+        provenance={"source_path": document.source_path},
+    )
+    held = engine._hold_many_for_review(job=job, document=document, review_records=[(record, "alignment_candidate_generated")])
+    assert held == 1
+    assert ReviewQueueItem.objects.filter(fingerprint="alignment:dedupe:2").count() == 1
+    approved.refresh_from_db()
+    assert approved.status == "approved"
+
