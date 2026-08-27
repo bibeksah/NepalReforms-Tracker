@@ -1,23 +1,59 @@
-# Next.js & Bun
+# Next.js & Node / Bun
 .next/
 node_modules/
 bun.lockb
 tsconfig.tsbuildinfo
 *.log
 
-# Env
+# Python / Django
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.sqlite3
+db.sqlite3
+
+# Scratch status, test runs & credentials
+backend/*.txt
+backend/*.json
+!backend/package.json
+backend/supabase/
+backend/sb_start.txt
+backend/supabase_status.txt
+
+# Temp files & test outputs
+tmp/
+tmp*
+__tmp*
+redbook-command-tests-*/
+*.txt.bak
+*.orig
+*.zip
+
+# Large data PDFs & raw archives
+sources/**/*.pdf
+sources/**/*.zip
+sources/LalKitab/
+sources/RSPdocs/*.pdf
+sources/NepalReforms_menafesto/*.pdf
+
+# Environment & local settings
 .env
-.env.local
+.env*
+!.env.example
+.env*.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Build
+# Build output
 out/
 dist/
 build/
-
-# Temp
-tmp/
-__pycache__/
-*.pyc
+.vercel
