@@ -1,0 +1,152 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tracker NepalReforms — UI/UX Prototype</title>
+  <style>
+    :root{
+      --bg:#f6faf8; --fg:#334155; --card:#fff; --muted:#eef5f2; --border:#dbe5e1;
+      --primary:#10b981; --primary-2:#22c55e; --secondary:#374151; --danger:#ef4444; --warn:#f59e0b;
+      --ok:#16a34a; --radius:14px;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--fg)}
+    .top{position:sticky;top:0;z-index:20;background:#ffffffd9;backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .wrap{max-width:1280px;margin:0 auto;padding:12px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .brand{font-weight:800;color:#065f46}
+    .pill{border:1px solid var(--border);background:var(--card);padding:8px 10px;border-radius:999px;font-size:12px}
+    .btn{border:1px solid var(--border);background:var(--card);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .grid{display:grid;gap:12px}
+    .kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;transition:.25s transform,.25s box-shadow}
+    .kpi:hover{transform:translateY(-2px);box-shadow:0 10px 25px #00000012}
+    .kpi h4{margin:0 0 8px;font-size:13px;color:#64748b;font-weight:600}
+    .kpi .v{font-size:26px;font-weight:800;color:#0f172a}
+    .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-top:12px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+    .title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .title h3{margin:0;font-size:16px}
+    .map{height:280px;border-radius:12px;background:linear-gradient(135deg,#ecfeff,#ecfdf5);border:1px dashed #94a3b8;display:grid;place-items:center;color:#0f766e;font-weight:700}
+    .list{display:grid;gap:8px;max-height:360px;overflow:auto;padding-right:4px}
+    .item{border:1px solid var(--border);border-radius:10px;padding:10px;background:#fff}
+    .meta{font-size:12px;color:#64748b}
+    .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
+    .tA{background:#dcfce7;color:#166534}.tB{background:#dbeafe;color:#1d4ed8}.tC{background:#f3e8ff;color:#6b21a8}
+    .status{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700}
+    .s0{background:#e5e7eb;color:#374151}.s1{background:#dbeafe;color:#1e3a8a}.s2{background:#fef3c7;color:#92400e}.s3{background:#dcfce7;color:#166534}.s4{background:#fee2e2;color:#991b1b}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden}.progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-2))}
+    .lang{margin-left:auto}
+    .hidden{display:none}
+    .bottomnav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--border);display:none;padding:8px}
+    .bottomnav .btn{flex:1}
+    @media (max-width: 920px){
+      .layout{grid-template-columns:1fr}
+      .split{grid-template-columns:1fr}
+      .map{height:220px}
+      .bottomnav{display:flex;gap:8px}
+      body{padding-bottom:64px}
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="wrap row">
+      <div class="brand">NepalReforms • Tracker</div>
+      <div class="pill" data-i18n="live">LIVE • 4PM Daily Processing</div>
+      <button class="btn">FY 2081/82</button>
+      <button class="btn">All Provinces</button>
+      <button class="btn">All Categories</button>
+      <button class="btn">Search</button>
+      <div class="lang row">
+        <button class="btn primary" id="enBtn">EN</button>
+        <button class="btn" id="neBtn">ने</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <section class="grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-top:12px">
+      <div class="kpi"><h4 data-i18n="k1">Tracked Promises</h4><div class="v">1,248</div><div class="meta">+34 this week</div></div>
+      <div class="kpi"><h4 data-i18n="k2">Completed</h4><div class="v" style="color:var(--ok)">278</div><div class="meta">22.3%</div></div>
+      <div class="kpi"><h4 data-i18n="k3">Budgeted</h4><div class="v" style="color:#2563eb">391</div><div class="meta">31.3%</div></div>
+      <div class="kpi"><h4 data-i18n="k4">Delayed/Failed</h4><div class="v" style="color:var(--danger)">214</div><div class="meta">Needs scrutiny</div></div>
+      <div class="kpi"><h4 data-i18n="k5">Public Demands</h4><div class="v">86</div><div class="meta">50 local / 200 national rule</div></div>
+    </section>
+
+    <section class="layout">
+      <div class="card">
+        <div class="title"><h3 data-i18n="mapTitle">Nepal Democratic Execution Map</h3><span class="meta">Updated 11:16</span></div>
+        <div class="map" data-i18n="mapMock">Province + District + Constituency Heatmap (Prototype)</div>
+        <div class="split" style="margin-top:10px">
+          <div class="item">
+            <div class="meta" data-i18n="budget">Budget Allocation vs Utilization</div>
+            <div style="font-weight:700;margin:6px 0">Education Infra</div>
+            <div class="progress"><span style="width:64%"></span></div>
+            <div class="meta" style="margin-top:6px">Allocated NPR 10.2B • Utilized 6.5B</div>
+          </div>
+          <div class="item">
+            <div class="meta" data-i18n="mp">MP Promise Execution</div>
+            <div style="font-weight:700;margin:6px 0">Dhanusha-3 Commitments</div>
+            <div class="progress"><span style="width:44%"></span></div>
+            <div class="meta" style="margin-top:6px">5 tracked • 1 done • 2 active • 2 pending</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="title"><h3 data-i18n="feedTitle">Evidence & Status Feed</h3><button class="btn" data-i18n="filters">Filters</button></div>
+        <div class="list">
+          <div class="item"><div><span class="tag tA">Tier A</span> <span class="status s1">In Budget Phase</span></div><div style="margin-top:6px;font-weight:600">Fast Track Court budget line published in Lal Kitab</div><div class="meta">Ministry document • Linked Promise: Governance-08</div></div>
+          <div class="item"><div><span class="tag tB">Tier B</span> <span class="status s2">Under Construction</span></div><div style="margin-top:6px;font-weight:600">Road package mobilization update from verified media</div><div class="meta">2 independent outlets • Confidence 0.82</div></div>
+          <div class="item"><div><span class="tag tC">Tier C</span> <span class="status s0">Unverified</span></div><div style="margin-top:6px;font-weight:600">Citizen report: water project halted in ward 7</div><div class="meta">Queued for editor review (defamation safety)</div></div>
+          <div class="item"><div><span class="tag tB">Tier B</span> <span class="status s4">Failed</span></div><div style="margin-top:6px;font-weight:600">MP commitment deadline passed without execution proof</div><div class="meta">Auto-routed to NepalReforms Public Demand board</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:12px">
+      <div class="title"><h3 data-i18n="demandTitle">Demand Router (Tracker → NepalReforms)</h3><span class="meta">Rule: Local ≥ 50 or National ≥ 200</span></div>
+      <div class="split">
+        <div class="item">
+          <div style="font-weight:700">Drinking Water — Janakpurdham Ward Cluster</div>
+          <div class="meta">Local unique demand count: 43 / 50</div>
+          <div class="progress" style="margin-top:6px"><span style="width:86%"></span></div>
+        </div>
+        <div class="item">
+          <div style="font-weight:700">School Toilet Maintenance (National)</div>
+          <div class="meta">National unique demand count: 212 / 200</div>
+          <div class="progress" style="margin-top:6px"><span style="width:100%"></span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="bottomnav">
+    <button class="btn">Dashboard</button><button class="btn">Map</button><button class="btn">Promises</button><button class="btn">Budget</button><button class="btn">Alerts</button>
+  </div>
+
+  <script>
+    const dict = {
+      en: {
+        live:'LIVE • 4PM Daily Processing', k1:'Tracked Promises', k2:'Completed', k3:'Budgeted', k4:'Delayed/Failed', k5:'Public Demands',
+        mapTitle:'Nepal Democratic Execution Map', mapMock:'Province + District + Constituency Heatmap (Prototype)',
+        budget:'Budget Allocation vs Utilization', mp:'MP Promise Execution', feedTitle:'Evidence & Status Feed', filters:'Filters',
+        demandTitle:'Demand Router (Tracker → NepalReforms)'
+      },
+      ne: {
+        live:'LIVE • दैनिक प्रशोधन ४ बजे', k1:'ट्र्याक गरिएका प्रतिबद्धता', k2:'सम्पन्न', k3:'बजेटमा समावेश', k4:'ढिलाइ/असफल', k5:'सार्वजनिक माग',
+        mapTitle:'नेपाल लोकतान्त्रिक कार्यान्वयन नक्सा', mapMock:'प्रदेश + जिल्ला + निर्वाचन क्षेत्र हिटम्याप (प्रोटोटाइप)',
+        budget:'बजेट विनियोजन बनाम उपयोग', mp:'सांसद प्रतिबद्धता कार्यान्वयन', feedTitle:'प्रमाण तथा स्थिति फिड', filters:'फिल्टर',
+        demandTitle:'माग राउटर (ट्र्याकर → नेपालरिफर्म्स)'
+      }
+    };
+    function setLang(lang){
+      document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n; el.textContent=dict[lang][k]||el.textContent});
+      enBtn.classList.toggle('primary',lang==='en'); neBtn.classList.toggle('primary',lang==='ne');
+    }
+    enBtn.onclick=()=>setLang('en'); neBtn.onclick=()=>setLang('ne'); setLang('en');
+  </script>
+</body>
+</html>

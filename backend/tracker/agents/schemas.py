@@ -164,6 +164,110 @@ class AlignmentAssessmentRecord(BaseModel):
     political_promise_id: str = ""
 
 
+class ReviewedBudgetFlowEventInput(BaseModel):
+    event_type: str
+    title: str = ""
+    amount: float = Field(ge=0.0)
+    currency: str = "NPR"
+    event_date: str = ""
+    body_id: str = ""
+    body_name: str = ""
+    body_level: str = ""
+    reference_code: str = ""
+    notes: str = ""
+    reviewer_status: str = "approved"
+    placeholder: bool = False
+
+    @field_validator("event_type")
+    @classmethod
+    def normalize_event_type(cls, value: str) -> str:
+        normalized = (value or "").strip().lower()
+        if normalized not in {"release", "transfer", "receipt"}:
+            raise ValueError("event_type must be one of: release, transfer, receipt")
+        return normalized
+
+
+class ReviewedBudgetFlowInput(BaseModel):
+    allocation_title: str = Field(min_length=3)
+    amount: float = Field(ge=0.0)
+    currency: str = "NPR"
+    budget_class: str = ""
+    sector: str = ""
+    subsector: str = ""
+    fiscal_year: str = Field(min_length=3)
+    source_page: int = Field(ge=1)
+    source_excerpt: str = Field(min_length=5)
+    extraction_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    reviewer_status: str = "approved"
+    placeholder: bool = False
+    project_id: str = ""
+    allocation_code: str = ""
+    allocation_type: str = ""
+    implementing_body_id: str = ""
+    implementing_body_name: str = ""
+    implementing_body_level: str = ""
+    source_reference_override: str = ""
+    release_events: list[ReviewedBudgetFlowEventInput] = Field(default_factory=list)
+    transfer_events: list[ReviewedBudgetFlowEventInput] = Field(default_factory=list)
+    receipt_events: list[ReviewedBudgetFlowEventInput] = Field(default_factory=list)
+
+
+class ReviewedBudgetFlowBundle(BaseModel):
+    source_reference: str = Field(min_length=3)
+    source_subtype: str = "budget_flow_review"
+    extraction_mode: str = "reviewed_budget_flow"
+    reviewed_budget_flow_status: str = "reviewed_approved"
+    review_required_for_budget_flow: bool = True
+    reviewed_budget_flows: list[ReviewedBudgetFlowInput] = Field(default_factory=list)
+
+
+class BudgetAllocationRecord(BaseModel):
+    budget_allocation_id: str
+    title: str = Field(min_length=3)
+    amount: float = Field(ge=0.0)
+    currency: str = "NPR"
+    budget_class: str = ""
+    sector: str = ""
+    subsector: str = ""
+    fiscal_year: str = Field(min_length=3)
+    source_reference: str
+    source_page: int | None = None
+    source_excerpt: str = ""
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    allocation_code: str = ""
+    allocation_type: str = ""
+    project_id: str = ""
+    project_linkage_state: str = "unresolved_candidate"
+    project_linkage_reason: str = ""
+    observed_project_id: str = ""
+    observed_project_name: str = ""
+    resolved_project_id: str = ""
+    project_candidate_count: int = Field(default=0, ge=0)
+    project_requires_review: bool = False
+    implementing_body_id: str = ""
+    implementing_body_name: str = ""
+    implementing_body_level: str = ""
+
+
+class BudgetFlowEventRecord(BaseModel):
+    event_id: str
+    event_type: str
+    budget_allocation_id: str
+    title: str = ""
+    amount: float = Field(ge=0.0)
+    currency: str = "NPR"
+    event_date: str = ""
+    source_reference: str
+    source_page: int | None = None
+    source_excerpt: str = ""
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    body_id: str = ""
+    body_name: str = ""
+    body_level: str = ""
+    reference_code: str = ""
+    notes: str = ""
+
+
 class ManifestoCommitment(BaseModel):
     promise_text: str = Field(min_length=10)
     category: str = Field(default="")

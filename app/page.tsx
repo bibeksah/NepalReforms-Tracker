@@ -124,7 +124,7 @@ export default function TrackerHomePage() {
                 href="https://nepalreforms.com/#agendas-section"
                 className="text-slate-400 hover:text-white transition-colors hidden sm:inline"
               >
-                27 Agendas
+                31 Agendas
               </Link>
               <Link
                 href="https://nepalreforms.com/testimonials"
@@ -220,7 +220,7 @@ export default function TrackerHomePage() {
                   href="https://nepalreforms.com/#agendas-section"
                   className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900/80 px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800 transition-colors"
                 >
-                  Explore 27 Reform Agendas
+                  Explore 31 Reform Agendas
                   <ArrowRight className="h-4 w-4 text-emerald-400" />
                 </Link>
                 <Link
@@ -258,7 +258,7 @@ export default function TrackerHomePage() {
                   <span className="text-xs font-mono">CORE_AGENDAS</span>
                   <Layers className="h-4 w-4 text-emerald-400" />
                 </div>
-                <div className="mt-3 text-3xl font-extrabold font-mono text-white">27</div>
+                <div className="mt-3 text-3xl font-extrabold font-mono text-white">31</div>
                 <p className="mt-1 text-xs text-slate-400">Evidence-based reform proposals with baseline outcomes</p>
               </div>
 

@@ -710,3 +710,332 @@ def test_hold_many_for_review_reuses_existing_pending_or_approved_item_without_d
     approved.refresh_from_db()
     assert approved.status == "approved"
 
+
+
+def test_extract_reviewed_budget_flows_builds_allocation_and_event_records(monkeypatch):
+    monkeypatch.setattr(engine, '_project_exists', lambda project_id: project_id == 'project:road1')
+    doc = SimpleNamespace(
+        source_path="C:/x/budget-review.json",
+        source_document="budget-review.json",
+        source_hash="hash-budget",
+        source_type="other",
+        extra_metadata={
+            "reviewed_budget_flow_bundle": {
+                "source_reference": "C:/x/red-book.pdf",
+                "source_subtype": "budget_flow_review",
+                "extraction_mode": "reviewed_budget_flow",
+                "reviewed_budget_flow_status": "reviewed_approved",
+                "reviewed_budget_flows": [
+                    {
+                        "allocation_title": "Road maintenance grant",
+                        "amount": 1500000,
+                        "currency": "NPR",
+                        "budget_class": "capital",
+                        "sector": "transport",
+                        "subsector": "roads",
+                        "fiscal_year": "2083/84",
+                        "source_page": 12,
+                        "source_excerpt": "Allocation for road maintenance.",
+                        "extraction_confidence": 0.88,
+                        "reviewer_status": "approved",
+                        "placeholder": False,
+                        "project_id": "project:road1",
+                        "implementing_body_id": "body:moit",
+                        "implementing_body_name": "Ministry of Infrastructure",
+                        "implementing_body_level": "federal",
+                        "allocation_code": "AL-1",
+                        "allocation_type": "grant",
+                        "release_events": [
+                            {"event_type": "release", "title": "First release", "amount": 500000, "currency": "NPR", "event_date": "2026-01-01", "body_id": "body:moit", "body_name": "Ministry of Infrastructure", "body_level": "federal", "reference_code": "REL-1", "notes": "phase 1", "reviewer_status": "approved", "placeholder": False}
+                        ],
+                        "transfer_events": [
+                            {"event_type": "transfer", "title": "Province transfer", "amount": 300000, "currency": "NPR", "event_date": "2026-01-15", "body_id": "body:bagmati", "body_name": "Bagmati Office", "body_level": "provincial", "reference_code": "TR-1", "notes": "phase 2", "reviewer_status": "approved", "placeholder": False}
+                        ],
+                        "receipt_events": [
+                            {"event_type": "receipt", "title": "Municipal receipt", "amount": 200000, "currency": "NPR", "event_date": "2026-01-20", "body_id": "body:metro", "body_name": "Metro Office", "body_level": "local", "reference_code": "RC-1", "notes": "phase 3", "reviewer_status": "approved", "placeholder": False}
+                        ],
+                    },
+                    {
+                        "allocation_title": "Skip low confidence",
+                        "amount": 100,
+                        "currency": "NPR",
+                        "budget_class": "capital",
+                        "sector": "transport",
+                        "subsector": "roads",
+                        "fiscal_year": "2083/84",
+                        "source_page": 13,
+                        "source_excerpt": "skip item",
+                        "extraction_confidence": 0.50,
+                        "reviewer_status": "approved",
+                        "placeholder": False,
+                    }
+                ],
+            }
+        },
+    )
+
+    records = engine._extract_reviewed_budget_flows(doc)
+
+    assert [r["entity_type"] for r in records] == ["BudgetAllocation", "ReleaseEvent", "TransferEvent", "ReceiptEvent"]
+    allocation = records[0]
+    assert allocation["graph_payload"]["key"] == "budgetAllocationId"
+    assert any(rel["relation_type"] == "IN_FISCAL_YEAR" for rel in allocation["graph_relations"])
+    assert any(rel["relation_type"] == "MANAGED_BY" for rel in allocation["graph_relations"])
+    assert any(rel["relation_type"] == "FUNDS" and rel["require_existing_target"] is True for rel in allocation["graph_relations"])
+    receipt = records[-1]
+    assert any(rel["relation_type"] == "RECEIVED_BY" for rel in receipt["graph_relations"])
+    assert any(rel["relation_type"] == "RELATES_TO" and rel["require_existing_target"] is True for rel in receipt["graph_relations"])
+    assert receipt["review_context"]["workflow"]["workflow_kind"] == "budget_flow_review"
+
+
+@pytest.mark.django_db(transaction=True)
+def test_run_job_sets_budget_flow_workflow_summary(monkeypatch):
+    from tracker.models import IngestionDocument, IngestionJob
+
+    with tempfile.TemporaryDirectory(dir=Path.cwd()) as tmp_dir:
+        source_path = Path(tmp_dir) / "budget-review.json"
+        source_path.write_text("{}", encoding="utf-8")
+        job = IngestionJob.objects.create(name="budget-flow-job", status="queued")
+        document = IngestionDocument.objects.create(
+            job=job,
+            source_path=str(source_path),
+            source_document=source_path.name,
+            source_hash="hash-budget-run",
+            source_type="budget_flow",
+            status="queued",
+            extra_metadata={
+                "reviewed_budget_flow_bundle": {
+                    "source_reference": "C:/x/red-book.pdf",
+                    "source_subtype": "budget_flow_review",
+                    "extraction_mode": "reviewed_budget_flow",
+                    "reviewed_budget_flow_status": "reviewed_approved",
+                    "reviewed_budget_flows": [
+                        {
+                            "allocation_title": "Road maintenance grant",
+                            "amount": 1500000,
+                            "currency": "NPR",
+                            "budget_class": "capital",
+                            "sector": "transport",
+                            "subsector": "roads",
+                            "fiscal_year": "2083/84",
+                            "source_page": 12,
+                            "source_excerpt": "Allocation for road maintenance.",
+                            "extraction_confidence": 0.88,
+                            "reviewer_status": "approved",
+                            "placeholder": False,
+                            "project_id": "project:road1",
+                            "implementing_body_id": "body:moit",
+                            "implementing_body_name": "Ministry of Infrastructure",
+                            "implementing_body_level": "federal",
+                            "allocation_code": "AL-1",
+                            "allocation_type": "grant",
+                            "receipt_events": [
+                                {"event_type": "receipt", "title": "Municipal receipt", "amount": 200000, "currency": "NPR", "event_date": "2026-01-20", "body_id": "body:metro", "body_name": "Metro Office", "body_level": "local", "reference_code": "RC-1", "notes": "phase 3", "reviewer_status": "approved", "placeholder": False}
+                            ],
+                        }
+                    ],
+                }
+            },
+        )
+
+        published = []
+        monkeypatch.setattr(engine, "ensure_smart_constraints", lambda: None)
+        monkeypatch.setattr(engine, "publish_record", lambda record: published.append(record["entity_type"]) or {"ok": True, "node_id": record["record_identity"]})
+        monkeypatch.setattr(engine, "publish_records_batch", lambda records, batch_size=200: {"ok_count": 0, "published_ids": [], "failed_ids": [], "errors": []})
+
+        result = engine.run_job(job, max_workers=1, adaptive=False, publish_threshold=0.75)
+
+        document.refresh_from_db()
+        assert result["status"] == "completed"
+        assert result["published_count"] == 2
+        assert published == ["BudgetAllocation", "ReceiptEvent"]
+        assert document.extra_metadata["budget_flow_workflow"]["workflow_kind"] == "budget_flow_review"
+        assert document.extra_metadata["budget_flow_workflow"]["reviewed_budget_flow_status"] == "reviewed_approved"
+        assert document.extra_metadata["budget_flow_workflow"]["budget_flow_records_extracted"] == 2
+
+
+
+def test_extract_reviewed_budget_flows_exact_known_project_link_marks_linked_and_emits_funds(monkeypatch):
+    monkeypatch.setattr(engine, '_project_exists', lambda project_id: project_id == 'project:road1')
+    doc = SimpleNamespace(
+        source_path='C:/x/budget-review.json',
+        source_document='budget-review.json',
+        source_hash='hash-budget-known',
+        source_type='other',
+        extra_metadata={
+            'reviewed_budget_flow_bundle': {
+                'source_reference': 'C:/x/red-book.pdf',
+                'source_subtype': 'budget_flow_review',
+                'extraction_mode': 'reviewed_budget_flow',
+                'reviewed_budget_flow_status': 'reviewed_approved',
+                'reviewed_budget_flows': [{
+                    'allocation_title': 'Road maintenance grant',
+                    'amount': 1500000,
+                    'currency': 'NPR',
+                    'budget_class': 'capital',
+                    'sector': 'transport',
+                    'subsector': 'roads',
+                    'fiscal_year': '2083/84',
+                    'source_page': 12,
+                    'source_excerpt': 'Allocation for road maintenance.',
+                    'extraction_confidence': 0.88,
+                    'reviewer_status': 'approved',
+                    'placeholder': False,
+                    'project_id': 'project:road1',
+                    'implementing_body_id': 'body:moit',
+                    'implementing_body_name': 'Ministry of Infrastructure',
+                    'implementing_body_level': 'federal',
+                    'allocation_code': 'AL-1',
+                    'allocation_type': 'grant',
+                }],
+            }
+        },
+    )
+    records = engine._extract_reviewed_budget_flows(doc)
+    allocation = records[0]
+    props = allocation['graph_payload']['properties']
+    assert props['project_linkage_state'] == 'linked'
+    assert props['project_linkage_reason'] == 'exact_existing_project_id'
+    assert props['observed_project_id'] == 'project:road1'
+    assert props['resolved_project_id'] == 'project:road1'
+    assert props['project_candidate_count'] == 1
+    assert props['project_requires_review'] is False
+    assert any(rel['relation_type'] == 'FUNDS' and rel['target_id'] == 'project:road1' and rel['require_existing_target'] is True for rel in allocation['graph_relations'])
+    assert allocation['raw_payload']['project_linkage']['project_linkage_state'] == 'linked'
+
+
+def test_extract_reviewed_budget_flows_nonexistent_project_id_marks_unresolved_and_emits_no_funds(monkeypatch):
+    monkeypatch.setattr(engine, '_project_exists', lambda _project_id: False)
+    doc = SimpleNamespace(
+        source_path='C:/x/budget-review.json',
+        source_document='budget-review.json',
+        source_hash='hash-budget-missing-project',
+        source_type='other',
+        extra_metadata={
+            'reviewed_budget_flow_bundle': {
+                'source_reference': 'C:/x/red-book.pdf',
+                'source_subtype': 'budget_flow_review',
+                'extraction_mode': 'reviewed_budget_flow',
+                'reviewed_budget_flow_status': 'reviewed_approved',
+                'reviewed_budget_flows': [{
+                    'allocation_title': 'Road maintenance grant',
+                    'amount': 1500000,
+                    'currency': 'NPR',
+                    'budget_class': 'capital',
+                    'sector': 'transport',
+                    'subsector': 'roads',
+                    'fiscal_year': '2083/84',
+                    'source_page': 12,
+                    'source_excerpt': 'Allocation for road maintenance.',
+                    'extraction_confidence': 0.88,
+                    'reviewer_status': 'approved',
+                    'placeholder': False,
+                    'project_id': 'project:missing',
+                    'implementing_body_id': 'body:moit',
+                    'implementing_body_name': 'Ministry of Infrastructure',
+                    'implementing_body_level': 'federal',
+                    'allocation_code': 'AL-1',
+                    'allocation_type': 'grant',
+                }],
+            }
+        },
+    )
+    records = engine._extract_reviewed_budget_flows(doc)
+    allocation = records[0]
+    props = allocation['graph_payload']['properties']
+    assert props['project_linkage_state'] == 'unresolved_candidate'
+    assert props['project_linkage_reason'] == 'project_id_not_found'
+    assert props['observed_project_id'] == 'project:missing'
+    assert props['resolved_project_id'] == ''
+    assert props['project_requires_review'] is True
+    assert not any(rel['relation_type'] == 'FUNDS' for rel in allocation['graph_relations'])
+
+
+def test_extract_reviewed_budget_flows_no_project_ref_but_body_marks_unlinked_accountable_body(monkeypatch):
+    monkeypatch.setattr(engine, '_project_exists', lambda _project_id: False)
+    doc = SimpleNamespace(
+        source_path='C:/x/budget-review.json',
+        source_document='budget-review.json',
+        source_hash='hash-budget-body-only',
+        source_type='other',
+        extra_metadata={
+            'reviewed_budget_flow_bundle': {
+                'source_reference': 'C:/x/red-book.pdf',
+                'source_subtype': 'budget_flow_review',
+                'extraction_mode': 'reviewed_budget_flow',
+                'reviewed_budget_flow_status': 'reviewed_approved',
+                'reviewed_budget_flows': [{
+                    'allocation_title': 'Body accountable allocation',
+                    'amount': 900000,
+                    'currency': 'NPR',
+                    'budget_class': 'capital',
+                    'sector': 'transport',
+                    'subsector': 'roads',
+                    'fiscal_year': '2083/84',
+                    'source_page': 15,
+                    'source_excerpt': 'Allocation assigned to ministry body.',
+                    'extraction_confidence': 0.88,
+                    'reviewer_status': 'approved',
+                    'placeholder': False,
+                    'project_id': '',
+                    'implementing_body_id': 'body:moit',
+                    'implementing_body_name': 'Ministry of Infrastructure',
+                    'implementing_body_level': 'federal',
+                    'allocation_code': 'AL-2',
+                    'allocation_type': 'grant',
+                }],
+            }
+        },
+    )
+    records = engine._extract_reviewed_budget_flows(doc)
+    allocation = records[0]
+    props = allocation['graph_payload']['properties']
+    assert props['project_linkage_state'] == 'unlinked_accountable_body'
+    assert props['project_linkage_reason'] == 'no_project_reference_accountable_body_present'
+    assert props['resolved_project_id'] == ''
+    assert props['project_requires_review'] is False
+    assert any(rel['relation_type'] == 'MANAGED_BY' for rel in allocation['graph_relations'])
+    assert not any(rel['relation_type'] == 'FUNDS' for rel in allocation['graph_relations'])
+
+
+def test_extract_reviewed_budget_flows_regression_nonexistent_project_does_not_create_phantom_project_edge(monkeypatch):
+    monkeypatch.setattr(engine, '_project_exists', lambda _project_id: False)
+    doc = SimpleNamespace(
+        source_path='C:/x/budget-review.json',
+        source_document='budget-review.json',
+        source_hash='hash-budget-regression',
+        source_type='other',
+        extra_metadata={
+            'reviewed_budget_flow_bundle': {
+                'source_reference': 'C:/x/red-book.pdf',
+                'source_subtype': 'budget_flow_review',
+                'extraction_mode': 'reviewed_budget_flow',
+                'reviewed_budget_flow_status': 'reviewed_approved',
+                'reviewed_budget_flows': [{
+                    'allocation_title': 'Regression allocation',
+                    'amount': 12345,
+                    'currency': 'NPR',
+                    'budget_class': 'capital',
+                    'sector': 'transport',
+                    'subsector': 'roads',
+                    'fiscal_year': '2083/84',
+                    'source_page': 17,
+                    'source_excerpt': 'Missing project should not create edge.',
+                    'extraction_confidence': 0.88,
+                    'reviewer_status': 'approved',
+                    'placeholder': False,
+                    'project_id': 'project:ghost',
+                    'implementing_body_id': '',
+                    'implementing_body_name': '',
+                    'implementing_body_level': '',
+                    'allocation_code': 'AL-3',
+                    'allocation_type': 'grant',
+                }],
+            }
+        },
+    )
+    records = engine._extract_reviewed_budget_flows(doc)
+    allocation = records[0]
+    assert allocation['graph_payload']['properties']['project_linkage_state'] == 'unresolved_candidate'
+    assert allocation['graph_payload']['properties']['resolved_project_id'] == ''
+    assert not any(rel['target_entity_type'] == 'Project' for rel in allocation['graph_relations'])

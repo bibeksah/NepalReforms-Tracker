@@ -16,6 +16,7 @@ from typing import Any
 
 import pdfplumber
 from django.db import close_old_connections
+from neomodel import db
 from django.db.models import Sum
 from django.utils import timezone
 
@@ -29,11 +30,14 @@ from .schemas import (
     AgendaItemRecord,
     AgendaVersionRecord,
     AlignmentAssessmentRecord,
+    BudgetAllocationRecord,
+    BudgetFlowEventRecord,
     ManifestoCommitment,
     ManifestoDocumentRecord,
     PoliticalPartyRecord,
     PoliticalPromiseRecord,
     ReviewedAlignmentAssessmentBundle,
+    ReviewedBudgetFlowBundle,
     ReviewedOCRPromiseBundle,
     stable_id,
 )
@@ -392,6 +396,79 @@ def _make_related_node(*, relation_type: str, target_entity_type: str, target_ke
         "target_properties": target_properties,
         "relationship_properties": relationship_properties or {},
         "require_existing_target": require_existing_target,
+    }
+
+
+def _project_exists(project_id: str) -> bool:
+    normalized = (project_id or '').strip()
+    if not normalized:
+        return False
+    query = """
+    MATCH (p:Project {projectId: $project_id})
+    RETURN p.projectId AS project_id
+    LIMIT 1
+    """
+    results, _ = db.cypher_query(query, {"project_id": normalized})
+    return bool(results)
+
+
+def _resolve_budget_allocation_project_linkage(item: Any) -> dict[str, Any]:
+    observed_project_id = (getattr(item, 'project_id', '') or '').strip()
+    observed_project_name = (getattr(item, 'project_name', '') or '').strip()
+    implementing_body_id = (getattr(item, 'implementing_body_id', '') or '').strip()
+    implementing_body_name = (getattr(item, 'implementing_body_name', '') or '').strip()
+
+    if observed_project_id:
+        if _project_exists(observed_project_id):
+            return {
+                'project_linkage_state': 'linked',
+                'project_linkage_reason': 'exact_existing_project_id',
+                'observed_project_id': observed_project_id,
+                'observed_project_name': observed_project_name,
+                'resolved_project_id': observed_project_id,
+                'project_candidate_count': 1,
+                'project_requires_review': False,
+            }
+        return {
+            'project_linkage_state': 'unresolved_candidate',
+            'project_linkage_reason': 'project_id_not_found',
+            'observed_project_id': observed_project_id,
+            'observed_project_name': observed_project_name,
+            'resolved_project_id': '',
+            'project_candidate_count': 0,
+            'project_requires_review': True,
+        }
+
+    if observed_project_name:
+        return {
+            'project_linkage_state': 'unresolved_candidate',
+            'project_linkage_reason': 'project_name_observed_without_exact_project_id',
+            'observed_project_id': '',
+            'observed_project_name': observed_project_name,
+            'resolved_project_id': '',
+            'project_candidate_count': 0,
+            'project_requires_review': True,
+        }
+
+    if implementing_body_id or implementing_body_name:
+        return {
+            'project_linkage_state': 'unlinked_accountable_body',
+            'project_linkage_reason': 'no_project_reference_accountable_body_present',
+            'observed_project_id': '',
+            'observed_project_name': '',
+            'resolved_project_id': '',
+            'project_candidate_count': 0,
+            'project_requires_review': False,
+        }
+
+    return {
+        'project_linkage_state': 'unresolved_candidate',
+        'project_linkage_reason': 'no_safe_project_reference',
+        'observed_project_id': '',
+        'observed_project_name': '',
+        'resolved_project_id': '',
+        'project_candidate_count': 0,
+        'project_requires_review': True,
     }
 
 
@@ -944,6 +1021,115 @@ def _extract_reviewed_rsp_bacha_patra_structured_promises(document: IngestionDoc
     return records
 
 
+def _extract_reviewed_budget_flows(document: IngestionDocument | Any) -> list[dict[str, Any]]:
+    metadata = getattr(document, "extra_metadata", None) or {}
+    reviewed_bundle = metadata.get("reviewed_budget_flow_bundle")
+    if not isinstance(reviewed_bundle, dict):
+        return []
+
+    validated_bundle = ReviewedBudgetFlowBundle(**reviewed_bundle)
+    if validated_bundle.source_subtype != "budget_flow_review":
+        return []
+    if validated_bundle.reviewed_budget_flow_status != "reviewed_approved":
+        return []
+
+    records: list[dict[str, Any]] = []
+    workflow_context = {
+        "workflow_kind": "budget_flow_review",
+        "reviewed_budget_flow_status": validated_bundle.reviewed_budget_flow_status,
+    }
+
+    for item in validated_bundle.reviewed_budget_flows:
+        if item.reviewer_status != "approved" or item.placeholder or item.extraction_confidence < 0.70:
+            continue
+
+        project_linkage = _resolve_budget_allocation_project_linkage(item)
+        allocation = BudgetAllocationRecord(
+            budget_allocation_id=stable_id("budget_allocation", item.allocation_code, item.allocation_title, item.fiscal_year, item.project_id, item.implementing_body_id, validated_bundle.source_reference, item.source_page),
+            title=item.allocation_title.strip(),
+            amount=float(item.amount),
+            currency=item.currency,
+            budget_class=item.budget_class.strip(),
+            sector=item.sector.strip(),
+            subsector=item.subsector.strip(),
+            fiscal_year=item.fiscal_year.strip(),
+            source_reference=(item.source_reference_override or validated_bundle.source_reference).strip(),
+            source_page=item.source_page,
+            source_excerpt=item.source_excerpt.strip(),
+            confidence=float(item.extraction_confidence),
+            allocation_code=item.allocation_code.strip(),
+            allocation_type=item.allocation_type.strip(),
+            project_id=item.project_id.strip(),
+            project_linkage_state=project_linkage['project_linkage_state'],
+            project_linkage_reason=project_linkage['project_linkage_reason'],
+            observed_project_id=project_linkage['observed_project_id'],
+            observed_project_name=project_linkage['observed_project_name'],
+            resolved_project_id=project_linkage['resolved_project_id'],
+            project_candidate_count=project_linkage['project_candidate_count'],
+            project_requires_review=project_linkage['project_requires_review'],
+            implementing_body_id=item.implementing_body_id.strip(),
+            implementing_body_name=item.implementing_body_name.strip(),
+            implementing_body_level=item.implementing_body_level.strip(),
+        )
+        allocation_props = allocation.model_dump()
+        allocation_props.update({"source_subtype": validated_bundle.source_subtype, "extraction_mode": validated_bundle.extraction_mode})
+        allocation_raw_payload = item.model_dump()
+        allocation_raw_payload.update({
+            "allocation_id": allocation.budget_allocation_id,
+            "source_reference": allocation.source_reference,
+            "source_subtype": validated_bundle.source_subtype,
+            "extraction_mode": validated_bundle.extraction_mode,
+            "project_linkage": project_linkage,
+            "project_linkage_state": allocation.project_linkage_state,
+            "project_linkage_reason": allocation.project_linkage_reason,
+            "observed_project_id": allocation.observed_project_id,
+            "observed_project_name": allocation.observed_project_name,
+            "resolved_project_id": allocation.resolved_project_id,
+            "project_candidate_count": allocation.project_candidate_count,
+            "project_requires_review": allocation.project_requires_review,
+        })
+        allocation_relations = [
+            _make_related_node(relation_type="IN_FISCAL_YEAR", target_entity_type="FiscalYear", target_key="year", target_id=allocation.fiscal_year, target_properties={"year": allocation.fiscal_year}),
+        ]
+        if allocation.implementing_body_id:
+            allocation_relations.append(_make_related_node(relation_type="MANAGED_BY", target_entity_type="ImplementingBody", target_key="implementingBodyId", target_id=allocation.implementing_body_id, target_properties={"implementingBodyId": allocation.implementing_body_id, "name": allocation.implementing_body_name, "level": allocation.implementing_body_level}))
+        if allocation.project_linkage_state == "linked" and allocation.resolved_project_id:
+            allocation_relations.append(_make_related_node(relation_type="FUNDS", target_entity_type="Project", target_key="projectId", target_id=allocation.resolved_project_id, target_properties={"projectId": allocation.resolved_project_id}, require_existing_target=True))
+        records.append({
+            "entity_type": "BudgetAllocation", "record_identity": allocation.budget_allocation_id, "confidence": allocation.confidence, "risk_flags": [],
+            "graph_payload": {"id": allocation.budget_allocation_id, "key": "budgetAllocationId", "properties": allocation_props},
+            "graph_relations": allocation_relations, "raw_payload": allocation_raw_payload, "review_context": {"workflow": workflow_context},
+            "source_type": getattr(document, "source_type", "other"), "source_subtype": validated_bundle.source_subtype,
+            "source_document": getattr(document, "source_document", ""), "source_path": getattr(document, "source_path", ""), "source_hash": getattr(document, "source_hash", ""),
+        })
+
+        event_groups = [("ReleaseEvent", "releaseEventId", "release", "TO_BODY", item.release_events), ("TransferEvent", "transferEventId", "transfer", "TO_BODY", item.transfer_events), ("ReceiptEvent", "receiptEventId", "receipt", "RECEIVED_BY", item.receipt_events)]
+        for entity_type, graph_key, event_type, body_relation, events in event_groups:
+            for idx, event in enumerate(events, start=1):
+                if event.reviewer_status != "approved" or event.placeholder:
+                    continue
+                event_record = BudgetFlowEventRecord(
+                    event_id=stable_id(event_type + "_event", allocation.budget_allocation_id, event.reference_code, event.title, event.amount, event.event_date, idx),
+                    event_type=event.event_type, budget_allocation_id=allocation.budget_allocation_id, title=event.title.strip(), amount=float(event.amount), currency=event.currency, event_date=event.event_date.strip(),
+                    source_reference=allocation.source_reference, source_page=allocation.source_page, source_excerpt=allocation.source_excerpt, confidence=allocation.confidence, body_id=event.body_id.strip(), body_name=event.body_name.strip(), body_level=event.body_level.strip(), reference_code=event.reference_code.strip(), notes=event.notes.strip(),
+                )
+                event_props = event_record.model_dump()
+                event_props.update({"source_subtype": validated_bundle.source_subtype, "extraction_mode": validated_bundle.extraction_mode})
+                event_raw_payload = event.model_dump()
+                event_raw_payload.update({"event_id": event_record.event_id, "budget_allocation_id": allocation.budget_allocation_id, "source_reference": allocation.source_reference, "source_subtype": validated_bundle.source_subtype, "extraction_mode": validated_bundle.extraction_mode})
+                event_relations = [_make_related_node(relation_type="RELATES_TO", target_entity_type="BudgetAllocation", target_key="budgetAllocationId", target_id=allocation.budget_allocation_id, target_properties={"budgetAllocationId": allocation.budget_allocation_id}, require_existing_target=True)]
+                if event_record.body_id:
+                    event_relations.append(_make_related_node(relation_type=body_relation, target_entity_type="ImplementingBody", target_key="implementingBodyId", target_id=event_record.body_id, target_properties={"implementingBodyId": event_record.body_id, "name": event_record.body_name, "level": event_record.body_level}))
+                records.append({
+                    "entity_type": entity_type, "record_identity": event_record.event_id, "confidence": event_record.confidence, "risk_flags": [],
+                    "graph_payload": {"id": event_record.event_id, "key": graph_key, "properties": event_props},
+                    "graph_relations": event_relations, "raw_payload": event_raw_payload, "review_context": {"workflow": workflow_context},
+                    "source_type": getattr(document, "source_type", "other"), "source_subtype": validated_bundle.source_subtype,
+                    "source_document": getattr(document, "source_document", ""), "source_path": getattr(document, "source_path", ""), "source_hash": getattr(document, "source_hash", ""),
+                })
+    return records
+
+
 def _extract_reviewed_alignment_assessments(document: IngestionDocument | Any) -> list[dict[str, Any]]:
     metadata = getattr(document, "extra_metadata", None) or {}
     reviewed_bundle = metadata.get("reviewed_alignment_assessment_bundle")
@@ -1220,6 +1406,10 @@ def extract_records(document: IngestionDocument, plan: dict[str, Any]) -> list[d
     else:
         records = []
 
+    reviewed_budget_flow_records = _extract_reviewed_budget_flows(document)
+    if reviewed_budget_flow_records:
+        records.extend(reviewed_budget_flow_records)
+
     reviewed_alignment_records = _extract_reviewed_alignment_assessments(document)
     if reviewed_alignment_records:
         records.extend(reviewed_alignment_records)
@@ -1360,6 +1550,7 @@ def _process_document(document_id: str, publish_threshold: float) -> dict[str, A
 
     document.extracted_count = len(records)
     alignment_record_count = sum(1 for record in records if record.get("entity_type") == "AlignmentAssessment")
+    budget_flow_record_count = sum(1 for record in records if record.get("entity_type") in {"BudgetAllocation", "ReleaseEvent", "TransferEvent", "ReceiptEvent"})
     document.status = "publishing"
     document.save(update_fields=["extracted_count", "status", "updated_at"])
     ensure_smart_constraints()
@@ -1420,6 +1611,15 @@ def _process_document(document_id: str, publish_threshold: float) -> dict[str, A
                 "ocr_status": "reviewed_artifact_supplied" if has_reviewed_bundle else "not_run",
                 "structured_promises_status": "reviewed_approved" if has_reviewed_bundle and held == 0 and published > 0 else "not_extracted",
                 "document_record_published": published > 0 and not has_reviewed_bundle,
+                "review_queue_count": held,
+            }
+        reviewed_budget_flow_bundle = (document.extra_metadata or {}).get("reviewed_budget_flow_bundle") or {}
+        has_reviewed_budget_flow_bundle = isinstance(reviewed_budget_flow_bundle, dict)
+        if has_reviewed_budget_flow_bundle or budget_flow_record_count:
+            metadata_patch["budget_flow_workflow"] = {
+                "workflow_kind": "budget_flow_review",
+                "reviewed_budget_flow_status": reviewed_budget_flow_bundle.get("reviewed_budget_flow_status", "pending_review") if has_reviewed_budget_flow_bundle else "pending_review",
+                "budget_flow_records_extracted": budget_flow_record_count,
                 "review_queue_count": held,
             }
         reviewed_alignment_bundle = (document.extra_metadata or {}).get("reviewed_alignment_assessment_bundle") or {}
