@@ -31,7 +31,7 @@ export default function TrackerHomePage() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || !email.includes("@")) {
       toast.error("Please enter a valid email address.")
@@ -39,13 +39,26 @@ export default function TrackerHomePage() {
     }
 
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      setSubmitted(true)
-      toast.success("You're on the Tracker early access list!", {
-        description: "We'll notify you as soon as the live graph visualizer goes live.",
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "homepage" }),
       })
-    }, 600)
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setSubmitted(true)
+        toast.success(data.message || "You're on the Tracker early access list!", {
+          description: "We've registered your email in our database.",
+        })
+      } else {
+        toast.error(data.error || "Failed to subscribe. Please try again.")
+      }
+    } catch (err) {
+      toast.error("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleShare = () => {

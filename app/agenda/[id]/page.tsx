@@ -34,7 +34,7 @@ export default function AgendaTrackerComingSoonPage({
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email || !email.includes("@")) {
       toast.error("Please enter a valid email address.")
@@ -42,13 +42,30 @@ export default function AgendaTrackerComingSoonPage({
     }
 
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      setSubmitted(true)
-      toast.success(`You're subscribed for Agenda #${agendaId} updates!`, {
-        description: "We will notify you when graph-backed evidence is published for this agenda.",
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          source: "agenda_detail",
+          agenda_id: agendaId,
+        }),
       })
-    }, 600)
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setSubmitted(true)
+        toast.success(data.message || `You're subscribed for Agenda #${agendaId} updates!`, {
+          description: "We have recorded your email in our database.",
+        })
+      } else {
+        toast.error(data.error || "Failed to subscribe. Please try again.")
+      }
+    } catch (err) {
+      toast.error("Network error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleShare = () => {

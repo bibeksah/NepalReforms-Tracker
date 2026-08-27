@@ -1,0 +1,152 @@
+{
+  "owner_name": "NepalReforms",
+  "organization": "NepalReforms",
+  "language": "en",
+  "version": "platform-baseline-32",
+  "effective_from": "2026-08-27",
+  "status": "baseline",
+  "manifesto_document_id": "manifesto_document:a32_disaster_recovery_2026",
+  "agenda_version_id": "agenda_version:a32_disaster_v1",
+  "items": [
+    {
+      "id": "32",
+      "title": "Establish a World-Class National Alpine & Disaster Incident Response Command (NDRRMA-SAR) and Real-Time Early Warning System",
+      "description": "Build an integrated national disaster recovery, high-altitude search & rescue (SAR), and geohazard early warning network with transboundary flood telemetry, unified 112 dispatch, pre-positioned highway incident hubs, cell-broadcast emergency alerts, and anti-fraud air medevac to cut critical rescue times to under 45 minutes nationwide.",
+      "category": "Disaster Management & Safety",
+      "priority": "High",
+      "timeline": "3 years",
+      "updatedOn": "27 Aug 2026",
+      "problem": {
+        "short": "A recurring decade of catastrophic disasters—from the 2014 Annapurna blizzard, 2015 Gorkha earthquake, and 2021 Melamchi debris flood to the 2024 Simaltal bus tragedy, 2024 Jhaple Khola burials, and the August 2026 transboundary Trishuli flash flood—proves that Nepal's disaster response is crippled by fragmented command, zero cross-border telemetry, missing swiftwater sonar tech, lack of automated highway closures, and delayed life-saving extrication.",
+        "long": "Nepal is among the most geohazard-vulnerable nations on earth, situated at the active tectonic collision zone of the Himalayas and battered by intensifying monsoon cloudbursts and cryospheric collapse. Over the past decade, a tragic litany of preventable mass casualties demonstrates persistent systemic failures: 1) Seismic & High-Altitude Vulnerability (2015 Gorkha Earthquake, Langtang Avalanche & 2023 Jajarkot Earthquake): The 7.8 Mw earthquake claimed 8,964 lives and wiped out Langtang village under 40 million tons of rock and ice, yet rescue was paralyzed by complete telecom blackouts and an absence of heavy Urban Search and Rescue (USAR) breaching tools during the 72-hour golden window; in 2023, Jajarkot survivors died from secondary winter exposure in tents due to bureaucratic logistics; 2) Transboundary & Glacial Surges (August 2026 Bhotekoshi/Trishuli Disaster, 2024 Thame GLOF & 2021 Melamchi Surge): In August 2026, an upstream glacial collapse in Tibet obliterated the Miteri Bridge, destroyed 40 km of highway, wiped out 430 MW of hydropower (1/8th of Nepal's grid), and left 165+ dead and over 1,000 tourists and pilgrims missing with zero warning due to the complete lack of automated cross-border hydrological data sharing; 3) Highway Landslide Death Traps (July 2024 Simaltal Trishuli Tragedy & Sept 2024 Jhaple Khola Burials): Over 100 passengers in buses and vans were buried or washed away because highways remained open during extreme cloudbursts without automated rain-gauge boom barriers, followed by weeks of futile search operations due to the total lack of underwater side-scan sonar, magnetometers, and ROVs in high-velocity silt rivers; 4) High-Altitude Trekker Tragedies (2014 Annapurna Hudhud Blizzard): 43 trekkers and guides died at Thorong La Pass due to absent real-time localized weather bulletins and lack of personal locator beacons; 5) Search & Rescue Corruption: Helicopter evacuations in high-altitude zones have been tarnished by fraudulent insurance rackets, destroying international underwriting trust; 6) Neglect of Local First Responders: Local Sherpa mountaineers, raft guides, and community volunteers operate without state hazard insurance, standardized SAR certifications, or satellite communication gear."
+      },
+      "solution": {
+        "short": [
+          "Phase 1: Real-time Transboundary Early Warning Data Exchange (Nepal-China-India) & Cell Broadcast emergency alerts",
+          "Unified 112 National Emergency CAD Dispatch with automated caller GPS triangulation",
+          "Automated Geotech Highway Boom Barriers halting traffic during active cloudbursts (Narayanghat-Mugling, BP, Nagdhunga)",
+          "Centralized Air Medevac Coordination Cell with fixed-tariff medical clearance to eliminate rescue fraud",
+          "Digital SafeTrek & Satellite SOS Beacon (Garmin/PLB) rental integration across all trekking gateways",
+          "Phase 2: Submerged Riverine SAR Command with Side-Scan Sonar, ROVs, and heavy containment booms at Kurintar",
+          "Provincial Heavy INSARAG-compliant Urban Search & Rescue (USAR) hubs with acoustic listening devices",
+          "1,000+ Certified Mountain & Swiftwater Rescue Rangers with 100% state-backed hazard insurance",
+          "Phase 3: IoT GLOF sensor telemetry on 21 high-risk glacial lakes and LEO emergency satellite mesh network"
+        ],
+        "long": {
+          "phases": [
+            {
+              "phase": "Phase 1 (Months 1-12)",
+              "title": "Transboundary Early Warning, Unified 112 Dispatch & Proactive Highway Gate Closures",
+              "items": [
+                "Transboundary Cryosphere & Flood Telemetry Protocol: Establish a high-level bilateral real-time data exchange with China (Tibet) and ICIMOD for automated upstream hydrological, seismic, and glacial lake monitoring along shared transboundary basins (Bhotekoshi/Trishuli, Arun, Tamor, Karnali) with instant API siren triggers for downstream communities.",
+                "Cell Broadcast Emergency Alert System (CBEAS): Direct NTC and Ncell to activate standard 3GPP Cell Broadcast channels to blast unblockable, audible siren alerts and safety instructions to all mobile devices (domestic SIMs and international roaming eSIMs) within 15 seconds of detected geohazard triggers without requiring app installations.",
+                "Automated Cloudburst Highway Boom Barriers: Install automated rain gauges and soil-moisture sensors along chronic slide zones (Narayanghat-Mugling, BP Highway, Jhaple Khola/Nagdhunga, Betrawati-Rasuwagadhi). When precipitation exceeds 50mm/hour, automated smart boom barriers and dynamic digital signage instantly halt traffic before vehicles enter active slide paths.",
+                "Unified National Emergency Command (112 / SafeNepal): Consolidate police (100), fire (101), ambulance (102), and disaster (1149) hotlines into a single 24/7 National Emergency Communications Center with Computer-Aided Dispatch (CAD), GPS triangulation, and 24/7 multilingual operators (Nepali, English, Hindi, Mandarin).",
+                "Centralized Air Medevac & Anti-Fraud Protocol: Establish the National Search and Rescue Coordination Cell under NDRRMA and CAAN with a transparent fixed-tariff medevac system, independent medical triage validation, and sovereign payment guarantees to permanently eliminate rescue fraud.",
+                "Digital SafeTrek & Satellite SOS Integration: Upgrade TIMS into a live digital checkpoint system; establish satellite SOS beacon (Garmin inReach/PLB) rental counters at all major trailheads (Everest, Annapurna, Manaslu, Langtang, Mustang)."
+              ]
+            },
+            {
+              "phase": "Phase 2 (Months 13-24)",
+              "title": "Riverine Sonar Units, Provincial USAR Hubs & Rescue Ranger Corps",
+              "items": [
+                "Submerged Riverine & Swiftwater SAR Command (Kurintar Center): Upgrade the APF Disaster Management Center at Kurintar with cutting-edge swiftwater capabilities: Side-Scan Sonar systems, high-definition underwater ROVs (Remotely Operated Vehicles), underwater magnetometers, acoustic Doppler current profilers, and downstream heavy containment boom nets on the Trishuli, Narayani, and Koshi river confluences.",
+                "Strategic Highway Incident Response Hubs: Deploy 12 fully equipped Rapid Incident Hubs along high-risk highway corridors. Each hub is equipped with heavy hydraulic excavators, rock-breakers, thermal drone reconnaissance, and emergency shelter stockpiles (food, warm blankets, satellite Wi-Fi, trauma first aid).",
+                "Provincial INSARAG Urban Search & Rescue (USAR) Hubs: Pre-position 7 provincial heavy structural collapse response units equipped with acoustic void detectors, thermal search cameras, diamond concrete cutters, hydraulic spreaders, and search canine units to ensure immediate life-saving extrication following seismic events.",
+                "Accredited Mountain & Swiftwater Rescue Ranger Corps: Formally certify 1,000+ local Sherpa mountain guides, raft guides, and local youth as auxiliary first responders with UIAA/ICAR-aligned credentials and 100% state-funded accidental death and disability hazard insurance.",
+                "Helicopter Winch & Hoist Modernization: Equip Nepal Army and APF helicopter squadrons with certified long-line rescue winches, night-vision navigation, and FLIR thermal search pods capable of night and extreme weather operations."
+              ]
+            },
+            {
+              "phase": "Phase 3 (Months 25-36)",
+              "title": "IoT GLOF Sensor Grid, Resilient Satellite Mesh & Sovereign Disaster Fund",
+              "items": [
+                "Glacial Lake & Landslide IoT Sensor Network: Install solar-powered automated water-level, seismic, and geophone sensors on 21 dangerous glacial lakes (Tsho Rolpa, Imja, Thame) and critical mountain passes, feeding directly into the national automated siren network.",
+                "Resilient Emergency Satellite Backbone: Deploy low-earth-orbit (LEO) satellite terminals (VSAT/Starlink/OneWeb) at all district disaster headquarters and emergency hubs to ensure communication continuity during major grid or telecom blackouts.",
+                "Hydropower Geo-Resilience Mandate: Legislate mandatory automated upstream flood-surge gates and sediment bypass tunnels for all run-of-the-river hydropower plants to protect the national energy grid from sudden catastrophic wipeouts.",
+                "Sovereign Disaster Relief & Tourist Guarantee Fund: Establish a non-lapsable fund financed through a micro-levy on national park permits ($2-$5) and infrastructure tolls, providing immediate ex-gratia relief and emergency hospital medevac coverage without bureaucratic hold-ups.",
+                "Public Live Safety Dashboard (rescue.gov.np): Launch a real-time portal providing live river discharge rates, road passability statuses, active weather warnings, and verified rescue logs."
+              ]
+            }
+          ]
+        }
+      },
+      "realWorldEvidence": {
+        "short": [
+          "Switzerland's Rega air-rescue reaches any alpine emergency within 15 minutes with complete medical integration",
+          "Iceland's SafeTravel.is and ICE-SAR system reduced tourist wilderness fatalities by 65%",
+          "Japan's automated highway rain-gauge barriers eliminated bus landslide burials across mountain expressways",
+          "New Zealand's Emergency Mobile Alerts reach 95% of active mobile devices in hazard zones within seconds"
+        ],
+        "long": [
+          {
+            "country": "Switzerland",
+            "details": "Rega operates 14 helicopter bases positioned so that any location in the Swiss Alps can be reached within 15 minutes. Its centralized 1414 dispatch and proprietary IFR mountain flight paths allow night and bad-weather operations with integrated trauma center handovers.",
+            "impact": "Handles over 14,000 alpine missions annually with a 99% mission success rate, establishing Switzerland as the safest mountain destination in the world."
+          },
+          {
+            "country": "Iceland",
+            "details": "SafeTravel.is integrates tourist travel plan registration, personal locator beacon rentals, and automatic geo-targeted weather warnings, backed by 4,000 trained ICE-SAR volunteers across remote glacial regions.",
+            "impact": "Wilderness search times dropped from 12+ hours to under 90 minutes, and preventable tourist deaths dropped by 65% despite a 400% surge in international visitors."
+          },
+          {
+            "country": "Japan",
+            "details": "Japan's Ministry of Land, Infrastructure, Transport and Tourism (MLIT) installed automated rain-threshold gate barriers across 10,000+ km of mountain expressways. When rainfall exceeds calibrated hourly safety thresholds, automated gates close the roadway to prevent vehicles from being trapped in debris flows.",
+            "impact": "Near-total elimination of mass-casualty vehicular landslide burials on major mountain highway corridors over two decades."
+          },
+          {
+            "country": "New Zealand",
+            "details": "The National Emergency Management Agency (NEMA) deployed nationwide Cell Broadcast Emergency Mobile Alerts integrated with GeoNet seismic and meteorological monitoring, sending targeted bilingual alerts directly to all mobile handsets without subscription requirements.",
+            "impact": "Achieved 95%+ population reach during severe weather and cyclone emergencies, with zero cellular network congestion."
+          }
+        ]
+      },
+      "implementation": {
+        "short": [
+          "Year 1: Transboundary early warning protocol with China, 112 CAD dispatch, Cell Broadcast deployment, air rescue anti-fraud protocol",
+          "Year 2: Kurintar Swiftwater Sonar/ROV base operational, 12 Highway Incident Hubs, 1,000 Rescue Rangers certified and insured",
+          "Year 3: IoT GLOF sensor grid operational, emergency satellite mesh deployed, Sovereign Guarantee Fund established"
+        ],
+        "long": [
+          {
+            "timeline": "Year 1 (Months 1-12)",
+            "description": "Transboundary Early Warning, 112 Dispatch & Air Rescue Reform",
+            "details": [
+              "Months 1-3: Cabinet issues National Disaster Incident Command Directive; initiate bilateral data exchange with China for transboundary river basins; form National Search & Rescue Coordination Cell under NDRRMA, CAAN, and MoHA.",
+              "Months 4-6: Ministry of Communication mandates NTC/Ncell to deploy Cell Broadcast channels; deploy automated rain-gauge smart boom barriers at high-risk highway choke points (Narayanghat-Mugling, BP Highway, Jhaple Khola/Nagdhunga, Betrawati-Rasuwagadhi).",
+              "Months 7-12: Operationalize fixed-tariff air rescue medevac protocol with independent triage; open satellite SOS beacon rental desks at TIA, Pokhara, Lukla, and Besisahar; launch pilot Unified 112 CAD dispatch."
+            ]
+          },
+          {
+            "timeline": "Year 2 (Months 13-24)",
+            "description": "Riverine Sonar Command, Highway Hubs & Rescue Rangers",
+            "details": [
+              "Months 13-18: Establish the Submerged Riverine SAR Command at Kurintar equipped with Side-Scan Sonar, ROVs, magnetometers, and heavy containment booms; construct 12 Highway Incident Hubs with pre-positioned heavy excavators; equip Army/APF helicopters with rescue hoists.",
+              "Months 19-24: Deploy 7 provincial heavy USAR structural collapse kits; formally certify 1,000 Mountain & Swiftwater Rescue Rangers with full state hazard insurance."
+            ]
+          },
+          {
+            "timeline": "Year 3 (Months 25-36)",
+            "description": "IoT Geohazard Sensor Grid & Resilient Emergency Mesh",
+            "details": [
+              "Months 25-30: Install solar IoT early warning telemetry across 21 high-risk glacial lakes (Tsho Rolpa, Imja, Thame) and key slide zones; deploy LEO satellite emergency terminals to all 77 district EOCs; enact hydropower flood-shielding building codes.",
+              "Months 31-36: Launch public real-time dashboard (rescue.gov.np); operationalize Sovereign Disaster Relief & Tourist Guarantee Fund; publish first annual National SAR Performance Audit."
+            ]
+          }
+        ]
+      },
+      "performanceTargets": [
+        "Transboundary flood surge warning lead-time of at least 30-45 minutes before water reaches Nepalese settlements",
+        "Emergency call response time under 10 seconds on Unified 112 dispatch",
+        "Average alpine air-rescue dispatch time reduced from 4-8 hours to under 45 minutes",
+        "100% elimination of fraudulent helicopter rescue claims and full restoration of international insurer accreditation",
+        "100% mobile reach for geo-fenced Cell Broadcast early warnings within 15 seconds of detected danger",
+        "Zero vehicular fatalities from unmonitored highway landslides due to automated rain-gauge barrier closures",
+        "Deployment of specialized swiftwater sonar / ROV search within 2 hours of any reported river incident",
+        "72-hour golden window heavy USAR extrication capability operational in all 7 provinces",
+        "1,000+ local mountain and river guides certified and protected with 100% state-backed hazard insurance"
+      ],
+      "legalFoundation": "Disaster Risk Reduction and Management Act 2074 (2017) empowers NDRRMA as the central executive body for disaster incident command. Civil Aviation Authority of Nepal (CAAN) Act 2053 regulates emergency search & rescue flight clearances and medevac tariffs. Public Roads Act 2031 gives the Department of Roads authority to regulate and restrict vehicular movement during geohazard emergencies. Electricity Act 2049 provides the regulatory basis for flood-safety standards in hydropower assets. Telecommunications Act 2053 allows NTA to mandate public safety cell broadcasts across all telecom operators. Local Government Operation Act 2074 mandates municipal and community-level disaster response units."
+    }
+  ]
+}
