@@ -1,0 +1,23 @@
+# Next.js & Bun
+.next/
+node_modules/
+bun.lockb
+tsconfig.tsbuildinfo
+*.log
+
+# Env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build
+out/
+dist/
+build/
+
+# Temp
+tmp/
+__pycache__/
+*.pyc
