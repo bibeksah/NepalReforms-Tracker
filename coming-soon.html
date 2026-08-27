@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NepalReforms Tracker — Coming Soon</title>
+  <meta name="description" content="NepalReforms Tracker: The public accountability intelligence engine connecting political promises, Red Book budget movements, and ground-reality verification for Nepal." />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --accent-subtle: rgba(16, 185, 129, 0.12);
+      --accent-border: rgba(16, 185, 129, 0.3);
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .top-bar {
+      background: #022c22;
+      border-bottom: 1px solid #064e3b;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: #6ee7b7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #34d399;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #34d399;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    header {
+      border-bottom: 1px solid var(--card-border);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .brand span {
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 14px;
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent-border);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #064e3b;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      color: #fff;
+    }
+    .btn-outline {
+      border-color: var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      background: #1e293b;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent-border);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero p {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+
+    .notify-form {
+      display: flex;
+      max-width: 500px;
+      margin: 0 auto 16px;
+      gap: 8px;
+    }
+    .notify-input {
+      flex: 1;
+      padding: 12px 16px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .notify-input:focus {
+      border-color: var(--accent);
+    }
+    .form-features {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .telemetry-section {
+      padding: 50px 0;
+      background: #080c14;
+      border-top: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .section-title {
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .section-headline {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .kpi-card:hover {
+      border-color: #334155;
+      transform: translateY(-2px);
+    }
+    .kpi-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .kpi-val {
+      font-family: var(--font-mono);
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .kpi-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .features-section {
+      padding: 70px 0;
+    }
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--accent-subtle);
+      border-color: var(--accent-border);
+      color: var(--accent);
+    }
+    .tab-content {
+      display: none;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .roadmap-section {
+      padding: 60px 0;
+      background: #080c14;
+      border-top: 1px solid var(--card-border);
+    }
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .roadmap-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+    }
+    .roadmap-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .badge-done { background: #064e3b; color: #34d399; }
+    .badge-current { background: #1e3a8a; color: #60a5fa; }
+    .badge-upcoming { background: #1e293b; color: #94a3b8; }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 0;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .notify-form { flex-direction: column; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="status-badge">
+      <div class="pulse-dot"></div>
+      <span>ALPHA INGESTION ENGINE ACTIVE • GRAPH SCHEMA V1.0</span>
+    </div>
+    <div style="font-family: var(--font-mono); font-size: 11px;">
+      TARGET LAUNCH: Q2 2026
+    </div>
+  </div>
+
+  <header>
+    <div class="nav-container">
+      <a href="https://nepalreforms.com" class="brand">
+        NepalReforms <span>Tracker</span>
+      </a>
+      <div class="nav-links">
+        <a href="https://nepalreforms.com" class="nav-link">Main Platform</a>
+        <a href="https://nepalreforms.com/#agendas-section" class="nav-link">27 Agendas</a>
+        <a href="https://nepalreforms.com/testimonials" class="nav-link">Voices</a>
+        <a href="https://nepalreforms.com" class="btn btn-outline">Explore Agendas</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="hero-pill">
+        ⚡ NEPALREFORMS INTELLIGENCE BACKBONE
+      </div>
+      <h1>The Public Accountability Engine for Nepal’s Governance.</h1>
+      <p>
+        Connecting political manifesto promises, Red Book budget allocations, money flow events,
+        and citizen-verified ground reality into an open knowledge graph.
+      </p>
+
+      <form class="notify-form" onsubmit="handleNotify(event)">
+        <input type="email" id="emailInput" class="notify-input" placeholder="Enter your email for early access..." required />
+        <button type="submit" class="btn btn-primary">Get Notified</button>
+      </form>
+      <div id="notifyMessage" style="display:none; color: #34d399; font-size: 14px; margin-bottom: 16px;">
+        ✓ Thank you! You've been added to the early access queue.
+      </div>
+      <div class="form-features">
+        <span>✓ Zero Spam</span>
+        <span>•</span>
+        <span>✓ Verifiable Citations</span>
+        <span>•</span>
+        <span>✓ Open Civic Tech</span>
+      </div>
+    </section>
+
+    <section class="telemetry-section">
+      <div class="container">
+        <div class="section-title">Telemetry & Pipeline Readiness</div>
+        <div class="section-headline">Ingestion In Progress</div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">CORE_AGENDAS</div>
+            <div class="kpi-val">27</div>
+            <div class="kpi-desc">Evidence-based reform proposals mapped</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">PROMISES_PARSED</div>
+            <div class="kpi-val">1,248+</div>
+            <div class="kpi-desc">Manifesto & Parliamentary commitments</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">BUDGET_INDEXED</div>
+            <div class="kpi-val">NPR 1.86T</div>
+            <div class="kpi-desc">Federal & Provincial Red Book line items</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">MPS_LINKED</div>
+            <div class="kpi-val">275</div>
+            <div class="kpi-desc">House of Representatives constituency nodes</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">LOCAL_BODIES</div>
+            <div class="kpi-val">753</div>
+            <div class="kpi-desc">Municipalities & audit points mapped</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section container">
+      <div class="section-title">Core Systems</div>
+      <div class="section-headline">How the Tracker Holds Power Accountable</div>
+
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('promise')">1. Promise Engine</button>
+        <button class="tab-btn" onclick="switchTab('budget')">2. Red Book Flow</button>
+        <button class="tab-btn" onclick="switchTab('divergence')">3. Ground Reality Audit</button>
+        <button class="tab-btn" onclick="switchTab('mps')">4. Parliamentary Heatmap</button>
+      </div>
+
+      <div id="tab-promise" class="tab-content active">
+        <h3 style="font-size: 18px; margin-bottom: 8px;">Structured Manifesto Extraction</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+          Promises are not treated as vague assertions. Every promise is parsed into an atomic entity with page, paragraph, party attribution, and target ministry.
+        </p>
+        <div style="background: #090d16; border: 1px solid #1e293b; padding: 16px; border-radius: 8px; font-family: var(--font-mono); font-size: 12px; color: #a7f3d0;">
+          [PROMISE #RSP-BP-014] → "Full Digitization of National Identity & Vital Registrations"<br>
+          LINKED_REFORM: Agenda #1 (Digital Governance)<br>
+          PROVENANCE: RSP Bacha Patra 2079/2082 (p. 14)<br>
+          STATUS: In Review / Execution Mapping
+        </div>
+      </div>
+
+      <div id="tab-budget" class="tab-content">
+        <h3 style="font-size: 18px; margin-bottom: 8px;">Red Book Budget & Expenditure Tracking</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+          Tracks money from parliamentary allocation to ministry release to local expenditure, surfacing unspent balances and delayed disbursements.
+        </p>
+        <div style="background: #090d16; border: 1px solid #1e293b; padding: 16px; border-radius: 8px; font-family: var(--font-mono); font-size: 12px; color: #fde68a;">
+          BUDGET_CODE: 350-02-10 (Education Infrastructure Upgrade)<br>
+          ALLOCATED: NPR 14.8B | RELEASED: NPR 10.2B (68.9%) | EXPENDED: NPR 5.4B (36.4%)<br>
+          EXECUTING_MINISTRY: MoEST | DISCREPANCY: 32.5% unspent release
+        </div>
+      </div>
+
+      <div id="tab-divergence" class="tab-content">
+        <h3 style="font-size: 18px; margin-bottom: 8px;">Paper Truth vs. Ground Reality</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+          Detects the gap between official completion certificates and physical ground status reported by citizens and field audits.
+        </p>
+        <div style="background: #090d16; border: 1px solid #1e293b; padding: 16px; border-radius: 8px; font-family: var(--font-mono); font-size: 12px; color: #fca5a5;">
+          PROJECT: Rautahat 50-Bed ICU Extension<br>
+          OFFICIAL_PAPER_CLAIM: 100% Complete & Commissioned<br>
+          CITIZEN_GROUND_AUDIT: Physical structure finished, 0 doctors/nurses deployed<br>
+          DIVERGENCE_ALERT: Operational Deficit
+        </div>
+      </div>
+
+      <div id="tab-mps" class="tab-content">
+        <h3 style="font-size: 18px; margin-bottom: 8px;">Constituency-Level MP Commitment Heatmap</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">
+          Hold all 275 members of the House of Representatives accountable for local promises made during elections.
+        </p>
+        <div style="background: #090d16; border: 1px solid #1e293b; padding: 16px; border-radius: 8px; font-family: var(--font-mono); font-size: 12px; color: #e9d5ff;">
+          DISTRICT: Dhanusha - Constituency 3 (Madhesh Province)<br>
+          TRACKED_COMMITMENTS: 12 Local Projects<br>
+          BREAKDOWN: 2 Completed • 4 In Progress • 6 Stalled
+        </div>
+      </div>
+    </section>
+
+    <section class="roadmap-section">
+      <div class="container">
+        <div class="section-title">Delivery Schedule</div>
+        <div class="section-headline">Roadmap to Launch</div>
+        <div class="roadmap-grid">
+          <div class="roadmap-card">
+            <span class="roadmap-badge badge-done">PHASE 1 • COMPLETED</span>
+            <h4 style="margin-bottom: 8px;">Foundation Schema</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Neo4j knowledge graph schema, typed budget contracts, and consistency checks.
+            </p>
+          </div>
+          <div class="roadmap-card">
+            <span class="roadmap-badge badge-current">PHASE 2 • IN PROGRESS</span>
+            <h4 style="margin-bottom: 8px;">Red Book Ingestion</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Extraction of Red Book budget line items, party manifestos, and ministry project IDs.
+            </p>
+          </div>
+          <div class="roadmap-card">
+            <span class="roadmap-badge badge-upcoming">PHASE 3 • Q2 2026</span>
+            <h4 style="margin-bottom: 8px;">Public Beta Explorer</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Interactive web visualizer, constituency search, and exportable audit datasets.
+            </p>
+          </div>
+          <div class="roadmap-card">
+            <span class="roadmap-badge badge-upcoming">PHASE 4 • Q3 2026</span>
+            <h4 style="margin-bottom: 8px;">Citizen Oracle Network</h4>
+            <p style="font-size: 12px; color: var(--text-muted);">
+              Decentralized field audits, photo verification, and open accountability API.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p style="margin-bottom: 8px;">NepalReforms Tracker • Public Accountability for Nepal</p>
+      <p style="font-size: 12px; color: #64748b;">
+        Main platform available at <a href="https://nepalreforms.com">nepalreforms.com</a> • Built by <a href="https://nexalaris.com" target="_blank">Nexalaris Tech</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      const activeContent = document.getElementById('tab-' + tabId);
+      if (activeContent) {
+        activeContent.classList.add('active');
+      }
+      
+      event.target.classList.add('active');
+    }
+
+    function handleNotify(e) {
+      e.preventDefault();
+      const email = document.getElementById('emailInput').value;
+      if (email && email.includes('@')) {
+        document.querySelector('.notify-form').style.display = 'none';
+        document.getElementById('notifyMessage').style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
