@@ -15,6 +15,7 @@
     "@supabase/supabase-js": "^2.112.4",
     "clsx": "^2.1.1",
     "lucide-react": "^0.454.0",
+    "neo4j-driver": "^6.2.0",
     "next": "16.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
